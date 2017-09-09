@@ -2,7 +2,7 @@
 
 # This pre-commit hook script was lifted from: https://sigmoidal.io/automatic-code-quality-checks-with-git-hooks/
 
-echo "Running pre-commit hook"
+echo "===Running pre-commit hook==="
 ./scripts/run_tests.sh
 
 # $? stores exit value of the last command
