@@ -1,8 +1,7 @@
 class UserProfile:
 
-    def __init__(self, id, userType, username, password, firstName, lastName, email, gender, dob, status, imgpath):
+    def __init__(self, id, username, password, firstName, lastName, email, gender, dob, status, imgpath):
         self.id = id
-        self.userType = userType
         self.username = username
         self.password = password
         self.firstName = firstName
@@ -15,91 +14,83 @@ class UserProfile:
 
     @property
     def id(self):
-        return self.id
+        return self.__id
 
     @id.setter
     def id(self, id):
-        self.id = id
-
-    @property
-    def userType(self):
-        return self.userType
-
-    @userType.setter
-    def userType(self, userType):
-        self.userType = userType
+        self.__id = id
 
     @property
     def username(self):
-        return self.username
+        return self.__username
 
     @username.setter
     def username(self, username):
-        self.username = username
+        self.__username = username
 
     @property
     def password(self):
-        return self.password
+        return self.__password
 
     @password.setter
     def password(self, password):
-        self.password = password
+        self.__password = password
 
     @property
     def firstName(self):
-        return self.firstName
+        return self.__firstName
 
     @firstName.setter
     def firstName(self, firstName):
-        self.firstName = firstName
+        self.__firstName = firstName
 
     @property
     def lastName(self):
-        return self.lastName
+        return self.__lastName
 
     @lastName.setter
     def lastName(self, lastName):
-        self.lastName = lastName
+        self.__lastName = lastName
 
     @property
     def email(self):
-        return self.email
+        return self.__email
 
     @email.setter
     def email(self, email):
-        self.email = email
+        self.__email = email
 
     @property
     def gender(self):
-        return self.gender
+        return self.__gender
 
     @gender.setter
     def gender(self, gender):
-        self.gender = gender
+        self.__gender = gender
 
     @property
     def dob(self):
-        return self.dob
+        return self.__dob
 
     @dob.setter
     def dob(self, dob):
-        self.dob = dob
+        self.__dob = dob
 
     @property
     def status(self):
-        return self.status
+        return self.__status
 
     @status.setter
     def status(self, status):
-        self.status = status
+        self.__status = status
 
     @property
     def imgpath(self):
-        return self.imgpath
+        return self.__imgpath
 
     @imgpath.setter
     def imgpath(self, imgpath):
-        self.imgpath = imgpath
+        self.__imgpath = imgpath
 
 
 

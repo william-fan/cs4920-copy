@@ -9,42 +9,42 @@ class UserClass:
 
     @property
     def id(self):
-        return self.id
+        return self.__id
 
     @id.setter
     def id(self, id):
-        self.id = id
+        self.__id = id
 
     @property
     def userId(self):
-        return self.userId
+        return self.__userId
 
     @userId.setter
     def userId(self, userId):
-        self.userId = userId
+        self.__userId = userId
 
     @property
     def courseName(self):
-        return self.courseName
+        return self.__courseName
 
     @courseName.setter
     def courseName(self, courseName):
-        self.courseName = courseName
+        self.__courseName = courseName
 
     @property
     def startTime(self):
-        return self.startTime
+        return self.__startTime
 
     @startTime.setter
     def startTime(self, startTime):
-        self.startTime = startTime
+        self.__startTime = startTime
 
     @property
     def endTime(self):
-        return self.endTime
+        return self.__endTime
 
     @endTime.setter
     def endTime(self, endTime):
-        self.endTime = endTime
+        self.__endTime = endTime
 
 

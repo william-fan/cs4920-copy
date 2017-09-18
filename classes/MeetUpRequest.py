@@ -7,24 +7,24 @@ class MeetUpRequest:
 
     @property
     def fromId(self):
-        return self.fromId
+        return self.__fromId
 
     @fromId.setter
     def fromId(self, fromId):
-        self.fromId = fromId
+        self.__fromId = fromId
 
     @property
     def toId(self):
-        return self.toId
+        return self.__toId
 
     @toId.setter
     def toId(self, toId):
-        self.toId = toId
+        self.__toId = toId
 
     @property
     def status(self):
-        return self.status
+        return self.__status
 
     @status.setter
     def status(self, status):
-        self.status = status
+        self.__status = status
