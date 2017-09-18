@@ -1,50 +1,40 @@
 class UserClass:
 
-    def __init__(self, id, userId, courseName, startTime, endTime):
-        self.id = id
-        self.userId = userId
-        self.courseName = courseName
-        self.startTime = startTime
-        self.endTime = endTime
+    def __init__(self, user_id, course_name, start_time, end_time):
+        self._user_id = user_id
+        self._course_name = course_name
+        self._start_time = start_time
+        self._end_time = end_time
+    
+    @property
+    def user_id(self):
+        return self._user_id
+    
+    @user_id.setter
+    def user_id(self, user_id):
+        self._user_id = user_id
 
     @property
-    def id(self):
-        return self.__id
-
-    @id.setter
-    def id(self, id):
-        self.__id = id
-
+    def course_name(self):
+        return self._course_name
+        
+    @course_name.setter
+    def course_name(self, course_name):
+        self._course_name = course_name
+        
     @property
-    def userId(self):
-        return self.__userId
+    def start_time(self):
+        return self._start_time
 
-    @userId.setter
-    def userId(self, userId):
-        self.__userId = userId
-
+    @start_time.setter
+    def start_time(self, start_time):
+        self._start_time = start_time
+        
     @property
-    def courseName(self):
-        return self.__courseName
+    def end_time(self):
+        return self._end_time
 
-    @courseName.setter
-    def courseName(self, courseName):
-        self.__courseName = courseName
-
-    @property
-    def startTime(self):
-        return self.__startTime
-
-    @startTime.setter
-    def startTime(self, startTime):
-        self.__startTime = startTime
-
-    @property
-    def endTime(self):
-        return self.__endTime
-
-    @endTime.setter
-    def endTime(self, endTime):
-        self.__endTime = endTime
-
-
+    @end_time.setter
+    def end_time(self, end_time):
+        self._end_time = end_time
+        
