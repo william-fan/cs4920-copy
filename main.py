@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import*
 
+from flask import Flask, render_template, url_for
+from classes.ToDo import ToDo
 app = Flask(__name__)
 app.secret_key = "secret-key"
 
@@ -89,22 +91,13 @@ def available():
 def todo():
     logged_in_user = find_by_id(session.get("loggedInUser"))
     # TODO: get logged-in user's todo list
+    test = ToDo('Presentation', 'Monday 11 September', 'Monday 11 September', 'COMP4920', 'Finish pres')
     tasks = [
         {
-            'name': 'Presentation',
-            'subject': 'COMP4920',
-            'date': 'Monday 11 September'
-        },
-        {
-            'name': 'Document',
-            'subject': 'COMP4920',
-            'date': 'Sunday 17 September'
-        },
-        {
-            'name': 'Report',
-            'subject': 'COMP4920',
-            'date': 'Monday 2 October'
-        },
+            'name': test.name,
+            'subject': test.subject,
+            'date': test.end_time
+        }
     ]
 
     return render_template('todo.html', tasks=tasks)
