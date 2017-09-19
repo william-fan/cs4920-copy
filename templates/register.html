@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>Signin Template for Bootstrap</title>
+
+
+    <!-- Custom styles for this template -->
+    <link href="../static/register.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <div class="container">
+      {%if registerError%}
+      <div class="alert alert-danger">
+        <strong>Registration Failed</strong> {{registerError}}
+      </div>
+      {%endif%}
+      <form action="/register" id="form-register" class="form-register" method="POST">
+        <h2 class="form-register-heading">Register with us</h2>
+        <label for="username">Username</label>
+        <input name="username" type="text" id="username" class="form-control" placeholder="Enter Username" required autofocus>
+        <label for="password">Password</label>
+        <input name="password" type="password" id="password" class="form-control" placeholder="Enter Password" required>
+        <label for="email">Email</label>
+        <input name="email" type="email" id="email" class="form-control" placeholder="Enter Email" required>
+        <label for="firstname">Firstname</label>
+        <input name="firstname" type="text" id="firstname" class="form-control" placeholder="Enter Firstname" required>
+        <label for="lastname">Lastname</label>
+        <input name="lastname" type="text" id="lastname" class="form-control" placeholder="Enter Lastname" required>
+        <label for="gender">Select Gender:</label>
+        <select name="gender" class="form-control" id="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <label for="date">DOB</label>
+        <input name="dob" type="date" id="date" class="form-control" placeholder="Enter DOB" required>
+        <button id="register" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <div class="register-login">
+          <a href="/">Login</a>
+        </div>
+      </form>
+
+    </div>
+  </body>
+</html>
