@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% set active_page = "profile" %}
+
+{% block title %}
+{{ user.first_name }} {{ user.last_name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="profile">
+  <div class="row">
+    <div class="col-sm-3 text-center">
+      <img src="/static/placeholder.svg" class="img-fluid">
+    </div>
+    <div class="col-sm-9">
+      <!-- <a href="/settings" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i> Edit</a> -->
+      <p>
+        <i class="fa fa-graduation-cap fa-fw"></i> {{ user.degree }}
+        <br />
+        <i class="fa fa-user fa-fw"></i> {{ user.status }}
+        <br />
+        <i class="fa fa-envelope fa-fw"></i> {{ user.email }}
+        <br />
+      </p>
+
+    </div>
+  </div>
+</div>
+
+
+<table class="table table-striped table-bordered">
+  <thead class="thead-inverse">
+    <tr>
+      <th width="5%">Time</th>
+      <th width="19%">Monday</th>
+      <th width="19%">Tuesday</th>
+      <th width="19%">Wednesday</th>
+      <th width="19%">Thursday</th>
+      <th width="19%">Friday</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for time in range(9, 21) %}
+    <tr>
+      <th height="80px" scope="row">{{time}}:00</th>
+      {% for day in range(0, 5) %}
+        {% for course in courses %}
+          {% if course.day == day and course.time == time %}
+            <td class="subject text-center align-middle" rowspan="{{ course.length }}">{{ course.subject }}<br />{{ course.activity }}</td>
+          {% endif %}
+        {% endfor %}
+
+        {% if {"day": day, "time": time} not in busy_times %}
+          <td rowspan="1"></td>
+        {% endif %}
+
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
