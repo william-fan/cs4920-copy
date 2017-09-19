@@ -67,6 +67,7 @@ def user(userid):
     user = {
         'first_name': 'Jordan',
         'last_name': 'Cohn',
+        'userid': userid,
         'status': 'Available',
         'email': 'jordan.cohn@student.unsw.edu.au',
         'degree': 'Computer Science'
@@ -109,6 +110,10 @@ def user(userid):
 
 
     return render_template('user.html', user=user, courses=courses, busy_times=busy_times)
+
+@app.route('/settings')
+def settings():
+    return 'Settings <button onclick="window.history.back()">Go Back</button>'
 
 @app.route('/signout')
 def signout():

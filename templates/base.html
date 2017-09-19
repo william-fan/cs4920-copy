@@ -44,11 +44,11 @@
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="/static/placeholder.svg" width="30" height="30" alt="">
+                <img src="/static/img/users/jordancohn.png" width="30" height="30" alt="">
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="{{ url_for('user', userid='jordancohn') }}"><i class="fa fa-user fa-fw"></i> Profile</a>
-                <a class="dropdown-item" href="/settings"><i class="fa fa-cog fa-fw"></i> Settings</a>
+                <a class="dropdown-item" href="{{ url_for('settings')}}"><i class="fa fa-cog fa-fw"></i> Settings</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ url_for('signout') }}"><i class="fa fa-sign-out fa-fw"></i> Sign out</a>
               </div>
