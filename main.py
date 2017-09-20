@@ -95,6 +95,7 @@ def todo():
     tasks = [
         {
             'name': test.name,
+            'text': test.text,
             'subject': test.subject,
             'date': test.end_time
         }
