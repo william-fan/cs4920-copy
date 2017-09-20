@@ -17,11 +17,11 @@
   <body>
 
     <div class="container">
-      {%if registerError%}
+      {% if register_error %}
       <div class="alert alert-danger">
-        <strong>Registration Failed</strong> {{registerError}}
+        <strong>Registration Failed</strong> {{ register_error }}
       </div>
-      {%endif%}
+      {% endif %}
       <form action="/register" id="form-register" class="form-register" method="POST">
         <h2 class="form-register-heading">Register with us</h2>
         <label for="username">Username</label>

@@ -20,7 +20,7 @@ def login():
         session['loggedInUser'] = profile.id
         return redirect(url_for('available'))
     else:
-        return render_template("signin.html", errorMessage="Incorrect username or password")
+        return render_template("signin.html", error_message="Incorrect username or password")
 
 @app.route("/logout")
 def logout():
@@ -47,7 +47,7 @@ def register():
         errors.append("That username has been taken already")
 
     if (len(errors) > 0):
-        return render_template("register.html", registerError=", ".join(errors))
+        return render_template("register.html", register_error=", ".join(errors))
 
     register_user(username, password, email, firstname, lastname, gender, dob)
     return render_template("created.html")

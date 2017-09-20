@@ -17,11 +17,11 @@
   <body>
 
     <div class="container">
-      {%if errorMessage%}
+      {% if error_message %}
       <div class="alert alert-danger">
-        <strong>Login Failed</strong> {{errorMessage}}
+        <strong>Login Failed</strong> {{ errorMessage }}
       </div>
-      {%endif%}
+      {% endif %}
       <form action="/login" id="form-login" class="form-signin" method="POST">
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputEmail">Email address</label>
@@ -39,6 +39,6 @@
         </div>
       </form>
 
-    </div> 
+    </div>
   </body>
 </html>
