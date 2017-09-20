@@ -1,11 +1,12 @@
+import pymysql
+
 class UserProfile:
 
-    def __init__(self, user_id, user_type, username, password, first_name, last_name, email, gender, dob, status, imgpath):
+    def __init__(self, user_id, username, password, first_name, last_name, email, gender, dob, status, imgpath):
         self._user_id = user_id
-        self._user_type = user_type
         self._username = username
         self._password = password
-        self._first__name = first_name
+        self._first_name = first_name
         self._last_name = last_name
         self._email = email
         self._gender = gender
@@ -20,14 +21,6 @@ class UserProfile:
     @user_id.setter
     def user_id(self, user_id):
         self._user_id = user_id
-
-    @property
-    def user_type(self):
-        return self._user_type
-
-    @user_type.setter
-    def user_type(self, user_type):
-        self._user_type = user_type
 
     @property
     def username(self):
@@ -92,6 +85,17 @@ class UserProfile:
     @status.setter
     def status(self, status):
         self._status = status
+        connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058', password='WWCl5DaAea', db='sql12195058', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+        try:
+            with connection.cursor() as cursor:
+                # SQL
+                sql = "UPDATE user_profile SET status = '" + status + "' WHERE id = " + str(self._user_id)
+                # Execute query.
+                cursor.execute(sql)
+                connection.commit()
+        finally:
+            # Close connection.
+            connection.close()
 
     @property
     def imgpath(self):

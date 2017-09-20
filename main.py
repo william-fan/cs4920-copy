@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import*
+import status
 
 app = Flask(__name__)
 app.secret_key = "secret-key"
@@ -17,7 +18,7 @@ def login():
     password = request.form["inputPassword"]
     profile = find_by_email_pass(username, password)
     if (profile is not None):
-        session['loggedInUser'] = profile.id
+        session['loggedInUser'] = profile.user_id
         return redirect(url_for('available'))
     else:
         return render_template("signin.html", error_message="Incorrect username or password")
@@ -119,14 +120,15 @@ def get_busy_times(courses):
 
 @app.route('/user/<userid>')
 def user(userid):
+    # TEMPORARY
     logged_in_user = find_by_id(session.get("loggedInUser"))
     # TODO: get profile page user's details
     user = {
-        'first_name': 'Jordan',
-        'last_name': 'Cohn',
+        'first_name': logged_in_user.first_name,
+        'last_name': logged_in_user.last_name,
         'userid': userid,
-        'status': 'Available',
-        'email': 'jordan.cohn@student.unsw.edu.au',
+        'status': logged_in_user.status,
+        'email': logged_in_user.email,
         'degree': 'Computer Science'
     }
 
@@ -168,9 +170,13 @@ def user(userid):
 
     return render_template('user.html', user=user, courses=courses, busy_times=busy_times)
 
-@app.route('/settings')
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    return 'Settings <button onclick="window.history.back()">Go Back</button>'
+    if request.method == 'POST':
+        new_status = request.form.get('input_status')
+        logged_in_user = find_by_id(session.get("loggedInUser"))
+        status.change_status(logged_in_user, new_status)
+    return render_template('settings.html', statuses=status.statuses)
 
 
 @app.errorhandler(404)

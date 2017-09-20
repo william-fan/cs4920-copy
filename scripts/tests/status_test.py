@@ -1,14 +1,16 @@
 #!/usr/local/bin/python3.6
 import sys
-sys.path.insert(0, './classes/')
-sys.path.insert(0, './')
+sys.path.append('./')
+sys.path.append('./scripts/tests')
+from test_helper import get_test_profile
 from status import *
-import UserProfile
+import classes.UserProfile
 
-newUser = UserProfile.UserProfile(None, None, None, None, None, None, None, None, None, Status.AVAILABLE, None)
-print("Testing status changing...")
-assert newUser.status == Status.AVAILABLE
-change_status(newUser, Status.INCLASS)
-assert newUser.status == Status.INCLASS
-change_status(newUser, Status.OFFCAMPUS)
-assert newUser.status == Status.OFFCAMPUS
+def test_change_status():
+    print("Testing status changing...")
+    user = get_test_profile()
+    for status in statuses:
+        change_status(user, status)
+        assert user.status == status
+
+test_change_status()

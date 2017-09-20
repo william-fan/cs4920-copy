@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}
+Settings
+{% endblock %}
+
+{% block content %}
+ <div class="form-group">
+  <form action="/settings" method="POST">
+    <label for="status">Select list:</label>
+    <select class="form-control" name="input_status">
+        {% for status in statuses %}
+            <option>{{status}}</option>
+        {% endfor %}
+    </select>
+    </br>
+    <button type="submit" class="btn btn-default">Change Settings</button>
+  </form>
+</div> 
+{% endblock %}
