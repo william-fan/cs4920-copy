@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, session
+from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import*
 
 app = Flask(__name__)
@@ -7,7 +7,7 @@ app.secret_key = "secret-key"
 @app.route("/")
 def index():
     if (session.get("loggedInUser") is not None):
-        return render_template("available.html", loggedInUser=find_by_id(session.get("loggedInUser")))
+        return redirect(url_for('available'))
     else:
         return render_template("signin.html")
 
@@ -18,7 +18,7 @@ def login():
     profile = find_by_email_pass(username, password)
     if (profile is not None):
         session['loggedInUser'] = profile.id
-        return render_template("available.html", loggedInUser=profile)
+        return redirect(url_for('available'))
     else:
         return render_template("signin.html", errorMessage="Incorrect username or password")
 
