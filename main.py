@@ -103,6 +103,21 @@ def todo():
 
     return render_template('todo.html', tasks=tasks)
 
+@app.route('/todo/create')
+def todo_create():
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+    # TODO: get logged-in user's todo list
+    test = ToDo('Presentation', 'Monday 11 September', 'Monday 11 September', 'COMP4920', 'Finish pres')
+    tasks = [
+        {
+            'name': test.name,
+            'text': test.text,
+            'subject': test.subject,
+            'date': test.end_time
+        }
+    ]
+
+    return render_template('todocreate.html', tasks=tasks)
 
 def get_busy_times(courses):
     busy_times = []

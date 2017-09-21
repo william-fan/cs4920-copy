@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% set active_page = "todo" %}
+
+{% block title %}
+Create a new todo item
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form action="/todo/create" id="form-todo" class="form-todo" method="POST">
+        <label for="name">Name</label>
+        <input name="name" type="text" id="name" class="form-control" placeholder="Name" autofocus>
+    </form>
+
+</div>
+
+<a class="btn btn-primary" href="/todo/create" role="button">Add new item</a>
+
+
+{% endblock %}
