@@ -60,29 +60,15 @@ def displaySignIn():
 
 @app.route('/available')
 def available():
-    logged_in_user = find_by_id(session.get("loggedInUser"))
     # TODO: get list of logged-in user's friends that are available
+    friends_of_user = friends_by_id(session.get("loggedInUser"))
     available = [
-        {
-            'first_name': 'Cheston',
-            'last_name': 'Lee',
-            'userid': 'chestonlee'
-        },
-        {
-            'first_name': 'David',
-            'last_name': 'Bassin',
-            'userid': 'davidbassin'
-        },
-        {
-            'first_name': 'William',
-            'last_name': 'Fan',
-            'userid': 'williamfan'
-        },
-        {
-            'first_name': 'Darren',
-            'last_name': 'Zhu',
-            'userid': 'darrenzhu'
-        },
+        { 'first_name': p.first_name,
+          'last_name': p.last_name,
+          'userid': p.user_id,
+          'imgpath': p.imgpath
+        } for p in friends_of_user
+        if p.status == status.statuses[0]
     ]
     return render_template('available.html', available=available)
 
