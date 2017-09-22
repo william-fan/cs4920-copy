@@ -1,7 +1,10 @@
+import time
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import*
 import status
 
+from flask import Flask, render_template, url_for
+from classes.ToDo import ToDo
 app = Flask(__name__)
 app.secret_key = "secret-key"
 
@@ -76,24 +79,42 @@ def available():
 def todo():
     logged_in_user = find_by_id(session.get("loggedInUser"))
     # TODO: get logged-in user's todo list
-    tasks = [
-        {
-            'name': 'Presentation',
-            'subject': 'COMP4920',
-            'date': 'Monday 11 September'
-        },
-        {
-            'name': 'Document',
-            'subject': 'COMP4920',
-            'date': 'Sunday 17 September'
-        },
-        {
-            'name': 'Report',
-            'subject': 'COMP4920',
-            'date': 'Monday 2 October'
-        },
-    ]
+    todo_list = load_todos(session.get("loggedInUser"))
+    tasks = []
+    for task in todo_list:
+        tasks += [
+            {
+                'name': task['title'],
+                'text': task['description'],
+                'subject': task['course_name'],
+                'date': task['end_time']
+            }
+        ]
 
+    return render_template('todo.html', tasks=tasks)
+
+
+@app.route('/todo/createpage')
+def todo_createpage():
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+    # TODO: get logged-in user's todo list
+    return render_template('todocreate.html')
+
+
+@app.route("/todo/create", methods=['POST'])
+def todo_create():
+    add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")), request.form["course"], str(time.time()), request.form["date"])
+    todo_list = load_todos(session.get("loggedInUser"))
+    tasks = []
+    for task in todo_list:
+        tasks += [
+            {
+                'name': task['title'],
+                'text': task['description'],
+                'subject': task['course_name'],
+                'date': task['end_time']
+            }
+        ]
     return render_template('todo.html', tasks=tasks)
 
 

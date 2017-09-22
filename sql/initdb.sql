@@ -40,6 +40,18 @@ CREATE TABLE IF NOT EXISTS user_meetup_request (
   FOREIGN KEY (to_id) REFERENCES user_profile(id)
 );
 
+CREATE TABLE IF NOT EXISTS user_todo_list (
+  id 			INT(11) NOT NULL AUTO_INCREMENT,
+  title   VARCHAR(45) NOT NULL,
+  description   VARCHAR(200) NOT NULL,
+  user_id  INT(11) NOT NULL,
+  course_name  VARCHAR(45) NOT NULL,
+  create_time VARCHAR(45) NOT NULL,
+  end_time  VARCHAR(45) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES user_profile(id)
+);
+
 INSERT INTO user_profile (id, username, password, firstname, lastname, email, gender, dob, status, imgpath)
 VALUES (2, 'testuser1', 'testuser1', 'test1', 'user1', 'testuser1@test.com', 'MALE', '1997-01-01', 'CREATED', 'default.jpg');
 INSERT INTO user_profile (id, username, password, firstname, lastname, email, gender, dob, status, imgpath)

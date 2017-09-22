@@ -9,7 +9,8 @@ To Do
 <table class="table table-striped table-hover">
   <thead class="thead-inverse">
     <tr>
-      <th width="60%">Task</th>
+      <th width="20%">Task</th>
+      <th width="40%">Text</th>
       <th width="19%">Subject</th>
       <th width="20%">Due</th>
       <th width="1%"></th>
@@ -19,6 +20,7 @@ To Do
     {% for task in tasks %}
     <tr>
       <td>{{ task.name }}</td>
+      <td>{{ task.text }}</td>
       <td>{{ task.subject }}</td>
       <td>{{ task.date }}</td>
       <td><a href="#"><i class="fa fa-times"></i></a></td>
@@ -27,7 +29,7 @@ To Do
   </tbody>
 </table>
 
-<a class="btn btn-primary" href="#" role="button">Add new item</a>
+<a class="btn btn-primary" href="/todo/createpage" role="button">Add new item</a>
 
 <!-- <form class="form-row">
   <div class="col-sm-3">
