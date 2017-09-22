@@ -8,13 +8,23 @@ Create a new todo item
 {% block content %}
 <div class="container">
     <form action="/todo/create" id="form-todo" class="form-todo" method="POST">
-        <label for="name">Name</label>
-        <input name="name" type="text" id="name" class="form-control" placeholder="Name" autofocus>
+        <label for="title">Title</label>
+        <input name="title" type="text" id="title" class="form-control" placeholder="Title" autofocus required>
+        <br>
+        <label for="course">Course</label>
+        <input name="course" type="text" id="course" class="form-control" placeholder="Course" autofocus required>
+        <br>
+        <label for="description">Description</label>
+        <input name="description" type="text" id="description" class="form-control" placeholder="Description" autofocus required>
+        <br>
+        <label for="date">Due Date</label>
+        <input name="date" type="date" id="date" class="form-control" placeholder="Enter Due Date" required>
+        <br>
+        <button id="create" class="btn btn-lg btn-primary btn-block" type="submit">Add new todo item</button>
     </form>
 
 </div>
 
-<a class="btn btn-primary" href="/todo/create" role="button">Add new item</a>
 
 
 {% endblock %}

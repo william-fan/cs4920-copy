@@ -1,6 +1,8 @@
 import pymysql
 
 from classes.UserProfile import UserProfile
+from classes.ToDo import ToDo
+
 import status
 
 def load_profile(sql_row):
@@ -113,6 +115,42 @@ def register_user(username, password, email, firstname, lastname, gender, dob):
         with connection.cursor() as cursor:
             # SQL
             sql = "INSERT INTO user_profile(id, username, password, firstname, lastname, email, gender, dob, status, imgpath) VALUES (null, '" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "', '" + email + "', '" + gender + "', '" + dob + "', '" + status.statuses[0] + "', 'default.jpg')"
+
+            # Execute query.
+            cursor.execute(sql)
+            connection.commit()
+
+    finally:
+        # Close connection.
+        connection.close()
+
+
+def load_todos():
+    connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058',password='WWCl5DaAea', db='sql12195058',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
+    todo_list = ()
+    try:
+        with connection.cursor() as cursor:
+            # SQL
+            sql = "SELECT * FROM todo_list"
+
+            # Execute query.
+            cursor.execute(sql)
+
+            todo_list = list(cursor.fetchall())
+
+    finally:
+        # Close connection.
+        connection.close()
+    return todo_list
+
+#add a to-do for a user
+def add_todo(id, title, description, user_id, course_name, create_time, end_time):
+
+    connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058', password='WWCl5DaAea', db='sql12195058', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor, autocommit=True)
+    try:
+        with connection.cursor() as cursor:
+            # SQL
+            sql = "INSERT INTO todo_list(id, title, description, user_id, course_name, create_time, end_time) VALUES (null, '" + title + "', '" + description + "', '" + user_id + "', '" + course_name + "', '" + create_time + "', '" + end_time + "')"
 
             # Execute query.
             cursor.execute(sql)

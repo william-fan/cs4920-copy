@@ -1,3 +1,4 @@
+import time
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import*
 import status
@@ -78,33 +79,35 @@ def available():
 def todo():
     logged_in_user = find_by_id(session.get("loggedInUser"))
     # TODO: get logged-in user's todo list
-    test = ToDo('Presentation', 'Monday 11 September', 'Monday 11 September', 'COMP4920', 'Finish pres')
-    tasks = [
-        {
-            'name': test.name,
-            'text': test.text,
-            'subject': test.subject,
-            'date': test.end_time
-        }
-    ]
+    # test = ToDo('Presentation', 'Monday 11 September', 'Monday 11 September', 'COMP4920', 'Finish pres')
+    todo_list = load_todos()
+    tasks = []
+    for task in todo_list :
+        tasks += [
+            {
+                'name': task.name,
+                'text': task.text,
+                'subject': task.subject,
+                'date': task.end_time
+            }
+        ]
 
     return render_template('todo.html', tasks=tasks)
 
-@app.route('/todo/create')
-def todo_create():
+
+@app.route('/todo/createpage')
+def todo_createpage():
     logged_in_user = find_by_id(session.get("loggedInUser"))
     # TODO: get logged-in user's todo list
-    test = ToDo('Presentation', 'Monday 11 September', 'Monday 11 September', 'COMP4920', 'Finish pres')
-    tasks = [
-        {
-            'name': test.name,
-            'text': test.text,
-            'subject': test.subject,
-            'date': test.end_time
-        }
-    ]
+    return render_template('todocreate.html')
 
-    return render_template('todocreate.html', tasks=tasks)
+
+@app.route("/todo/create", methods=['POST'])
+def todo_create():
+    add_todo(request.form["title"], request.form["course"], request.form["description"], session.get("loggedInUser"), time.strftime("%c"), request.form["date"])
+
+    return render_template('todo.html')
+
 
 def get_busy_times(courses):
     busy_times = []
