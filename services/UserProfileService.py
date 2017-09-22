@@ -125,13 +125,13 @@ def register_user(username, password, email, firstname, lastname, gender, dob):
         connection.close()
 
 
-def load_todos():
+def load_todos(id):
     connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058',password='WWCl5DaAea', db='sql12195058',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
     todo_list = ()
     try:
         with connection.cursor() as cursor:
             # SQL
-            sql = "SELECT * FROM todo_list"
+            sql = "SELECT * FROM user_todo_list WHERE user_id = " + str(id)
 
             # Execute query.
             cursor.execute(sql)
@@ -150,7 +150,7 @@ def add_todo(id, title, description, user_id, course_name, create_time, end_time
     try:
         with connection.cursor() as cursor:
             # SQL
-            sql = "INSERT INTO todo_list(id, title, description, user_id, course_name, create_time, end_time) VALUES (null, '" + title + "', '" + description + "', '" + user_id + "', '" + course_name + "', '" + create_time + "', '" + end_time + "')"
+            sql = "INSERT INTO user_todo_list(id, title, description, user_id, course_name, create_time, end_time) VALUES (null, '" + title + "', '" + description + "', '" + user_id + "', '" + course_name + "', '" + create_time + "', '" + end_time + "')"
 
             # Execute query.
             cursor.execute(sql)

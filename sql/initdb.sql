@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS user_meetup_request (
   FOREIGN KEY (to_id) REFERENCES user_profile(id)
 );
 
-CREATE TABLE IF NOT EXISTS todo_list (
+CREATE TABLE IF NOT EXISTS user_todo_list (
   id 			INT(11) NOT NULL AUTO_INCREMENT,
   title   VARCHAR(45) NOT NULL,
   description   VARCHAR(200) NOT NULL,

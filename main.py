@@ -79,16 +79,15 @@ def available():
 def todo():
     logged_in_user = find_by_id(session.get("loggedInUser"))
     # TODO: get logged-in user's todo list
-    # test = ToDo('Presentation', 'Monday 11 September', 'Monday 11 September', 'COMP4920', 'Finish pres')
-    todo_list = load_todos()
+    todo_list = load_todos(session.get("loggedInUser"))
     tasks = []
-    for task in todo_list :
+    for task in todo_list:
         tasks += [
             {
-                'name': task.name,
-                'text': task.text,
-                'subject': task.subject,
-                'date': task.end_time
+                'name': task['title'],
+                'text': task['description'],
+                'subject': task['course_name'],
+                'date': task['end_time']
             }
         ]
 
@@ -104,9 +103,19 @@ def todo_createpage():
 
 @app.route("/todo/create", methods=['POST'])
 def todo_create():
-    add_todo(request.form["title"], request.form["course"], request.form["description"], session.get("loggedInUser"), time.strftime("%c"), request.form["date"])
-
-    return render_template('todo.html')
+    add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")), request.form["course"], str(time.time()), request.form["date"])
+    todo_list = load_todos(session.get("loggedInUser"))
+    tasks = []
+    for task in todo_list:
+        tasks += [
+            {
+                'name': task['title'],
+                'text': task['description'],
+                'subject': task['course_name'],
+                'date': task['end_time']
+            }
+        ]
+    return render_template('todo.html', tasks=tasks)
 
 
 def get_busy_times(courses):
