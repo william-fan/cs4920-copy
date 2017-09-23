@@ -4,9 +4,9 @@ from services.UserProfileService import*
 import status
 
 from flask import Flask, render_template, url_for
-from classes.ToDo import ToDo
 app = Flask(__name__)
 app.secret_key = "secret-key"
+
 
 @app.route("/")
 def index():
@@ -14,6 +14,7 @@ def index():
         return redirect(url_for('available'))
     else:
         return render_template("signin.html")
+
 
 @app.route("/login", methods=['POST'])
 def login():
@@ -26,11 +27,13 @@ def login():
     else:
         return render_template("signin.html", error_message="Incorrect username or password")
 
+
 @app.route("/logout")
 def logout():
     session.pop('loggedInUser', None)
     session.clear()
     return render_template("signin.html")
+
 
 @app.route("/register", methods=['POST'])
 def register():
@@ -56,6 +59,7 @@ def register():
     register_user(username, password, email, firstname, lastname, gender, dob)
     return render_template("created.html")
 
+
 @app.route("/registerPage")
 def displaySignIn():
     return render_template("register.html")
@@ -75,15 +79,16 @@ def available():
     ]
     return render_template('available.html', available=available)
 
+
 @app.route('/todo')
 def todo():
-    logged_in_user = find_by_id(session.get("loggedInUser"))
-    # TODO: get logged-in user's todo list
     todo_list = load_todos(session.get("loggedInUser"))
     tasks = []
+    # add all todos into one list
     for task in todo_list:
         tasks += [
             {
+                'id': task['id'],
                 'name': task['title'],
                 'text': task['description'],
                 'subject': task['course_name'],
@@ -96,26 +101,20 @@ def todo():
 
 @app.route('/todo/createpage')
 def todo_createpage():
-    logged_in_user = find_by_id(session.get("loggedInUser"))
-    # TODO: get logged-in user's todo list
     return render_template('todocreate.html')
 
 
 @app.route("/todo/create", methods=['POST'])
 def todo_create():
-    add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")), request.form["course"], str(time.time()), request.form["date"])
-    todo_list = load_todos(session.get("loggedInUser"))
-    tasks = []
-    for task in todo_list:
-        tasks += [
-            {
-                'name': task['title'],
-                'text': task['description'],
-                'subject': task['course_name'],
-                'date': task['end_time']
-            }
-        ]
-    return render_template('todo.html', tasks=tasks)
+    add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")),
+             request.form["course"], str(time.time()), request.form["date"])
+    return todo()
+
+
+@app.route('/todo/delete/<todo_id>')
+def todo_delete(todo_id):
+    delete_todo(todo_id)
+    return todo()
 
 
 def get_busy_times(courses):
@@ -124,6 +123,7 @@ def get_busy_times(courses):
         for i in range(course['length']):
             busy_times.append({'day': course['day'], 'time': course['time']+i})
     return busy_times
+
 
 @app.route('/user/<userid>')
 def user(userid):
@@ -174,8 +174,8 @@ def user(userid):
 
     busy_times = get_busy_times(courses)
 
-
     return render_template('user.html', user=user, courses=courses, busy_times=busy_times)
+
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
@@ -189,6 +189,7 @@ def settings():
 @app.errorhandler(404)
 def page_not_found(e):
     return '404 <button onclick="window.history.back()">Go Back</button>', 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)
