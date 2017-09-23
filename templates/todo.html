@@ -23,7 +23,7 @@ To Do
       <td>{{ task.text }}</td>
       <td>{{ task.subject }}</td>
       <td>{{ task.date }}</td>
-      <td><a href="#"><i class="fa fa-times"></i></a></td>
+      <td><a href="/todo/delete/{{ task.id }}"><i class="fa fa-times"></i></a></td>
     </tr>
     {% endfor %}
   </tbody>

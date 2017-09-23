@@ -143,14 +143,29 @@ def load_todos(id):
         connection.close()
     return todo_list
 
-#add a to-do for a user
-def add_todo(id, title, description, user_id, course_name, create_time, end_time):
 
+def add_todo(id, title, description, user_id, course_name, create_time, end_time):
     connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058', password='WWCl5DaAea', db='sql12195058', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor, autocommit=True)
     try:
         with connection.cursor() as cursor:
             # SQL
             sql = "INSERT INTO user_todo_list(id, title, description, user_id, course_name, create_time, end_time) VALUES (null, '" + title + "', '" + description + "', '" + user_id + "', '" + course_name + "', '" + create_time + "', '" + end_time + "')"
+
+            # Execute query.
+            cursor.execute(sql)
+            connection.commit()
+
+    finally:
+        # Close connection.
+        connection.close()
+
+
+def delete_todo(id):
+    connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058', password='WWCl5DaAea', db='sql12195058', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor, autocommit=True)
+    try:
+        with connection.cursor() as cursor:
+            # SQL
+            sql = "DELETE FROM user_todo_list WHERE id = " + str(id)
 
             # Execute query.
             cursor.execute(sql)
