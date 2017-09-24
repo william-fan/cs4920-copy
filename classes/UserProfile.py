@@ -2,7 +2,7 @@ import pymysql
 
 class UserProfile:
 
-    def __init__(self, user_id, username, password, first_name, last_name, email, gender, dob, status, imgpath):
+    def __init__(self, user_id, username, password, first_name, last_name, email, gender, dob, status, imgpath, degree):
         self._user_id = user_id
         self._username = username
         self._password = password
@@ -13,6 +13,7 @@ class UserProfile:
         self._dob = dob
         self._status = status
         self._imgpath = imgpath
+        self._degree = degree
 
     @property
     def user_id(self):
@@ -105,7 +106,10 @@ class UserProfile:
     def imgpath(self, imgpath):
         self._imgpath = imgpath
 
+    @property
+    def degree(self):
+        return self._degree
 
-
-
-
+    @degree.setter
+    def degree(self, degree):
+        self.degree = degree
