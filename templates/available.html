@@ -15,7 +15,7 @@ Available
 
       <div class="media-body">
         <h5 class="mt-0">{{ user.first_name }} {{ user.last_name }}</h5>
-        <a class="btn btn-outline-primary" href="{{ url_for('user', userid=user.userid) }}">Contact</a>
+        <a class="btn btn-outline-primary" href="{{ url_for('user', username=user.username) }}">Contact</a>
       </div>
   </div>
 {% endfor %}

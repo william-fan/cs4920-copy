@@ -72,12 +72,15 @@ def available():
     available = [
         { 'first_name': p.first_name,
           'last_name': p.last_name,
-          'userid': p.user_id,
+          'username': p.username,
           'imgpath': p.imgpath
         } for p in friends_of_user
         if p.status == status.statuses[0]
     ]
-    return render_template('available.html', available=available)
+
+
+    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    return render_template('available.html', logged_in_user=logged_in_user, available=available)
 
 
 @app.route('/todo')
@@ -96,12 +99,15 @@ def todo():
             }
         ]
 
-    return render_template('todo.html', tasks=tasks)
+    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks)
 
 
 @app.route('/todo/createpage')
 def todo_createpage():
-    return render_template('todocreate.html')
+
+    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    return render_template('todocreate.html', logged_in_user=logged_in_user)
 
 
 @app.route("/todo/create", methods=['POST'])
@@ -125,56 +131,17 @@ def get_busy_times(courses):
     return busy_times
 
 
-@app.route('/user/<userid>')
-def user(userid):
-    # TEMPORARY
-    logged_in_user = find_by_id(session.get("loggedInUser"))
-    # TODO: get profile page user's details
-    user = {
-        'first_name': logged_in_user.first_name,
-        'last_name': logged_in_user.last_name,
-        'userid': userid,
-        'status': logged_in_user.status,
-        'email': logged_in_user.email,
-        'degree': 'Computer Science'
-    }
+@app.route('/user/<username>')
+def user(username):
+    user = find_by_username(username)
 
-
-    # TODO: get profile page user's courses
-    courses = [
-        {
-            'day': 2,
-            'time': 12,
-            'length': 2,
-            'subject': 'COMP4920',
-            'activity': 'Lecture'
-        },
-        {
-            'day': 0,
-            'time': 12,
-            'length': 2,
-            'subject': 'COMP4920',
-            'activity': 'Seminar'
-        },
-        {
-            'day': 0,
-            'time': 18,
-            'length': 3,
-            'subject': 'COMP9444',
-            'activity': 'Lecture'
-        },
-        {
-            'day': 2,
-            'time': 15,
-            'length': 3,
-            'subject': 'COMP4418',
-            'activity': 'Lecture'
-        },
-    ]
+    courses = timetable_by_username(username)
 
     busy_times = get_busy_times(courses)
 
-    return render_template('user.html', user=user, courses=courses, busy_times=busy_times)
+
+    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    return render_template('user.html', logged_in_user=logged_in_user, user=user, courses=courses, busy_times=busy_times)
 
 
 @app.route('/settings', methods=['GET', 'POST'])
@@ -183,7 +150,9 @@ def settings():
         new_status = request.form.get('input_status')
         logged_in_user = find_by_id(session.get("loggedInUser"))
         status.change_status(logged_in_user, new_status)
-    return render_template('settings.html', statuses=status.statuses)
+
+    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    return render_template('settings.html', logged_in_user=logged_in_user, statuses=status.statuses)
 
 
 @app.errorhandler(404)

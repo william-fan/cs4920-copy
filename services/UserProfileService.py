@@ -174,3 +174,67 @@ def delete_todo(id):
     finally:
         # Close connection.
         connection.close()
+
+
+def get_user_id_from_username(username):
+    connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058',password='WWCl5DaAea', db='sql12195058',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
+    profile = None
+    try:
+        with connection.cursor() as cursor:
+            # SQL
+            sql = "SELECT id FROM user_profile WHERE username = '" + username + "'"
+
+            # Execute query.
+            cursor.execute(sql)
+
+            for row in cursor:
+                user_id = row['id']
+
+    finally:
+        # Close connection.
+        connection.close()
+    return user_id
+
+def get_username_from_user_id(user_id):
+    connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058',password='WWCl5DaAea', db='sql12195058',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
+    profile = None
+    try:
+        with connection.cursor() as cursor:
+            # SQL
+            sql = "SELECT username FROM user_profile WHERE id = {}".format(user_id)
+
+            # Execute query.
+            cursor.execute(sql)
+
+            for row in cursor:
+                username = row['username']
+
+    finally:
+        # Close connection.
+        connection.close()
+    return username
+
+def timetable_by_username(username):
+    user_id = get_user_id_from_username(username)
+
+    connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058',password='WWCl5DaAea', db='sql12195058',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
+    courses = []
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM user_class WHERE user_id = {}".format(user_id)
+
+            # Execute query.
+            cursor.execute(sql)
+
+            for row in cursor:
+                courses.append({
+                    'day': row['day'],
+                    'time': row['start_time'],
+                    'length': row['length'],
+                    'subject': row['course_name'],
+                    'activity': row['activity']
+                })
+    finally:
+        # Close connection.
+        connection.close()
+    return courses
