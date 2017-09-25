@@ -87,7 +87,6 @@ def available():
 def todo():
     todo_list = load_todos(session.get("loggedInUser"))
     tasks = []
-    # add all todos into one list
     for task in todo_list:
         tasks += [
             {
@@ -101,14 +100,6 @@ def todo():
 
     logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
     return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks)
-
-
-@app.route('/todo/createpage')
-def todo_createpage():
-
-    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
-    return render_template('todocreate.html', logged_in_user=logged_in_user)
-
 
 @app.route("/todo/create", methods=['POST'])
 def todo_create():
