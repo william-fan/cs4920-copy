@@ -1,6 +1,6 @@
 import time
 from flask import Flask, render_template, url_for, redirect, request, session
-from services.UserProfileService import*
+from services.UserProfileService import *
 import status
 
 from flask import Flask, render_template, url_for

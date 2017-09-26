@@ -1,4 +1,4 @@
-import pymysql
+import services.UserProfileService
 
 class UserProfile:
 
@@ -86,17 +86,7 @@ class UserProfile:
     @status.setter
     def status(self, status):
         self._status = status
-        connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058', password='WWCl5DaAea', db='sql12195058', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
-        try:
-            with connection.cursor() as cursor:
-                # SQL
-                sql = "UPDATE user_profile SET status = '" + status + "' WHERE id = " + str(self._user_id)
-                # Execute query.
-                cursor.execute(sql)
-                connection.commit()
-        finally:
-            # Close connection.
-            connection.close()
+        services.UserProfileService.update_user(self.user_id, status=self.status)
 
     @property
     def imgpath(self):
