@@ -1,9 +1,11 @@
 class MeetUpRequest:
 
-    def __init__(self, from_id, to_id, status):
+    def __init__(self, from_id, to_id, status, description, date):
         self._from_id = from_id
         self._to_id = to_id
         self._status = status
+        self._description = description
+        self._date = date
 
     @property
     def from_id(self):
@@ -28,3 +30,19 @@ class MeetUpRequest:
     @status.setter
     def status(self, status):
         self._status = status
+
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, description):
+        self._description = description
+
+    @property
+    def date(self):
+        return self._date
+
+    @date.setter
+    def date(self, date):
+        self._date = date

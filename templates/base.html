@@ -39,6 +39,59 @@
 
 
           <ul class="navbar-nav">
+              <li class="dropdown">
+              <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications (<b>{{notifications|length}}</b>)</a>
+              <ul class="dropdown-menu notify-drop">
+                <div class="notify-drop-title">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">Notifications (<b>{{notifications|length}}</b>)</div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 text-right"><a href="" class="rIcon allRead" data-tooltip="tooltip" data-placement="bottom" title="tümü okundu."><i class="fa fa-dot-circle-o"></i></a></div>
+                    </div>
+                </div>
+                <!-- end notify title -->
+                <!-- notify content -->
+
+                <div class="drop-content">
+                  {%for notif in notifications%}
+                    <!-- if we were the sender then that means someone has accepted our request, we put that shit in as well-->
+                    {%if notif.from_id == logged_in_user.user_id%}
+                      {%if notif.status == "ACCEPTED"%}
+                        <li>
+                            <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
+                              <a style="padding-left:15px;" href="">{{receiver_dict[notif.to_id].first_name}}</a> has ACCEPTED your request!<a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
+                              <p style="padding-left:15px;"><b>Your description</b>:{{notif.description}}</p>
+                              <p style="padding-left:15px;"><b>Your proposed date/time</b>: {{notif.date}}</p>
+
+                            </div>
+                        </li>
+                      {%else%}
+                        <li>
+                            <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
+                              <a style="padding-left:15px;" href="">{{receiver_dict[notif.to_id].first_name}}</a> has REJECTED your request! <a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
+                              <p style="padding-left:15px;"><b>Your description</b>:{{notif.description}}</p>
+                              <p style="padding-left:15px;"><b>Your proposed date/time</b>: {{notif.date}}</p>
+                            </div>
+                        </li>
+                      {%endif%}
+                    {%else%}
+                      <li>
+                          <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
+                            <a style="padding-left:15px;" href="">{{sender_dict[notif.from_id].first_name}}</a> has requested a meet up <a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
+                            <p style="padding-left:15px;"><b>Description</b>:{{notif.description}}</p>
+                            <p style="padding-left:15px;"><b>Date/Time</b>: {{notif.date}}</p>
+                            <a style="align:right; padding-left:15px;" href="/acceptMeetUpRequest?userId={{notif.from_id}}">Accept</a>
+                            <a style="align:right; padding-left:15px;" href="/rejectMeetUpRequest?userId={{notif.from_id}}">Reject</a>
+                          </div>
+                      </li>
+                    {%endif%}
+                  {%endfor%}
+                </div>
+                <div class="notify-drop-footer text-center">
+                    <a href=""><i class="fa fa-eye"></i> Your Notifications</a>
+                </div>
+
+              </ul>
+            </li>
             <li class="mr-2">
               <a href="/search" data-toggle="tooltip" data-placement="bottom" title="Search Users" data-original-title="Search Users" class="navbar-brand">
                 <i class="fa fa-search fa-fw"></i>

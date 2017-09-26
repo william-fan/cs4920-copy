@@ -1,6 +1,7 @@
 import time
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
+from services.MeetUpRequestService import *
 import status
 
 from flask import Flask, render_template, url_for
@@ -78,9 +79,14 @@ def available():
         if p.status == status.statuses[0]
     ]
 
+    logged_in_user = find_by_id(session.get("loggedInUser"))
 
-    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
-    return render_template('available.html', logged_in_user=logged_in_user, available=available)
+    notifications = load_notifications(session.get("loggedInUser"))
+    print(session.get("loggedInUser"))
+    sender_dict = map_sender_to_user(notifications)
+    receiver_dict = map_receiver_to_user(notifications)
+    return render_template('available.html', logged_in_user=logged_in_user, available=available,
+                           notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route('/todo')
@@ -98,8 +104,13 @@ def todo():
             }
         ]
 
-    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
-    return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks)
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+
+    notifications = load_notifications(session.get("loggedInUser"))
+    print(session.get("loggedInUser"))
+    sender_dict = map_sender_to_user(notifications)
+    receiver_dict = map_receiver_to_user(notifications)
+    return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 @app.route("/todo/create", methods=['POST'])
 def todo_create():
@@ -130,9 +141,13 @@ def user(username):
 
     busy_times = get_busy_times(courses)
 
+    logged_in_user = find_by_id(session.get("loggedInUser"))
 
-    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
-    return render_template('user.html', logged_in_user=logged_in_user, user=user, courses=courses, busy_times=busy_times)
+    notifications = load_notifications(session.get("loggedInUser"))
+    print(session.get("loggedInUser"))
+    sender_dict = map_sender_to_user(notifications)
+    receiver_dict = map_receiver_to_user(notifications)
+    return render_template('user.html', logged_in_user=logged_in_user, user=user, courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route("/class/create", methods=['POST'])
@@ -167,8 +182,13 @@ def settings():
         logged_in_user = find_by_id(session.get("loggedInUser"))
         status.change_status(logged_in_user, new_status)
 
-    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
-    return render_template('settings.html', logged_in_user=logged_in_user, statuses=status.statuses)
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+
+    notifications = load_notifications(session.get("loggedInUser"))
+    print(session.get("loggedInUser"))
+    sender_dict = map_sender_to_user(notifications)
+    receiver_dict = map_receiver_to_user(notifications)
+    return render_template('settings.html', logged_in_user=logged_in_user, statuses=status.statuses, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route("/search", methods=['GET'])
@@ -182,9 +202,57 @@ def user_search():
           'imgpath': p['imgpath']
         } for p in results
     ]
-    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
-    return render_template('search.html', logged_in_user=logged_in_user, results=profiles)
+    logged_in_user = find_by_id(session.get("loggedInUser"))
 
+    notifications = load_notifications(session.get("loggedInUser"))
+    print(session.get("loggedInUser"))
+    sender_dict = map_sender_to_user(notifications)
+    receiver_dict = map_receiver_to_user(notifications)
+    return render_template('search.html', logged_in_user=logged_in_user, results=profiles, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+
+def load_notifications(user_id):
+    notifications = find_user_requests(user_id)
+    notifications.extend(find_user_accepted_requests(user_id))
+    notifications.extend(find_user_rejected_requests(user_id))
+    return notifications
+
+def map_sender_to_user(notifications):
+    map = {}
+    for n in notifications:
+        map[n.from_id] = find_by_id(n.from_id)
+    return map
+
+def map_receiver_to_user(notifications):
+    map = {}
+    for n in notifications:
+        map[n.to_id] = find_by_id(n.to_id)
+    return map
+
+@app.route('/sendMeetUpRequest', methods=['POST', 'GET'])
+def send_meetup_request():
+    from_user_id = session.get("loggedInUser")
+    to_user_id = request.form["userId"]
+    date = request.form["date"]
+    time = request.form["time"]
+    date_time = date + " " + time
+    description = request.form["description"]
+    send_request(from_user_id, to_user_id, description, date_time)
+
+    return redirect(url_for('available'))
+
+@app.route('/acceptMeetUpRequest', methods=['POST','GET'])
+def accept_meetup_request():
+    to_user_id = session.get("loggedInUser")
+    from_user_id = request.args.get("userId")
+    accept_request(from_user_id, to_user_id)
+    return redirect(url_for('available'))
+
+@app.route('/rejectMeetUpRequest', methods=['POST', 'GET'])
+def reject_meetup_request():
+    to_user_id = session.get("loggedInUser")
+    from_user_id = request.args.get("userId")
+    reject_request(from_user_id, to_user_id)
+    return redirect(url_for('available'))
 
 @app.errorhandler(404)
 def page_not_found(e):
