@@ -166,6 +166,21 @@ def settings():
     return render_template('settings.html', logged_in_user=logged_in_user, statuses=status.statuses)
 
 
+@app.route("/search", methods=['GET'])
+def user_search():
+    search_query = request.args.get('q')
+    results = search_users(search_query)
+    profiles = [
+        { 'first_name': p['firstname'],
+          'last_name': p['lastname'],
+          'username': p['username'],
+          'imgpath': p['imgpath']
+        } for p in results
+    ]
+    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    return render_template('search.html', logged_in_user=logged_in_user, results=profiles)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return '404 <button onclick="window.history.back()">Go Back</button>', 404

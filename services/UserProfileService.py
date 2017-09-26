@@ -150,3 +150,13 @@ def delete_todo(id):
 def add_class(user_id, course_name, start_time, day, length, activity):
     sql = "insert into user_class (user_id, course_name, start_time, day, length, activity) values ({}, '{}', {}, {}, {}, '{}')".format(user_id, course_name, start_time, day, length, activity)
     table = execute_sql(sql)
+
+
+def search_users(query):
+    # search users based on query
+    # concat both first name and last name, search last name only, search first name only
+    # unsanitised so far
+    sql = "SELECT * FROM user_profile WHERE CONCAT(firstname, ' ', lastname) LIKE '%s%%' OR lastname LIKE '%s%%' OR firstname LIKE '%s%%'" % (query, query, query)
+    table = execute_sql(sql)
+    user_list = list(table.fetchall())
+    return user_list
