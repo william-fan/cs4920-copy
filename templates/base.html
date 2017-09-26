@@ -93,8 +93,10 @@
               </ul>
             </li>
             <li class="mr-2">
-              <a href="/search" data-toggle="tooltip" data-placement="bottom" title="Search Users" data-original-title="Search Users" class="navbar-brand">
-                <i class="fa fa-search fa-fw"></i>
+              <form action="/search" id="form-search" class="form-search" method="GET">
+                    <input name="q" type="text" id="search" class="form-control" placeholder="Search for name" title="Search" autofocus required>
+                    <input type="submit" style="display: none"/>
+              </form>
               </a>
             </li>
             <li class="nav-item dropdown">
