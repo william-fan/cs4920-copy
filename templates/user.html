@@ -46,7 +46,10 @@
       {% for day in range(0, 5) %}
         {% for course in courses %}
           {% if course.day == day and course.time == time %}
-            <td class="subject text-center align-middle" rowspan="{{ course.length }}">{{ course.subject }}<br />{{ course.activity }}</td>
+            <td class="subject text-center align-middle" rowspan="{{ course.length }}">
+              {% if logged_in_user == user.username %}<a href="/class/delete/{{ course.id }}"><i class="fa fa-times"></i></a>{% endif %}
+              {{ course.subject }}<br />{{ course.activity }}
+            </td>
           {% endif %}
         {% endfor %}
 
@@ -72,7 +75,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addClassLabel">Add new item</h5>
+        <h5 class="modal-title" id="addClassLabel">Add class</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -116,7 +119,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button id="create" class="btn btn-primary" type="submit">Add item</button>
+          <button id="create" class="btn btn-primary" type="submit">Add class</button>
         </div>
       </form>
     </div>

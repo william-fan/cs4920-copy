@@ -92,7 +92,7 @@ def update_user(user_id, username=None, password=None, email=None, firstname=Non
     # only do stuff if something was changed
     if sql != "UPDATE user_profile SET ":
         sql = sql[:-2] # take off the last comma and space
-        sql += " WHERE id = " + str(user_id) 
+        sql += " WHERE id = " + str(user_id)
         table = execute_sql(sql)
 
 
