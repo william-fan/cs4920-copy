@@ -10,8 +10,8 @@ To Do
   <thead class="thead-inverse">
     <tr>
       <th width="20%">Task</th>
-      <th width="40%">Text</th>
       <th width="19%">Subject</th>
+      <th width="40%">Text</th>
       <th width="20%">Due</th>
       <th width="1%"></th>
     </tr>
@@ -20,8 +20,8 @@ To Do
     {% for task in tasks %}
     <tr>
       <td>{{ task.name }}</td>
-      <td>{{ task.text }}</td>
       <td>{{ task.subject }}</td>
+      <td>{{ task.text }}</td>
       <td>{{ task.date }}</td>
       <td><a href="/todo/delete/{{ task.id }}"><i class="fa fa-times"></i></a></td>
     </tr>
@@ -61,7 +61,7 @@ To Do
           </div>
           <div class="form-group">
             <label for="date" class="form-control-label">Due Date</label>
-            <input name="date" type="text" id="date" class="form-control" autofocus required>
+            <input name="date" type="date" id="date" class="form-control" autofocus required>
           </div>
         </div>
         <div class="modal-footer">
