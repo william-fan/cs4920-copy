@@ -121,6 +121,7 @@ def timetable_by_username(username):
     courses = []
     for row in table:
         courses.append({
+            'id': row['id'],
             'day': row['day'],
             'time': row['start_time'],
             'length': row['length'],
@@ -149,4 +150,8 @@ def delete_todo(id):
 
 def add_class(user_id, course_name, start_time, day, length, activity):
     sql = "insert into user_class (user_id, course_name, start_time, day, length, activity) values ({}, '{}', {}, {}, {}, '{}')".format(user_id, course_name, start_time, day, length, activity)
+    table = execute_sql(sql)
+
+def delete_class(id):
+    sql = "DELETE FROM user_class WHERE id = " + str(id)
     table = execute_sql(sql)
