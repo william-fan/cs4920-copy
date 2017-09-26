@@ -16,7 +16,31 @@ Available
       <div class="media-body">
         <h5 class="mt-0">{{ user.first_name }} {{ user.last_name }}</h5>
         <a class="btn btn-outline-primary" href="{{ url_for('user', username=user.username) }}">Contact</a>
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#{{ user.first_name }}">Open Modal</button>
       </div>
+  </div>
+
+
+  <!-- Modal -->
+  <div id="{{ user.first_name }}" class="modal fade" role="dialog">
+
+    <form action="/sendMeetUpRequest" method="POST">
+      <div class="container">
+        <div class="form-group">
+          <label for="description">Meet-up Details:</label>
+          <input type="textarea" class="form-control" id="description">
+        </div>
+        <div class="form-group">
+          <label for="date">Date:</label>
+          <input type="date" class="form-control" id="date">
+        </div>
+        <div class="form-group">
+          <label for="time">Time:</label>
+          <input type="time" class="form-control" id="time">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+  </form>
   </div>
 {% endfor %}
 </div>

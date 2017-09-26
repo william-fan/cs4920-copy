@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS user_meetup_request (
   to_id     INT (11) NOT NULL,
   status    VARCHAR(45) NOT NULL,
   description VARCHAR(45) NOT NULL,
+  date        VARCHAR(45) NOT NULL,
   FOREIGN KEY (from_id) REFERENCES user_profile(id),
   FOREIGN KEY (to_id) REFERENCES user_profile(id)
 );
