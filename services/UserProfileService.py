@@ -190,6 +190,21 @@ def add_class(user_id, course_name, start_time, day, length, activity):
         # Close connection.
         connection.close()
 
+def delete_class(id):
+    connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058', password='WWCl5DaAea', db='sql12195058', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor, autocommit=True)
+    try:
+        with connection.cursor() as cursor:
+            # SQL
+            sql = "DELETE FROM user_class WHERE id = {}".format(id)
+
+            # Execute query.
+            cursor.execute(sql)
+            connection.commit()
+
+    finally:
+        # Close connection.
+        connection.close()
+
 
 def get_user_id_from_username(username):
     connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058',password='WWCl5DaAea', db='sql12195058',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)
@@ -243,6 +258,7 @@ def timetable_by_username(username):
 
             for row in cursor:
                 courses.append({
+                    'id': row['id'],
                     'day': row['day'],
                     'time': row['start_time'],
                     'length': row['length'],
