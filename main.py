@@ -154,6 +154,11 @@ def class_create():
     logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
     return redirect(url_for('user', username=logged_in_user))
 
+@app.route('/class/delete/<class_id>')
+def class_delete(class_id):
+    delete_class(class_id)
+    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    return redirect(url_for('user', username=logged_in_user))
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():

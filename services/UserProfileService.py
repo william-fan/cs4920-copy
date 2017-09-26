@@ -92,7 +92,7 @@ def update_user(user_id, username=None, password=None, email=None, firstname=Non
     # only do stuff if something was changed
     if sql != "UPDATE user_profile SET ":
         sql = sql[:-2] # take off the last comma and space
-        sql += " WHERE id = " + str(user_id) 
+        sql += " WHERE id = " + str(user_id)
         table = execute_sql(sql)
 
 
@@ -121,6 +121,7 @@ def timetable_by_username(username):
     courses = []
     for row in table:
         courses.append({
+            'id': row['id'],
             'day': row['day'],
             'time': row['start_time'],
             'length': row['length'],
@@ -160,3 +161,7 @@ def search_users(query):
     table = execute_sql(sql)
     user_list = list(table.fetchall())
     return user_list
+
+def delete_class(id):
+    sql = "DELETE FROM user_class WHERE id = " + str(id)
+    table = execute_sql(sql)

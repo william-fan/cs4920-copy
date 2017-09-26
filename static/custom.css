@@ -18,4 +18,12 @@ body {
 
 .subject {
   background-color: cadetblue;
+  position: relative;
+}
+
+.subject a {
+  color: black;
+  position: absolute;
+  top: 0px;
+  right: 5px;
 }
