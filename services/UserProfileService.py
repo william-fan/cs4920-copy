@@ -175,6 +175,21 @@ def delete_todo(id):
         # Close connection.
         connection.close()
 
+def add_class(user_id, course_name, start_time, day, length, activity):
+    connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058', password='WWCl5DaAea', db='sql12195058', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor, autocommit=True)
+    try:
+        with connection.cursor() as cursor:
+            # SQL
+            sql = "insert into user_class (user_id, course_name, start_time, day, length, activity) values ({}, '{}', {}, {}, {}, '{}')".format(user_id, course_name, start_time, day, length, activity)
+
+            # Execute query.
+            cursor.execute(sql)
+            connection.commit()
+
+    finally:
+        # Close connection.
+        connection.close()
+
 
 def get_user_id_from_username(username):
     connection = pymysql.connect(host='sql12.freemysqlhosting.net', user='sql12195058',password='WWCl5DaAea', db='sql12195058',charset='utf8mb4',cursorclass=pymysql.cursors.DictCursor)

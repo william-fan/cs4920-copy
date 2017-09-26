@@ -135,6 +135,26 @@ def user(username):
     return render_template('user.html', logged_in_user=logged_in_user, user=user, courses=courses, busy_times=busy_times)
 
 
+@app.route("/class/create", methods=['POST'])
+def class_create():
+
+    user_id = str(session.get("loggedInUser"))
+    course_name = request.form["course"]
+    start_time = request.form["time"][:-3]
+
+    day_numbers = {"Monday": 0, "Tuesday": 1, "Wednesday": 2, "Thursday": 3, "Friday": 4}
+    day = day_numbers[request.form["day"]]
+
+    length = request.form["length"]
+    activity = request.form["activity"]
+
+
+    add_class(user_id, course_name, start_time, day, length, activity)
+
+    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    return redirect(url_for('user', username=logged_in_user))
+
+
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     if request.method == 'POST':

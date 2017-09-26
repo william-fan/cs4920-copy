@@ -13,7 +13,7 @@
       <img class="img-fluid" src="/static/img/users/{{ user.username }}.png" width="200" height="200" alt="{{ user.first_name }} {{ user.last_name }}">
     </div>
     <div class="col-sm-9">
-      <!-- <a href="/settings" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i> Edit</a> -->
+      {% if logged_in_user == user.username %} <a href="{{ url_for('settings') }}" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i> Edit</a> {% endif %}
       <p>
         <i class="fa fa-graduation-cap fa-fw"></i> {{ user.degree }}
         <br />
@@ -59,6 +59,73 @@
     {% endfor %}
   </tbody>
 </table>
+
+
+
+{% if logged_in_user == user.username %}
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addClass">
+  Add class
+</button>
+
+<div class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="addClassLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addClassLabel">Add new item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/class/create" id="form-todo" class="form-todo" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="course" class="form-control-label">Course</label>
+            <input name="course" type="text" id="course" class="form-control" placeholder="Course" autofocus required>
+          </div>
+          <div class="form-group">
+            <label for="time" class="form-control-label">Time</label>
+            <select name="time" id="time" class="form-control">
+              {% for time in range(9, 21) %}
+              <option>{{ time }}:00</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="day" class="form-control-label">Day</label>
+            <select name="day" id="day" class="form-control">
+              <option>Monday</option>
+              <option>Tuesday</option>
+              <option>Wednesday</option>
+              <option>Thursday</option>
+              <option>Friday</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="length" class="form-control-label">Length</label>
+            <select name="length" id="length" class="form-control">
+              {% for length in range(1, 6) %}
+              <option>{{ length }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="activity" class="form-control-label">Activity</label>
+            <input name="activity" type="text" id="activity" class="form-control" placeholder="Activity" autofocus required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="create" class="btn btn-primary" type="submit">Add item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+
 
 
 {% endblock %}
