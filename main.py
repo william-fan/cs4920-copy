@@ -197,21 +197,23 @@ def settings():
 @app.route("/search", methods=['GET'])
 def user_search():
     search_query = request.args.get('q')
-    results = search_users(search_query)
-    profiles = [
-        { 'first_name': p['firstname'],
-          'last_name': p['lastname'],
-          'username': p['username'],
-          'imgpath': p['imgpath']
-        } for p in results
-    ]
+    profiles = []
+    if search_query:
+        results = search_users(search_query)
+        profiles = [
+            { 'first_name': p['firstname'],
+              'last_name': p['lastname'],
+              'username': p['username'],
+              'imgpath': p['imgpath']
+            } for p in results
+        ]
     logged_in_user = find_by_id(session.get("loggedInUser"))
 
     notifications = load_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
-    return render_template('search.html', logged_in_user=logged_in_user, results=profiles, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    return render_template('search.html', logged_in_user=logged_in_user, results=profiles, count=len(profiles), notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 def load_notifications(user_id):
     notifications = find_user_requests(user_id)
