@@ -13,7 +13,7 @@
       <img class="img-fluid" src="/static/img/users/{{ user.username }}.png" width="200" height="200" alt="{{ user.first_name }} {{ user.last_name }}">
     </div>
     <div class="col-sm-9">
-      {% if logged_in_user == user.username %} <a href="{{ url_for('settings') }}" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i> Edit</a> {% endif %}
+      {% if current_user == user.username %} <a href="{{ url_for('settings') }}" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i> Edit</a> {% endif %}
       <p>
         <i class="fa fa-graduation-cap fa-fw"></i> {{ user.degree }}
         <br />
@@ -47,7 +47,7 @@
         {% for course in courses %}
           {% if course.day == day and course.time == time %}
             <td class="subject text-center align-middle" rowspan="{{ course.length }}">
-              {% if logged_in_user == user.username %}<a href="/class/delete/{{ course.id }}"><i class="fa fa-times"></i></a>{% endif %}
+              {% if current_user == user.username %}<a href="/class/delete/{{ course.id }}"><i class="fa fa-times"></i></a>{% endif %}
               {{ course.subject }}<br />{{ course.activity }}
             </td>
           {% endif %}
@@ -65,7 +65,7 @@
 
 
 
-{% if logged_in_user == user.username %}
+{% if current_user == user.username %}
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addClass">
   Add class
