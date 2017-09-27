@@ -70,7 +70,14 @@ def displaySignIn():
 def available():
     # TODO: get list of logged-in user's friends that are available
     friends_of_user = friends_by_id(session.get("loggedInUser"))
-    available = [ p for p in friends_of_user
+    available = [
+        {
+         'user_id': p.user_id,
+         'first_name': p.first_name,
+         'last_name': p.last_name,
+         'username': p.username,
+         'imgpath': p.imgpath
+         } for p in friends_of_user
         if p.status == status.statuses[0]
     ]
 
