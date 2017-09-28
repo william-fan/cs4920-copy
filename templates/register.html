@@ -23,28 +23,40 @@
       </div>
       {% endif %}
       <form action="/register" id="form-register" class="form-register" method="POST">
-        <h2 class="form-register-heading">Register with us</h2>
-        <label for="username">Username</label>
-        <input name="username" type="text" id="username" class="form-control" placeholder="Enter Username" required autofocus>
-        <label for="password">Password</label>
-        <input name="password" type="password" id="password" class="form-control" placeholder="Enter Password" required>
-        <label for="email">Email</label>
-        <input name="email" type="email" id="email" class="form-control" placeholder="Enter Email" required>
-        <label for="firstname">Firstname</label>
-        <input name="firstname" type="text" id="firstname" class="form-control" placeholder="Enter Firstname" required>
-        <label for="lastname">Lastname</label>
-        <input name="lastname" type="text" id="lastname" class="form-control" placeholder="Enter Lastname" required>
-        <label for="gender">Select Gender:</label>
-        <select name="gender" class="form-control" id="gender">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
-        <label for="date">DOB</label>
-        <input name="dob" type="date" id="date" class="form-control" placeholder="Enter DOB" required>
-        <button id="register" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-        <div class="register-login">
-          <a href="/">Login</a>
+        <h2 class="form-register-heading">Register</h2>
+        <div class="form-group">
+          <label for="username" class="col-form-label">Username</label>
+          <input name="username" type="text" id="username" class="form-control" placeholder="Enter Username" required autofocus>
         </div>
+        <div class="form-group">
+          <label for="password" class="col-form-label">Password</label>
+          <input name="password" type="password" id="password" class="form-control" placeholder="Enter Password" required>
+        </div>
+        <div class="form-group">
+          <label for="email" class="col-form-label">Email</label>
+          <input name="email" type="email" id="email" class="form-control" placeholder="Enter Email" required>
+        </div>
+        <div class="form-group">
+          <label for="firstname" class="col-form-label">First Name</label>
+          <input name="firstname" type="text" id="firstname" class="form-control" placeholder="Enter First Name" required>
+        </div>
+        <div class="form-group">
+          <label for="lastname" class="col-form-label">Last Name</label>
+          <input name="lastname" type="text" id="lastname" class="form-control" placeholder="Enter Last Name" required>
+        </div>
+        <div class="form-group">
+          <label for="gender" class="col-form-label">Select Gender:</label>
+          <select name="gender" class="form-control" id="gender">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="date" class="col-form-label">DOB</label>
+          <input name="dob" type="date" id="date" class="form-control" placeholder="Enter DOB" required>
+        </div>
+        <button id="register" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <a class="btn btn-lg btn-secondary btn-block" href="/">Cancel</a>
       </form>
 
     </div>
