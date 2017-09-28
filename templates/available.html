@@ -10,13 +10,16 @@ Available
 <div class="row">
 {% for user in available %}
   <div class="media my-2 col-xl-3 col-lg-4 col-md-6">
-    <img class="d-flex mr-3" src="/static/img/users/{{ user.imgpath }}" width="64" height="64" alt="{{ user.first_name }} {{ user.last_name }}">
+    <a href="{{ url_for('user', username=user.username) }}">
+      <img class="d-flex mr-3" src="/static/img/users/{{ user.imgpath }}" width="64" height="64" alt="{{ user.first_name }} {{ user.last_name }}">
+    </a>
 
 
       <div class="media-body">
-        <h5 class="mt-0">{{ user.first_name }} {{ user.last_name }}</h5>
-        <a class="btn btn-outline-primary" href="{{ url_for('user', username=user.username) }}">Contact</a>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{user.user_id}}">Request meet-up with {{user.first_name}}</button>
+        <a href="{{ url_for('user', username=user.username) }}" style="color:black">
+          <h5 class="mt-0">{{ user.first_name }} {{ user.last_name }}</h5>
+        </a>
+        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#{{user.user_id}}">Contact</button>
 
         <!-- Modal -->
         <div class="modal fade" id="{{user.user_id}}" tabindex="-1" role="dialog" aria-labelledby="addTodoLabel" aria-hidden="true">
