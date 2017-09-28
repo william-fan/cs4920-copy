@@ -153,7 +153,7 @@ def user(username):
 
     notifications = load_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))
-    
+
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
     return render_template('user.html', logged_in_user=logged_in_user, user=user, courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
@@ -186,12 +186,11 @@ def class_delete(class_id):
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
+    logged_in_user = find_by_id(session.get("loggedInUser"))
     if request.method == 'POST':
         new_status = request.form.get('input_status')
-        logged_in_user = find_by_id(session.get("loggedInUser"))
         status.change_status(logged_in_user, new_status)
 
-    logged_in_user = find_by_id(session.get("loggedInUser"))
 
     notifications = load_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))
