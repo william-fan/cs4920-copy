@@ -2,7 +2,7 @@ import time
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
-import status
+import utilities.profile
 
 from flask import Flask, render_template, url_for
 app = Flask(__name__)
@@ -78,7 +78,7 @@ def available():
          'username': p.username,
          'imgpath': p.imgpath
          } for p in friends_of_user
-        if p.status == status.statuses[0]
+        if p.status == utilities.profile.statuses[0]
     ]
 
     logged_in_user = find_by_id(session.get("loggedInUser"))
@@ -183,7 +183,7 @@ def settings():
     if request.method == 'POST':
         new_status = request.form.get('input_status')
         logged_in_user = find_by_id(session.get("loggedInUser"))
-        status.change_status(logged_in_user, new_status)
+        utilities.profile.change_status(logged_in_user, new_status)
 
     logged_in_user = find_by_id(session.get("loggedInUser"))
 
@@ -191,7 +191,7 @@ def settings():
     print(session.get("loggedInUser"))
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
-    return render_template('settings.html', logged_in_user=logged_in_user, statuses=status.statuses, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    return render_template('settings.html', logged_in_user=logged_in_user, statuses=utilities.profile.statuses, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route("/search", methods=['GET'])

@@ -3,7 +3,7 @@ from services.SQLService import *
 from classes.UserProfile import UserProfile
 from classes.ToDo import ToDo
 
-import status
+import utilities.profile
 
 
 def load_profile(sql_row):
