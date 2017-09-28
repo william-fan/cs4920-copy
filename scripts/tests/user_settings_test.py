@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3.6
 import sys
 sys.path.append('./')
-from status import *
+from utilities.profile import *
 from services.UserProfileService import *
 import classes.UserProfile
 

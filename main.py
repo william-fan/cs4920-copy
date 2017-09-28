@@ -4,7 +4,7 @@ from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
 from services.FriendRequestService import *
-import status
+import utilities.profile
 
 from flask import Flask, render_template, url_for
 app = Flask(__name__)
@@ -80,7 +80,7 @@ def available():
          'username': p.username,
          'imgpath': p.imgpath
          } for p in friends_of_user
-        if p.status == status.statuses[0]
+        if p.status == utilities.profile.statuses[0]
     ]
 
     logged_in_user = find_by_id(session.get("loggedInUser"))
@@ -187,16 +187,39 @@ def class_delete(class_id):
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     logged_in_user = find_by_id(session.get("loggedInUser"))
+    error_message = ''
     if request.method == 'POST':
-        new_status = request.form.get('input_status')
-        status.change_status(logged_in_user, new_status)
+        old_pw = request.form.get('input-old-password')
+        if old_pw == logged_in_user.password:
+            new_username = request.form.get('input-username')
+            if not utilities.profile.change_username(logged_in_user, new_username):
+                error_message += 'Username already taken.'
+            new_password = request.form.get('input-new-password')
+            utilities.profile.change_password(logged_in_user, new_password)            
+            new_email = request.form.get('input-email')
+            if not utilities.profile.change_email(logged_in_user, new_email):
+                error_message += ('\nEmail already taken.' if error_message else 'Email already taken.')            
+            new_status = request.form.get('input-status')
+            utilities.profile.change_status(logged_in_user, new_status)
+            new_firstname = request.form.get('input-firstname')
+            utilities.profile.change_firstname(logged_in_user, new_firstname)
+            new_lastname = request.form.get('input-lastname')
+            utilities.profile.change_lastname(logged_in_user, new_lastname)
+            new_gender = request.form.get('input-gender')
+            utilities.profile.change_gender(logged_in_user, new_gender)
+            new_dob = request.form.get('input-dob')
+            utilities.profile.change_dob(logged_in_user, new_dob)
+            new_degree = request.form.get('input-degree')
+            utilities.profile.change_degree(logged_in_user, new_degree)
+        else:
+            error_message = 'Incorrect password.'
 
 
     notifications = load_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
-    return render_template('settings.html', logged_in_user=logged_in_user, statuses=status.statuses, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    return render_template('settings.html', logged_in_user=logged_in_user, statuses=utilities.profile.statuses, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, error_message=error_message)
 
 
 @app.route("/search", methods=['GET'])
