@@ -38,6 +38,6 @@ def reject_request(from_id, to_id):
     table = execute_sql(sql)
 
 
-def send_request(from_id, to_id, description):
-    sql = "INSERT INTO user_meetup_request(from_id, to_id, status, description) VALUES (" + str(from_id) + ", " + str(to_id) + ", 'PENDING', '" + description + "')"
+def send_request(from_id, to_id, description, date_time):
+    sql = "INSERT INTO user_meetup_request(from_id, to_id, status, description, date) VALUES (" + str(from_id) + ", " + str(to_id) + ", 'PENDING', '" + description + "', '" + date_time + "')"
     table = execute_sql(sql)

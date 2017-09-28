@@ -16,10 +16,10 @@ Available
       <div class="media-body">
         <h5 class="mt-0">{{ user.first_name }} {{ user.last_name }}</h5>
         <a class="btn btn-outline-primary" href="{{ url_for('user', username=user.username) }}">Contact</a>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#todouserid">Request meet-up with {{user.first_name}}</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{user.user_id}}">Request meet-up with {{user.first_name}}</button>
 
         <!-- Modal -->
-        <div class="modal fade" id="todouserid" tabindex="-1" role="dialog" aria-labelledby="addTodoLabel" aria-hidden="true">
+        <div class="modal fade" id="{{user.user_id}}" tabindex="-1" role="dialog" aria-labelledby="addTodoLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -29,7 +29,7 @@ Available
                 </button>
               </div>
               <form action="/sendMeetUpRequest" id="form-todo" class="form-todo" method="POST">
-                <input type="hidden" name="userId" value="todouserid">
+                <input type="hidden" name="userId" value="{{user.user_id}}">
                 <div class="modal-body">
                   <div class="form-group">
                     <label for="description" class="form-control-label">Description</label>

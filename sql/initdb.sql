@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS user_profile (
 	dob			VARCHAR(45) DEFAULT NULL,
 	status		VARCHAR(45) DEFAULT NULL,
 	imgpath		VARCHAR(45) DEFAULT NULL,
+	degree          VARCHAR(45) DEFAULT NULL,
 	PRIMARY KEY (id)
 );
 
