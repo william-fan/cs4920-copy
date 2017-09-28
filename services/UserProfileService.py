@@ -11,14 +11,20 @@ def load_profile(sql_row):
 
 
 def friends_by_id(user_id):
-    sql = "SELECT * FROM user_profile"
+    sql = "SELECT * FROM user_friend WHERE user_id1="+str(user_id)
     table = execute_sql(sql)
     profiles = []
     for row in table:
-        if row["id"] != user_id:
-            profiles.append(load_profile(row))
+        profiles.append(row["user_id2"])
     return profiles
 
+def friends_by_profile(user_id):
+    sql = "SELECT * FROM user_friend WHERE user_id1="+str(user_id)
+    table = execute_sql(sql)
+    profiles = []
+    for row in table:
+        profiles.append(find_by_id(row["user_id2"]))
+    return profiles
 
 #Retreives a user based on email and pass
 def find_by_email_pass(email, password):

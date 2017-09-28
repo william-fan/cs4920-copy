@@ -71,7 +71,8 @@ def displaySignIn():
 @app.route('/available')
 def available():
     # TODO: get list of logged-in user's friends that are available
-    friends_of_user = friends_by_id(session.get("loggedInUser"))
+    friends_of_user = friends_by_profile(session.get("loggedInUser"))
+
     available = [
         {
          'user_id': p.user_id,
@@ -80,7 +81,7 @@ def available():
          'username': p.username,
          'imgpath': p.imgpath
          } for p in friends_of_user
-        if p.status == status.statuses[0]
+        if p.status == "Available"
     ]
 
     logged_in_user = find_by_id(session.get("loggedInUser"))
@@ -143,6 +144,9 @@ def get_busy_times(courses):
 
 @app.route('/user/<username>', methods=['GET'])
 def user(username):
+
+    friends_of_user = friends_by_id(session.get("loggedInUser"))
+
     user = find_by_username(username)
 
     courses = timetable_by_username(username)
@@ -153,10 +157,10 @@ def user(username):
 
     notifications = load_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))
-    
+
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
-    return render_template('user.html', logged_in_user=logged_in_user, user=user, courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route("/class/create", methods=['POST'])

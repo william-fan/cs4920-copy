@@ -21,7 +21,7 @@
         <br />
         <i class="fa fa-envelope fa-fw"></i> {{ user.email }}
         <br />
-        {% if current_user != user.username %}
+        {% if current_user != user.username and user.user_id not in friends_of_user %}
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addFriend">Add Friend</button>
         {% endif %}
       </p>
