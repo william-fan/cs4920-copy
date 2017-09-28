@@ -29,7 +29,7 @@ Search Results
                 </div>
             {% else %}
                 <div id="pages">
-                    <a class="btn btn-link" role="button" href="/search?q=b&page={{ loop.index }}">{{ loop.index }}</a>
+                    <a class="btn btn-link" role="button" href="/search?q={{ search }}&page={{ loop.index }}">{{ loop.index }}</a>
                 </div>
             {% endif %}
         {% endfor %}

@@ -265,7 +265,7 @@ def user_search():
     print(session.get("loggedInUser"))
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
-    return render_template('search.html', logged_in_user=logged_in_user, results=users, page=page, count=len(profiles), page_count=page_count, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    return render_template('search.html', logged_in_user=logged_in_user, search=search_query, results=users, page=page, count=len(profiles), page_count=page_count, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 def load_notifications(user_id):
