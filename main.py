@@ -1,5 +1,4 @@
 import time
-import datetime
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
@@ -228,8 +227,14 @@ def settings():
 
 @app.route("/search", methods=['GET'])
 def user_search():
+    # get arguments
     search_query = request.args.get('q')
+    page = request.args.get('page', default=1, type=int)
+    # set how many results per page
+    per_page = 1
+
     profiles = []
+    # if query exists
     if search_query:
         results = search_users(search_query)
         profiles = [
@@ -239,13 +244,29 @@ def user_search():
               'imgpath': p['imgpath']
             } for p in results
         ]
-    logged_in_user = find_by_id(session.get("loggedInUser"))
 
+    # split output into how many per page
+    output = [profiles[i:i + per_page] for i in range(0, len(profiles), per_page)]
+    page_count = len(output)
+    # if arguments out of range reset them
+    if page > len(output):
+        page = len(output)
+    elif page <= 0:
+        page = 1
+
+    # if no results found, set to empty array
+    if len(output) == 0:
+        users = []
+    else:
+        users = output[page - 1]
+
+    logged_in_user = find_by_id(session.get("loggedInUser"))
     notifications = load_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
-    return render_template('search.html', logged_in_user=logged_in_user, results=profiles, count=len(profiles), notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    return render_template('search.html', logged_in_user=logged_in_user, results=users, page=page, count=len(profiles), page_count=page_count, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+
 
 def load_notifications(user_id):
     notifications = find_user_requests(user_id)
