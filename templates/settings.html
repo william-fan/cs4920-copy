@@ -5,13 +5,63 @@ Settings
 
 {% block content %}
  <div class="form-group">
+
+  {% if error_message %}
+  <div class="alert alert-danger">{{error_message}}</div>
+  {% endif %}
+
   <form action="/settings" method="POST">
-    <label for="status">Status:</label>
-    <select class="form-control" name="input_status">
-      {% for status in statuses %}
-        <option {% if logged_in_user.status == status %}selected{% endif %}   >{{status}}</option>
-      {% endfor %}
-    </select>
+    <strong>Profile Information</strong></br>
+    <div class="form-group">
+      <label for="status">Status:</label>
+      <select class="form-control" name="input-status">
+        {% for status in statuses %}
+          <option {% if logged_in_user.status == status %}selected{% endif %}   >{{status}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="firstname">First Name:</label>
+        <input name="input-firstname" type="text" id="input-firstname" class="form-control" value="{{logged_in_user.first_name}}">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="lastname">Last Name:</label>
+        <input name="input-lastname" type="text" id="input-lastname" class="form-control" value="{{logged_in_user.last_name}}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="gender">Gender:</label>
+      <input name="input-gender" type="text" id="input-gender" class="form-control" value="{{logged_in_user.gender}}">
+    </div>
+
+    <div class="form-group">
+      <label for="dob">Date of Birth:</label>
+      <input name="input-dob" type="text" id="input-dob" class="form-control" value="{{logged_in_user.dob}}">
+    </div>
+    <div class="form-group">
+      <label for="degree">Degree:</label>
+      <input name="input-degree" type="text" id="input-degree" class="form-control" value="{{logged_in_user.degree}}">
+    </div>
+    </br>
+    <strong>Account Information</strong></br>
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input name="input-username" type="text" id="input-username" class="form-control" value="{{logged_in_user.username}}">
+    </div>
+    <div class="form-group">
+      <label for="password">Old Password</label>
+      <input name="input-old-password" type="password" id="input-old-password" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="password">New Password</label>
+      <input name="input-new-password" type="password" id="input-new-password" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input name="input-email" type="email" id="input-email" class="form-control" value="{{logged_in_user.email}}">
+    </div>
     </br>
     <button type="submit" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i>Edit Settings</button>
   </form>

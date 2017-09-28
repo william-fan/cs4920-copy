@@ -148,7 +148,7 @@
 
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="/static/img/users/{{ current_user }}.png" width="30" height="30" alt="">
+                <img src="/static/img/users/{{ logged_in_user.imgpath }}" width="30" height="30" alt="">
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="{{ url_for('user', username=current_user) }}"><i class="fa fa-user fa-fw"></i> Profile</a>

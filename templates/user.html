@@ -22,13 +22,9 @@
         <br />
         <i class="fa fa-envelope fa-fw"></i> {{ user.email }}
         <br />
-<<<<<<< HEAD
         {% if current_user != user.username and user.user_id not in friends_of_user %}
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addFriend">Add Friend</button>
         {% endif %}
-=======
-
->>>>>>> 606374567be020a63d67ea5a8890c76027da5e08
       </p>
       <!-- Modal -->
       <div class="modal fade" id="addFriend" tabindex="-1" role="dialog" aria-labelledby="addFriendLabel" aria-hidden="true">
