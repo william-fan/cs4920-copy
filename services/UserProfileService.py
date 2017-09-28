@@ -61,7 +61,7 @@ def find_by_id(id):
 
 #registers a user
 def register_user(username, password, email, firstname, lastname, gender, dob):
-    sql = "INSERT INTO user_profile(id, username, password, firstname, lastname, email, gender, dob, status, imgpath) VALUES (null, '" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "', '" + email + "', '" + gender + "', '" + dob + "', '" + utilties.profile.statuses[0] + "', 'default.jpg')"
+    sql = "INSERT INTO user_profile(id, username, password, firstname, lastname, email, gender, dob, status, imgpath) VALUES (null, '" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "', '" + email + "', '" + gender + "', '" + dob + "', '" + utilities.profile.statuses[0] + "', 'default.jpg')"
     table = execute_sql(sql)
 
 
