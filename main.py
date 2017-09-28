@@ -190,12 +190,11 @@ def class_delete(class_id):
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
+    logged_in_user = find_by_id(session.get("loggedInUser"))
     if request.method == 'POST':
         new_status = request.form.get('input_status')
-        logged_in_user = find_by_id(session.get("loggedInUser"))
         status.change_status(logged_in_user, new_status)
 
-    logged_in_user = find_by_id(session.get("loggedInUser"))
 
     notifications = load_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))

@@ -10,10 +10,11 @@
 <div class="profile">
   <div class="row">
     <div class="col-sm-3 text-center">
-      <img class="img-fluid" src="/static/img/users/{{ user.username }}.png" width="200" height="200" alt="{{ user.first_name }} {{ user.last_name }}">
+      <img class="img-fluid" src="/static/img/users/{{ user.imgpath }}" width="200" height="200" alt="{{ user.first_name }} {{ user.last_name }}">
     </div>
     <div class="col-sm-9">
       {% if current_user == user.username %} <a href="{{ url_for('settings') }}" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i> Edit</a> {% endif %}
+      {% if current_user != user.username %} <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addFriend"><i class="fa fa-plus fa-fw"></i> Add Friend</button> {% endif %}
       <p>
         <i class="fa fa-graduation-cap fa-fw"></i> {{ user.degree }}
         <br />
@@ -21,16 +22,20 @@
         <br />
         <i class="fa fa-envelope fa-fw"></i> {{ user.email }}
         <br />
+<<<<<<< HEAD
         {% if current_user != user.username and user.user_id not in friends_of_user %}
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addFriend">Add Friend</button>
         {% endif %}
+=======
+
+>>>>>>> 606374567be020a63d67ea5a8890c76027da5e08
       </p>
       <!-- Modal -->
-      <div class="modal fade" id="addFriend" tabindex="-1" role="dialog" aria-labelledby="addTodoLabel" aria-hidden="true">
+      <div class="modal fade" id="addFriend" tabindex="-1" role="dialog" aria-labelledby="addFriendLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="addTodoLabel">Add a friend!</h5>
+              <h5 class="modal-title" id="addFriendLabel">Add a friend!</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>

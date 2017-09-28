@@ -21,7 +21,7 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
       <div class="container">
         <a class="navbar-brand" href="/">
-          Name
+          uniManage
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -37,10 +37,12 @@
             </li>
           </ul>
 
-          <!-- Friend Requests -->
+
+
+
 
           <ul class="navbar-nav">
-              <li class="dropdown">
+            <li class="dropdown">
               <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Friend Requests <span class="badge badge-secondary">{{friends_notifications|length}}</span></a>
               <ul class="dropdown-menu notify-drop">
                 <div class="notify-drop-title">
@@ -84,12 +86,8 @@
 
               </ul>
             </li>
-          </ul>
 
-           <!-- Notifications -->
-
-          <ul class="navbar-nav">
-              <li class="dropdown">
+            <li class="dropdown">
               <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications <span class="badge badge-secondary">{{notifications|length}}</span></a>
               <ul class="dropdown-menu notify-drop">
                 <div class="notify-drop-title">
@@ -142,13 +140,12 @@
 
               </ul>
             </li>
-            <li class="mr-2">
-              <form action="/search" id="form-search" class="form-search" method="GET">
-                    <input name="q" type="text" id="search" class="form-control" placeholder="Search users" title="Search" autofocus>
-                    <input type="submit" style="display: none"/>
-              </form>
-              </a>
-            </li>
+
+            <form action="/search" id="form-search" class="form-inline" method="GET">
+                  <input name="q" type="text" id="search" class="form-control" placeholder="Search users" title="Search" autofocus>
+                  <input type="submit" style="display: none"/>
+            </form>
+
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="/static/img/users/{{ current_user }}.png" width="30" height="30" alt="">

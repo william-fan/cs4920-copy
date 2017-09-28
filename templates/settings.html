@@ -8,12 +8,12 @@ Settings
   <form action="/settings" method="POST">
     <label for="status">Status:</label>
     <select class="form-control" name="input_status">
-        {% for status in statuses %}
-            <option>{{status}}</option>
-        {% endfor %}
+      {% for status in statuses %}
+        <option {% if logged_in_user.status == status %}selected{% endif %}   >{{status}}</option>
+      {% endfor %}
     </select>
     </br>
     <button type="submit" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i>Edit Settings</button>
   </form>
-</div> 
+</div>
 {% endblock %}
