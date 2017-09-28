@@ -110,5 +110,5 @@ class UserProfile:
 
     @degree.setter
     def degree(self, degree):
-        self.degree = degree
+        self._degree = degree
         services.UserProfileService.update_user(self.user_id, degree=self.degree)

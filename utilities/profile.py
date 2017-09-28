@@ -38,7 +38,7 @@ def change_dob(user, newdob):
         user.dob = newdob
 
 def change_status(user, newstatus):
-    if newstatus != user.status:
+    if newstatus != user.status and newstatus in statuses:
         user.status = newstatus
         
 def change_imgpath(user, newimgpath):

@@ -96,11 +96,15 @@ def test_get_username_from_user_id():
 
 
 print("==Testing UserProfileService.py...==")
-test_find_by_email_pass()
-test_find_by_email()
-test_find_by_username()
-test_find_by_id()
-test_update_user()
-test_get_user_id_from_username()
-test_get_username_from_user_id()
+try:
+    test_find_by_email_pass()
+    test_find_by_email()
+    test_find_by_username()
+    test_find_by_id()
+    test_update_user()
+    test_get_user_id_from_username()
+    test_get_username_from_user_id()
+except:
+    update_user(2, username='service', password='service', firstname='servicefirst', lastname='servicelast', email='service@service.com', gender='servicegender', dob='servicedob', status='Available', imgpath='default.jpg', degree='Computer Science')
+    assert False
 print("==UserProfileService.py OK!==")
