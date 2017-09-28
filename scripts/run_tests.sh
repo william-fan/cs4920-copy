@@ -10,11 +10,11 @@ echo "=== RUNNING TESTS ==="
 /usr/local/bin/python3.6 ./scripts/tests/user_profile_service_test.py
 if [ $? -ne 0 ]; then
   echo "===There was an error!==="
-  exit $?
+  exit 1
 fi
 /usr/local/bin/python3.6 ./scripts/tests/user_settings_test.py
 if [ $? -ne 0 ]; then
   echo "===There was an error!==="
-  exit $?
+  exit 1
 fi
 echo "===All tests passed!==="

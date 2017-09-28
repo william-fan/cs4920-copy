@@ -30,6 +30,7 @@ class UserProfile:
     @username.setter
     def username(self, username):
         self._username = username
+        services.UserProfileService.update_user(self.user_id, username=self.username)
 
     @property
     def password(self):
@@ -38,6 +39,7 @@ class UserProfile:
     @password.setter
     def password(self, password):
         self._password = password
+        services.UserProfileService.update_user(self.user_id, password=self.password)
 
     @property
     def first_name(self):
@@ -46,6 +48,7 @@ class UserProfile:
     @first_name.setter
     def first_name(self, first_name):
         self._first_name = first_name
+        services.UserProfileService.update_user(self.user_id, firstname=self.first_name)
 
     @property
     def last_name(self):
@@ -54,6 +57,7 @@ class UserProfile:
     @last_name.setter
     def last_name(self, last_name):
         self._last_name = last_name
+        services.UserProfileService.update_user(self.user_id, lastname=self.last_name)
 
     @property
     def email(self):
@@ -62,6 +66,7 @@ class UserProfile:
     @email.setter
     def email(self, email):
         self._email = email
+        services.UserProfileService.update_user(self.user_id, email=self.email)
 
     @property
     def gender(self):
@@ -70,6 +75,7 @@ class UserProfile:
     @gender.setter
     def gender(self, gender):
         self._gender = gender
+        services.UserProfileService.update_user(self.user_id, gender=self.gender)
 
     @property
     def dob(self):
@@ -78,6 +84,7 @@ class UserProfile:
     @dob.setter
     def dob(self, dob):
         self._dob = dob
+        services.UserProfileService.update_user(self.user_id, dob=self.dob)
 
     @property
     def status(self):
@@ -95,6 +102,7 @@ class UserProfile:
     @imgpath.setter
     def imgpath(self, imgpath):
         self._imgpath = imgpath
+        services.UserProfileService.update_user(self.user_id, imgpath=self.imgpath)
 
     @property
     def degree(self):
@@ -102,4 +110,5 @@ class UserProfile:
 
     @degree.setter
     def degree(self, degree):
-        self.degree = degree
+        self._degree = degree
+        services.UserProfileService.update_user(self.user_id, degree=self.degree)
