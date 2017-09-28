@@ -7,19 +7,25 @@ def valid_username(username):
     return True
 
 def change_username(user, newusername):
+    """Changes username if it is a valid username and not already taken. Returns False if nothing was changed."""
     existing = services.UserProfileService.find_by_username(newusername)
     if newusername != user.username and valid_username(newusername) and existing is None:
         user.username = newusername
+        return True
+    return False
 
 def change_password(user, newpassword):
     if newpassword != user.password:
         user.password = newpassword
     
 def change_email(user, newemail):
+    """Changes email if it is not already taken. Returns False if nothing was changed."""
     # assumes already checked for email format by input field
     existing = services.UserProfileService.find_by_email(newemail)
     if newemail != user.email and existing is None:
         user.email = newemail
+        return True
+    return False
 
 def change_firstname(user, newfirstname):
     if newfirstname != user.first_name:
