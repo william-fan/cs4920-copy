@@ -21,8 +21,36 @@
         <br />
         <i class="fa fa-envelope fa-fw"></i> {{ user.email }}
         <br />
+        {% if current_user != user.username %}
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addFriend">Add Friend</button>
+        {% endif %}
       </p>
-
+      <!-- Modal -->
+      <div class="modal fade" id="addFriend" tabindex="-1" role="dialog" aria-labelledby="addTodoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addTodoLabel">Add a friend!</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/sendFriendRequest" id="form-todo" class="form-todo" method="POST">
+              <input type="hidden" name="userId" value="{{ user.user_id }}">
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="message" class="form-control-label">Message </label>
+                  <textarea name="message" type="textarea" id="message" class="form-control" placeholder="Send a quick message!" autofocus required></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="create" class="btn btn-primary" type="submit">Send request</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

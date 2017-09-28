@@ -1,7 +1,9 @@
 import time
+import datetime
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
+from services.FriendRequestService import *
 import status
 
 from flask import Flask, render_template, url_for
@@ -82,11 +84,15 @@ def available():
     logged_in_user = find_by_id(session.get("loggedInUser"))
 
     notifications = load_notifications(session.get("loggedInUser"))
+    friends_notifications = load_friend_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))
     sender_dict = map_sender_to_user(notifications)
+    sender_dict.update(map_sender_to_user(friends_notifications))
     receiver_dict = map_receiver_to_user(notifications)
+    receiver_dict.update(map_receiver_to_user(friends_notifications))
+    print(receiver_dict)
     return render_template('available.html', logged_in_user=logged_in_user, available=available,
-                           notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route('/todo')
@@ -227,6 +233,38 @@ def map_receiver_to_user(notifications):
     for n in notifications:
         map[n.to_id] = find_by_id(n.to_id)
     return map
+
+@app.route('/sendFriendRequest', methods=['POST', 'GET'])
+def send_friend_request():
+    print("Hello")
+    from_user_id = session.get("loggedInUser")
+    to_user_id = request.form["userId"]
+    message = request.form["message"]
+    now = datetime.datetime.now()
+    now = now.strftime("%Y-%m-%d")
+    print(now)
+    send_friend_request_db(from_user_id, to_user_id, message, now)
+
+    return redirect(url_for('available'))
+
+@app.route('/acceptFriendRequest', methods=['POST','GET'])
+def accept_friend_request():
+    to_user_id = session.get("loggedInUser")
+    from_user_id = request.args.get("userId")
+    accept_friend_request_db(from_user_id, to_user_id)
+    return redirect(url_for('available'))
+
+@app.route('/rejectFriendRequest', methods=['POST', 'GET'])
+def reject_friend_request():
+    to_user_id = session.get("loggedInUser")
+    from_user_id = request.args.get("userId")
+    reject_friend_request_db(from_user_id, to_user_id)
+    return redirect(url_for('available'))
+
+def load_friend_notifications(user_id):
+    friend_notifications = find_friend_requests(user_id)
+    friend_notifications.extend(find_user_accepted_friend_requests(user_id))
+    return friend_notifications
 
 @app.route('/sendMeetUpRequest', methods=['POST', 'GET'])
 def send_meetup_request():
