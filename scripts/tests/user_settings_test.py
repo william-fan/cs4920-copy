@@ -5,7 +5,6 @@ from utilities.profile import *
 from services.UserProfileService import *
 import classes.UserProfile
 
-
 def test_change_username():
     print("Testing username changing...")
     user = find_by_id(1)

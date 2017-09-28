@@ -4,6 +4,7 @@ from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
 from services.FriendRequestService import *
+
 import utilities.profile
 
 from flask import Flask, render_template, url_for
@@ -213,7 +214,6 @@ def settings():
             utilities.profile.change_degree(logged_in_user, new_degree)
         else:
             error_message = 'Incorrect password.'
-
 
     notifications = load_notifications(session.get("loggedInUser"))
     print(session.get("loggedInUser"))
