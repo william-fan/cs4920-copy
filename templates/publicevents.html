@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set active_page = "todo" %}
+{% set active_page = "events" %}
 
 {% block title %}
 Public Events
@@ -7,15 +7,14 @@ Public Events
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-<table id='todotable' class="table table-striped table-hover">
+<table id='events' class="table table-striped table-hover">
   <thead class="thead-inverse">
     <tr>
       <th width="20%">Title</th>
-      <th width="30%">Description</th>
+      <th width="40%">Location</th>
       <th width="15%">From</th>
       <th width="15%">To</th>
-      <th width="15%"></th>
-      <th width="1%"></th>
+      <th width="10%"></th>
     </tr>
   </thead>
   <tbody>
@@ -25,19 +24,78 @@ Public Events
       <td>{{ task.description }}</td>
       <td>{{ task.start_time }}</td>
       <td>{{ task.end_time }}</td>
-      <td><a href="/todo/createPublicEvent?title={{ task.title }}&description={{ task.description }}&startTime={{ task.start_time }}&endTime={{ task.end_time }}"><i class="fa fa-caret-right">Add to TODO</i></a></td>
+      <td><a href="/todo/createPublicEvent?title={{ task.title }}&description={{ task.description }}&startTime={{ task.start_time }}&endTime={{ task.end_time }}">Add to Todo</a></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEvent">
+  Add new item
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="addEvent" tabindex="-1" role="dialog" aria-labelledby="addEventLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addEventLabel">Add new item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/events/create" id="form-event" class="form-event" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="title" class="form-control-label">Title</label>
+            <input name="title" type="text" id="title" class="form-control" placeholder="Title" autofocus required>
+          </div>
+          <!--<div class="form-group">
+            <label for="visiblity" class="form-control-label">Visibility</label>
+              <select>
+                  <option value="PUBLIC">Private</option>
+                  <option value="private">Friends Only</option>
+                  <option value="private">Public</option>
+              </select>
+          </div>-->
+          <div class="form-group">
+            <label for="description" class="form-control-label">Description</label>
+            <input name="description" type="text" id="description" class="form-control" placeholder="Description" autofocus required>
+          </div>
+          <div class="form-group">
+            <label for="startTime" class="form-control-label">Start Time</label>
+            <input name="startTime" type="time" id="startTime" class="form-control" autofocus required>
+          </div>
+          <div class="form-group">
+            <label for="startDate" class="form-control-label">Start Date</label>
+            <input name="startDate" type="date" id="startDate" class="form-control" autofocus required>
+          </div>
+          <div class="form-group">
+            <label for="endTime" class="form-control-label">End Time</label>
+            <input name="endTime" type="time" id="endTime" class="form-control" autofocus required>
+          </div>
+          <div class="form-group">
+            <label for="endDate" class="form-control-label">End Date</label>
+            <input name="endDate" type="date" id="endDate" class="form-control" autofocus required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="create" class="btn btn-primary" type="submit">Add item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block javascript %}
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            $('#todotable').DataTable({
-                "order": [[3, "asc"]],
+            $('#events').DataTable({
+                "order": [[2, "asc"]],
                 columnDefs: [
                     { orderable: false, targets: -1 }
                 ]

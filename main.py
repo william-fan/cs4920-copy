@@ -121,8 +121,9 @@ def todo():
     receiver_dict = map_receiver_to_user(notifications)
     return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
-@app.route('/showPublicEvents')
-def showPublicEvents():
+
+@app.route('/events')
+def events():
     logged_in_user = find_by_id(session.get("loggedInUser"))
 
     tasks = load_public_events()
@@ -132,15 +133,29 @@ def showPublicEvents():
     return render_template('publicevents.html', logged_in_user=logged_in_user, tasks=tasks, notifications=notifications,
                            sender_dict=sender_dict, receiver_dict=receiver_dict)
 
-@app.route("/todo/createPublicEvent", methods=['POST', 'GET'])
+
+@app.route("/events/create", methods=['POST', 'GET'])
+def event_create():
+    if request.method == 'POST':
+        add_public_events("a", request.form["title"], request.form["description"],
+                          request.form["startDate"]+" "+request.form["startTime"],
+                          request.form["endDate"]+" "+request.form["endTime"])
+
+    return events()
+
+
+@app.route("/todo/createPublicEvent", methods=['GET'])
 def todo_create_public_event():
-    add_todo("idk",request.args.get("title"), request.args.get("description"), str(session.get("loggedInUser")), "PUBLIC", request.args.get("startTime"), request.args.get("endTime"))
+    add_todo("a",request.args.get("title"), request.args.get("description"), str(session.get("loggedInUser")), "Event",
+             request.args.get("startTime"), request.args.get("endTime"))
     return todo()
 
-@app.route("/todo/create", methods=['POST'])
+
+@app.route("/todo/create", methods=['POST', 'GET'])
 def todo_create():
-    add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")),
-             request.form["course"], str(time.time()), request.form["date"])
+    if request.method == 'POST':
+        add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")),
+                 request.form["course"], str(time.time()), request.form["date"])
     return todo()
 
 
