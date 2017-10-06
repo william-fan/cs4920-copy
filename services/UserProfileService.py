@@ -154,6 +154,11 @@ def load_public_events():
     return public_events
 
 
+def add_public_events(id, title, description, start_time, end_time):
+    sql = "INSERT INTO public_event(id, title, description, start_time, end_time) VALUES (null, '" + title + "', '" + description + "', '" + start_time + "', '" + end_time + "')"
+    table = execute_sql(sql)
+
+
 def add_todo(id, title, description, user_id, course_name, create_time, end_time):
     sql = "INSERT INTO user_todo_list(id, title, description, user_id, course_name, create_time, end_time) VALUES (null, '" + title + "', '" + description + "', '" + user_id + "', '" + course_name + "', '" + create_time + "', '" + end_time + "')"
     table = execute_sql(sql)
