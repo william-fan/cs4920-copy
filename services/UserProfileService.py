@@ -1,6 +1,7 @@
 from services.SQLService import *
 
 from classes.UserProfile import UserProfile
+from classes.PublicEvent import PublicEvent
 from classes.ToDo import ToDo
 
 import utilities.profile
@@ -142,6 +143,15 @@ def load_todos(id):
     table = execute_sql(sql)
     todo_list = list(table.fetchall())
     return todo_list
+
+def load_public_events():
+    public_events = []
+    sql = "SELECT * FROM public_event"
+    table = execute_sql(sql)
+    for row in table:
+        public_events.append(PublicEvent(row["id"], row["title"], row["description"], row["start_time"], row["end_time"]))
+
+    return public_events
 
 
 def add_todo(id, title, description, user_id, course_name, create_time, end_time):

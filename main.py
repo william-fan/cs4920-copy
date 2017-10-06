@@ -121,6 +121,22 @@ def todo():
     receiver_dict = map_receiver_to_user(notifications)
     return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
+@app.route('/showPublicEvents')
+def showPublicEvents():
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+
+    tasks = load_public_events()
+    notifications = load_notifications(session.get("loggedInUser"))
+    sender_dict = map_sender_to_user(notifications)
+    receiver_dict = map_receiver_to_user(notifications)
+    return render_template('publicevents.html', logged_in_user=logged_in_user, tasks=tasks, notifications=notifications,
+                           sender_dict=sender_dict, receiver_dict=receiver_dict)
+
+@app.route("/todo/createPublicEvent", methods=['POST', 'GET'])
+def todo_create_public_event():
+    add_todo("idk",request.args.get("title"), request.args.get("description"), str(session.get("loggedInUser")), "PUBLIC", request.args.get("startTime"), request.args.get("endTime"))
+    return todo()
+
 @app.route("/todo/create", methods=['POST'])
 def todo_create():
     add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")),
