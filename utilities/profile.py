@@ -63,7 +63,7 @@ def change_degree(user, newdegree):
 
 def update_statuses(users, current=datetime.datetime.now()):
     """Given a list of users and a datetime object, checks their timetables and updates their statuses based on the current time. Returns the updated UserProfile objects afterwards."""
-    if current.hour < 9 or current.hour > 21:
+    if current.hour < 9 or current.hour > 21 or current.weekday() > 4:
         for i in range(0, len(users)):
             users[i] = change_status(users[i], statuses[2])
         return users
