@@ -1,8 +1,9 @@
 #!/usr/local/bin/python3.6
-import sys
+import sys, datetime
 sys.path.append('./')
 from utilities.profile import *
 from services.UserProfileService import *
+from services.SQLService import *
 import classes.UserProfile
 
 def test_change_username():
@@ -144,6 +145,38 @@ def test_change_degree():
     last = find_by_id(1)
     assert last.degree== 'Computer Science'
     print("Degree changing OK!")
+    
+def test_auto_update_status():
+    print("Testing automatic status change...")
+    profiles = sorted([load_profile(row) for row in execute_sql("SELECT * FROM user_profile")], key=lambda item : item.user_id)
+    now = datetime.datetime(2017, 10, 9, hour=9)
+    profiles = update_statuses(profiles, current=now)
+    assert profiles[0].status == statuses[1]
+    assert profiles[1].status == statuses[2]
+    now += datetime.timedelta(hours=1) # 10
+    profiles = update_statuses(profiles, current=now)
+    assert profiles[0].status == statuses[1]
+    assert profiles[1].status == statuses[1]
+    now += datetime.timedelta(hours=4) # 14
+    profiles = update_statuses(profiles, current=now)
+    assert profiles[0].status == statuses[0]
+    assert profiles[1].status == statuses[1]
+    now += datetime.timedelta(hours=1) # 15
+    profiles = update_statuses(profiles, current=now)
+    assert profiles[0].status == statuses[1]
+    assert profiles[1].status == statuses[0]
+    now += datetime.timedelta(hours=2) # 17
+    profiles = update_statuses(profiles, current=now)
+    assert profiles[0].status == statuses[1]
+    assert profiles[1].status == statuses[2]
+    now += datetime.timedelta(hours=5) # 22
+    profiles = update_statuses(profiles, current=now)
+    assert profiles[0].status == statuses[2]
+    assert profiles[1].status == statuses[2]
+    for user in profiles:
+        user = change_status(user, statuses[0])
+        assert user.status == statuses[0]
+    print("Automatic status changing OK!")
 
 print("==Testing user profile settings...==")
 try:
@@ -157,6 +190,7 @@ try:
     test_change_status()
     test_change_imgpath()
     test_change_degree()
+    test_auto_update_status()
 except:
     update_user(1, username='status', password='dummy', firstname='dummy', lastname='dummy', email='dummy@dummy.dummy', gender='dummy', dob='dummy', status='Available', imgpath='dummy.jpg', degree='Computer Science')
     assert False
