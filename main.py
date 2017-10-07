@@ -70,9 +70,8 @@ def displaySignIn():
 
 @app.route('/available')
 def available():
-    # TODO: get list of logged-in user's friends that are available
-    friends_of_user = friends_by_profile(session.get("loggedInUser"))
-
+    friends_of_user = friends_by_id(session.get("loggedInUser"))
+    friends_of_user = utilities.profile.update_statuses(friends_of_user)
     available = [
         {
          'user_id': p.user_id,
@@ -176,7 +175,7 @@ def get_busy_times(courses):
 @app.route('/user/<username>', methods=['GET'])
 def user(username):
 
-    friends_of_user = friends_by_id(session.get("loggedInUser"))
+    friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
 
     user = find_by_username(username)
 

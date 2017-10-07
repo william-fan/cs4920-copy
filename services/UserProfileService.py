@@ -16,14 +16,6 @@ def friends_by_id(user_id):
     table = execute_sql(sql)
     profiles = []
     for row in table:
-        profiles.append(row["user_id2"])
-    return profiles
-
-def friends_by_profile(user_id):
-    sql = "SELECT * FROM user_friend WHERE user_id1="+str(user_id)
-    table = execute_sql(sql)
-    profiles = []
-    for row in table:
         profiles.append(find_by_id(row["user_id2"]))
     return profiles
 
@@ -121,8 +113,7 @@ def get_username_from_user_id(user_id):
     return username
 
 
-def timetable_by_username(username):
-    user_id = get_user_id_from_username(username)
+def timetable_by_id(user_id):
     sql = "SELECT * FROM user_class WHERE user_id = {}".format(user_id)
     table = execute_sql(sql)
     courses = []
@@ -136,6 +127,11 @@ def timetable_by_username(username):
             'activity': row['activity']
         })
     return courses
+    
+
+def timetable_by_username(username):
+    user_id = get_user_id_from_username(username)
+    return timetable_by_id(user_id)
 
 
 def load_todos(id):
