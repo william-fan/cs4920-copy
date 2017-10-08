@@ -8,7 +8,8 @@ import utilities.profile
 
 
 def load_profile(sql_row):
-    return UserProfile(sql_row["id"], sql_row["username"], sql_row["password"], sql_row["firstname"], sql_row["lastname"], sql_row["email"], sql_row["gender"], sql_row["dob"], sql_row["status"], sql_row["imgpath"], sql_row["degree"])
+    return UserProfile(sql_row["id"], sql_row["username"], sql_row["password"], sql_row["firstname"], sql_row["lastname"], sql_row["email"], sql_row["gender"], sql_row["dob"], sql_row["status"], sql_row["imgpath"], sql_row["degree"],
+                       sql_row["flags"], sql_row["last_update"])
 
 
 def friends_by_id(user_id):
@@ -60,12 +61,12 @@ def find_by_id(id):
 
 #registers a user
 def register_user(username, password, email, firstname, lastname, gender, dob):
-    sql = "INSERT INTO user_profile(id, username, password, firstname, lastname, email, gender, dob, status, imgpath) VALUES (null, '" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "', '" + email + "', '" + gender + "', '" + dob + "', '" + utilities.profile.statuses[0] + "', 'default.jpg')"
+    sql = "INSERT INTO user_profile(id, username, password, firstname, lastname, email, gender, dob, status, imgpath, degree, flags, last_update) VALUES (null, '" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "', '" + email + "', '" + gender + "', '" + dob + "', '" + utilities.profile.statuses[0] + "', 'default.jpg', None, -1, -1)"
     table = execute_sql(sql)
 
 
 #updates a user on given parameters
-def update_user(user_id, username=None, password=None, email=None, firstname=None, lastname=None, gender=None, dob=None, status=None, imgpath=None, degree=None):
+def update_user(user_id, username=None, password=None, email=None, firstname=None, lastname=None, gender=None, dob=None, status=None, imgpath=None, degree=None, flags=None, last_update=None):
     sql = "UPDATE user_profile SET "
     if not username is None:
         sql += "username = '" + username + "', "
@@ -87,6 +88,10 @@ def update_user(user_id, username=None, password=None, email=None, firstname=Non
         sql += "imgpath = '" + imgpath + "', "
     if not degree is None:
         sql += "degree = '" + degree + "', "
+    if not flags is None:
+        sql += "flags = " + str(flags) + ", "
+    if not last_update is None:
+        sql += "last_update = " + str(last_update) + ", "
 
     # only do stuff if something was changed
     if sql != "UPDATE user_profile SET ":

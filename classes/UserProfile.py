@@ -2,7 +2,7 @@ import services.UserProfileService
 
 class UserProfile:
 
-    def __init__(self, user_id, username, password, first_name, last_name, email, gender, dob, status, imgpath, degree):
+    def __init__(self, user_id, username, password, first_name, last_name, email, gender, dob, status, imgpath, degree, flags, last_update):
         self._user_id = user_id
         self._username = username
         self._password = password
@@ -14,6 +14,8 @@ class UserProfile:
         self._status = status
         self._imgpath = imgpath
         self._degree = degree
+        self._flags = flags
+        self._last_update = last_update
 
     @property
     def user_id(self):
@@ -112,3 +114,21 @@ class UserProfile:
     def degree(self, degree):
         self._degree = degree
         services.UserProfileService.update_user(self.user_id, degree=self.degree)
+    
+    @property
+    def flags(self):
+        return self._flags
+    
+    @flags.setter
+    def flags(self, flags):
+        self._flags = flags
+        services.UserProfileService.update_user(self.user_id, flags=self.flags)
+
+    @property
+    def last_update(self):
+        return self._last_update
+        
+    @last_update.setter
+    def last_update(self, last_update):
+        self._last_update = last_update
+        services.UserProfileService.update_user(self.user_id, last_update=self.last_update)

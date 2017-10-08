@@ -60,16 +60,77 @@ def change_imgpath(user, newimgpath):
 def change_degree(user, newdegree):
     if newdegree != user.degree:
         user.degree = newdegree
+        
+def is_private(user, field_name):
+    """Checks privacy, which uses bit flags. If the bit position is 1 then that field should be private to strangers."""
+    
+    EMAIL_CHECK = 0b1
+    GENDER_CHECK = 0b10
+    DOB_CHECK = 0b100
+    DEGREE_CHECK = 0b1000
+    
+    if field_name == 'email':
+        return user.flags & EMAIL_CHECK != 0
+        
+    if field_name == 'gender':
+        return user.flags & GENDER_CHECK != 0
+    
+    if field_name == 'dob':
+        return user.flags & DOB_CHECK != 0
+        
+    if field_name == 'degree':
+        return user.flags & DEGREE_CHECK != 0
+
+def set_flags(user, email=None, gender=None, dob=None, degree=None, auto=None):
+    """Sets appropriate bit to 1 if True, 0 if False and the same as original if None"""
+    newflags = 0
+    if email:
+        newflags |= 0b1
+    elif email is None:
+        newflags |= (0b1 & user.flags)
+    if gender:
+        newflags |= 0b10
+    elif gender is None:
+        newflags |= (0b10 & user.flags)
+    if dob:
+        newflags |= 0b100
+    elif dob is None:
+        newflags |= (0b100 & user.flags)
+    if degree:
+        newflags |= 0b1000
+    elif degree is None:
+        newflags |= (0b1000 & user.flags)
+    if auto:
+        newflags |= 0b10000
+    elif auto is None:
+        newflags |= (0b10000 & user.flags)
+
+    if newflags != user.flags:
+        user.flags = newflags
+
+def is_auto_update(user):
+    AUTO_CHECK = 0b10000
+    return user.flags & AUTO_CHECK != 0
+
 
 def update_statuses(users, current=datetime.datetime.now()):
     """Given a list of users and a datetime object, checks their timetables and updates their statuses based on the current time. Returns the updated UserProfile objects afterwards."""
+    day = current.weekday()
+    update_time = (day * 24) + current.hour
+    # automatically off-campus if before or after standard class schedule hours or on the weekend
     if current.hour < 9 or current.hour > 21 or current.weekday() > 4:
         for i in range(0, len(users)):
+            user = users[i]
+            # if they do not want to be automatically updated or they have been updated for this hour already
+            if not is_auto_update(user) or user.last_update == update_time:
+                continue            
             users[i] = change_status(users[i], statuses[2])
+            users[i].last_update = update_time
         return users
-    day = current.weekday()
     for i in range(0, len(users)):
         user = users[i]
+        if not is_auto_update(user) or user.last_update == update_time:
+            continue            
         timetable = services.UserProfileService.timetable_by_id(user.user_id)
         timeslots = {i:statuses[2] for i in range(9, 22)}
         timeslot_time = 9
@@ -86,4 +147,5 @@ def update_statuses(users, current=datetime.datetime.now()):
             timeslot_time = start+user_class['length']
             class_before = True
         users[i] = change_status(user, timeslots[current.hour])
+        users[i].last_update = update_time
     return users

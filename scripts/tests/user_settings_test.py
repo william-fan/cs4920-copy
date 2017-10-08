@@ -146,36 +146,139 @@ def test_change_degree():
     assert last.degree== 'Computer Science'
     print("Degree changing OK!")
     
+def test_is_private():
+    print("Testing privacy settings...")
+    user = find_by_id(1)
+    assert is_private(user, 'email')
+    assert is_private(user, 'gender')
+    assert is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    user = find_by_id(2)
+    assert is_private(user, 'email')
+    assert not is_private(user, 'gender')
+    assert not is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    
+    print("Privacy settings OK!")
+    
+def test_is_auto_update():
+    print("Testing auto update check...")
+    user = find_by_id(1)
+    assert is_auto_update(user)
+    user = find_by_id(2)
+    assert not is_auto_update(user)
+    print("Auto update check OK!")
+    
+def test_set_flags():
+    print("Testing flag setting...")
+    user = find_by_id(1)
+    assert is_private(user, 'email')
+    assert is_private(user, 'gender')
+    assert is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    assert is_auto_update(user)
+    set_flags(user)
+    user = find_by_id(1)
+    assert is_private(user, 'email')
+    assert is_private(user, 'gender')
+    assert is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    assert is_auto_update(user)
+    set_flags(user, gender = False)
+    user = find_by_id(1)
+    assert is_private(user, 'email')
+    assert not is_private(user, 'gender')
+    assert is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    assert is_auto_update(user)
+    set_flags(user, dob = False)
+    user = find_by_id(1)
+    assert is_private(user, 'email')
+    assert not is_private(user, 'gender')
+    assert not is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    assert is_auto_update(user)
+    set_flags(user, email = False, dob = True)
+    user = find_by_id(1)
+    assert not is_private(user, 'email')
+    assert not is_private(user, 'gender')
+    assert is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    assert is_auto_update(user)
+    set_flags(user, email = True, gender = True, degree = False)
+    user = find_by_id(1)
+    assert is_private(user, 'email')
+    assert is_private(user, 'gender')
+    assert is_private(user, 'dob')
+    assert not is_private(user, 'degree')
+    assert is_auto_update(user)
+    set_flags(user, degree = True, auto = False)
+    assert is_private(user, 'email')
+    assert is_private(user, 'gender')
+    assert is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    assert not is_auto_update(user)
+    set_flags(user, email = True, gender = True, dob = True, degree = True, auto = True)
+    user = find_by_id(1)
+    assert is_private(user, 'email')
+    assert is_private(user, 'gender')
+    assert is_private(user, 'dob')
+    assert is_private(user, 'degree')
+    assert is_auto_update(user)
+    print("Flag setting OK!")
+    
 def test_auto_update_status():
     print("Testing automatic status change...")
     profiles = sorted([load_profile(row) for row in execute_sql("SELECT * FROM user_profile")], key=lambda item : item.user_id)
+    assert profiles[0].last_update == -1
+    assert profiles[1].last_update == -1
+    set_flags(profiles[1], auto=True)
+    assert is_auto_update(profiles[0])
+    assert is_auto_update(profiles[1])
     now = datetime.datetime(2017, 10, 9, hour=9)
     profiles = update_statuses(profiles, current=now)
     assert profiles[0].status == statuses[1]
     assert profiles[1].status == statuses[2]
+    assert profiles[0].last_update == 9
+    assert profiles[1].last_update == 9
     now += datetime.timedelta(hours=1) # 10
     profiles = update_statuses(profiles, current=now)
     assert profiles[0].status == statuses[1]
     assert profiles[1].status == statuses[1]
+    assert profiles[0].last_update == 10
+    assert profiles[1].last_update == 10
     now += datetime.timedelta(hours=4) # 14
     profiles = update_statuses(profiles, current=now)
     assert profiles[0].status == statuses[0]
     assert profiles[1].status == statuses[1]
+    assert profiles[0].last_update == 14
+    assert profiles[1].last_update == 14
     now += datetime.timedelta(hours=1) # 15
     profiles = update_statuses(profiles, current=now)
     assert profiles[0].status == statuses[1]
     assert profiles[1].status == statuses[0]
+    assert profiles[0].last_update == 15
+    assert profiles[1].last_update == 15
+    set_flags(profiles[1], auto=False)
     now += datetime.timedelta(hours=2) # 17
     profiles = update_statuses(profiles, current=now)
     assert profiles[0].status == statuses[1]
-    assert profiles[1].status == statuses[2]
+    assert profiles[1].status == statuses[0]
+    assert profiles[0].last_update == 17
+    assert profiles[1].last_update == 15
+    set_flags(profiles[1], auto=True)
     now += datetime.timedelta(hours=5) # 22
     profiles = update_statuses(profiles, current=now)
     assert profiles[0].status == statuses[2]
     assert profiles[1].status == statuses[2]
+    assert profiles[0].last_update == 22
+    assert profiles[1].last_update == 22
+    set_flags(profiles[1], auto=False)
     for user in profiles:
         user = change_status(user, statuses[0])
         assert user.status == statuses[0]
+        user.last_update = -1
+        assert user.last_update == -1
     print("Automatic status changing OK!")
 
 print("==Testing user profile settings...==")
@@ -190,9 +293,13 @@ try:
     test_change_status()
     test_change_imgpath()
     test_change_degree()
+    test_is_private()
+    test_is_auto_update()
+    test_set_flags()
     test_auto_update_status()
 except:
-    update_user(1, username='status', password='dummy', firstname='dummy', lastname='dummy', email='dummy@dummy.dummy', gender='dummy', dob='dummy', status='Available', imgpath='dummy.jpg', degree='Computer Science')
+    update_user(1, username='status', password='dummy', firstname='dummy', lastname='dummy', email='dummy@dummy.dummy', gender='dummy', dob='dummy', status='Available', imgpath='dummy.jpg', degree='Computer Science', flags=-1, last_update=-1)
+    update_user(2, status='Available', flags=9, last_update=-1)
     assert False
 
 print("==User profile settings OK!==")
