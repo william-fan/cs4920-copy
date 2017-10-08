@@ -83,8 +83,14 @@ To Do
                 "order": [[3, "asc"]],
                 columnDefs: [
                     { orderable: false, targets: -1 }
-                ]
+                ],
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search..."
+                }
             });
+            $('#todotable_filter input').addClass('form-control form-control-sm');
         });
+
     </script>
 {% endblock %}

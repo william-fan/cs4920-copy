@@ -2,7 +2,7 @@
 {% set active_page = "events" %}
 
 {% block title %}
-Public Events
+Events
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@ Public Events
   <thead class="thead-inverse">
     <tr>
       <th width="20%">Title</th>
-      <th width="40%">Location</th>
+      <th width="40%">Description</th>
       <th width="15%">From</th>
       <th width="15%">To</th>
       <th width="10%"></th>
@@ -51,14 +51,6 @@ Public Events
             <label for="title" class="form-control-label">Title</label>
             <input name="title" type="text" id="title" class="form-control" placeholder="Title" autofocus required>
           </div>
-          <!--<div class="form-group">
-            <label for="visiblity" class="form-control-label">Visibility</label>
-              <select>
-                  <option value="PUBLIC">Private</option>
-                  <option value="private">Friends Only</option>
-                  <option value="private">Public</option>
-              </select>
-          </div>-->
           <div class="form-group">
             <label for="description" class="form-control-label">Description</label>
             <input name="description" type="text" id="description" class="form-control" placeholder="Description" autofocus required>
@@ -98,8 +90,13 @@ Public Events
                 "order": [[2, "asc"]],
                 columnDefs: [
                     { orderable: false, targets: -1 }
-                ]
+                ],
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search..."
+                }
             });
+            $('#events_filter input').addClass('form-control form-control-sm');
         });
     </script>
 {% endblock %}
