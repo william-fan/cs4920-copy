@@ -15,6 +15,7 @@
     <div class="col-sm-9">
       {% if current_user == user.username %} <a href="{{ url_for('settings') }}" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i> Edit</a> {% endif %}
       {% if current_user != user.username and user.user_id not in friends_of_user %} <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addFriend"><i class="fa fa-plus fa-fw"></i> Add Friend</button> {% endif %}
+      {% if current_user != user.username and user.user_id in friends_of_user %} <td><a href="/removeFriend/{{user.username}}" class="btn btn-primary float-right">Remove Friend</a></td> {% endif %}
       <p>
         <i class="fa fa-graduation-cap fa-fw"></i> {{ user.degree }}
         <br />

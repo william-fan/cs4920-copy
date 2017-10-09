@@ -192,6 +192,29 @@ def user(username):
     receiver_dict = map_receiver_to_user(notifications)
     return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
+@app.route('/removeFriend/<username>', methods=['GET'])
+def remove_friend(username):
+
+    friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
+
+    user = find_by_username(username)
+
+    courses = timetable_by_username(username)
+
+    busy_times = get_busy_times(courses)
+
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+
+    notifications = load_notifications(session.get("loggedInUser"))
+    print(session.get("loggedInUser"))
+
+    sender_dict = map_sender_to_user(notifications)
+    receiver_dict = map_receiver_to_user(notifications)
+
+    remove_friend_from_db(logged_in_user.user_id, user.user_id)
+
+    return redirect(url_for('user', username=username))
+
 
 @app.route("/class/create", methods=['POST'])
 def class_create():
@@ -229,10 +252,10 @@ def settings():
             if not utilities.profile.change_username(logged_in_user, new_username):
                 error_message += 'Username already taken.'
             new_password = request.form.get('input-new-password')
-            utilities.profile.change_password(logged_in_user, new_password)            
+            utilities.profile.change_password(logged_in_user, new_password)
             new_email = request.form.get('input-email')
             if not utilities.profile.change_email(logged_in_user, new_email):
-                error_message += ('\nEmail already taken.' if error_message else 'Email already taken.')            
+                error_message += ('\nEmail already taken.' if error_message else 'Email already taken.')
             new_status = request.form.get('input-status')
             utilities.profile.change_status(logged_in_user, new_status)
             new_firstname = request.form.get('input-firstname')
