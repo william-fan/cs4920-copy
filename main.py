@@ -210,7 +210,7 @@ def user(username):
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
     if user is None:
-        return page_not_found
+        return page_not_found(404)
     return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 @app.route('/removeFriend/<username>', methods=['GET'])
