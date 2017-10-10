@@ -1,0 +1,9 @@
+.jumbotron {
+  text-align: center;
+  background-color: transparent;
+}
+
+.jumbotron .btn {
+  text-align: center;
+  width: 150px;
+}
