@@ -399,7 +399,7 @@ def reject_meetup_request():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return '404 <button onclick="window.history.back()">Go Back</button>', 404
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
