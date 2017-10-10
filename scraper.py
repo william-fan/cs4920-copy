@@ -1,3 +1,5 @@
+from services.SQLService import *
+
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -5,10 +7,23 @@ import re
 faculties = ["ACCT","ACTL","AERO","ANAT","ARCH","ARTS","ASIA","ATSI","AUST","AVEN","AVIA","AVIF","AVIG","BABS","BEES","BEIL","BENV","BINF","BIOC","BIOM","BIOS","BIOT","BLDG","CEIC","CHEM","CHEN","CLIM","CODE","COMD","COMM","COMP","CONS","CRIM","CRTV","CVEN","DATA","DIPP","ECON","EDST","ELEC","ENGG","ENGL","ENVP","ENVS","EXCH","FINS","FNDN","FOOD","GBAT","GENC","GENE","GENL","GENM","GENS","GENT","GENY","GEOL","GEOS","GMAT","GSBE","GSOE","HESC","HIST","HUML","HUMS","IDES","IEST","INDC","INFS","INST","INTA","INTD","JAPN","JURD","LAND","LAWS","LING","MANF","MARK","MATH","MATS","MBAX","MDCN","MDIA","MECH","MFAC","MFIN","MGMT","MICR","MINE","MMAN","MNGT","MNNG","MODL","MSCI","MTRN","MUPS","MUSC","NANO","NAVL","NCHR","NEUR","OBST","OPTM","PAED","PATH","PHAR","PHCM","PHIL","PHOP","PHSL","PHTN","PHYS","PLAN","POLS","POLY","PSCY","PSYC","PTRL","REGZ","REST","RISK","SCIF","SENG","SLSP","SOCF","SOCW","SOLA","SOMS","SOSS","SPRC","SRAP","STAM","SURG","SUSD","SWCH","TABL","TELE","UDES","VISN","WOMS","YENG","YMED","ADAD","SAED","SAHT","SART","SDES","SOMA","ZBUS","ZEIT","ZGEN","ZHSS","ZINT","ZPEM"]
 
 activities = {
+    "CLN": "Clinical",
+    "DST": "Distance",
+    "FLD": "Field Studies",
+    "LA1": "Lab 1",
+    "LA2": "Lab 2",
     "LAB": "Lab",
+    "LE1": "Lecture 1",
+    "LE2": "Lecture 2",
     "LEC": "Lecture",
     "OTH": "Other",
+    "PRJ": "Project",
     "SEM": "Seminar",
+    "STD": "Studio",
+    "THE": "Thesis",
+    "TLB": "Tut-Lab",
+    "TU1": "Tutorial 1",
+    "TU2": "Tutorial 2",
     "TUT": "Tutorial",
     "WEB": "Web Stream"
 }
@@ -56,11 +71,12 @@ for fac in faculties:
             else:
                 td = row.find_all('td')
                 activity = activities.get(td[0].get_text(), td[0].get_text())
+                class_id = td[1].get_text()
                 details = td[7].get_text()
 
                 if valid_details(details):
 
-                    print(course_code[:4], course_code[4:], activity)
+                    # print(course_code[:4], course_code[4:], class_id, activity)
                     for detail in details.split('; '):
                         m = re.search(r'(\w+) ([\d\-:]+)[#/]?.*', detail)
                         detail_day, detail_time = m.group(1), m.group(2)
@@ -71,4 +87,7 @@ for fac in faculties:
 
                             # only take weekday courses
                             if detail_day in days.keys():
-                                print('Faculty: {}, Code: {}, Day: {}, Activity: {}, Starts: {}, Length: {}'.format(course_code[:4], course_code, detail_day, activity, start_time, length))
+                                print('Faculty: {}, Code: {}, ID: {}, Day: {}, Activity: {}, Starts: {}, Length: {}'.format(course_code[:4], course_code[4:], class_id, days[detail_day], activity, start_time, length))
+
+                                sql = "INSERT IGNORE INTO courses (faculty, course_code, class_id, day, activity, start_time, length) VALUES ('{}', {}, '{}', {}, '{}', {}, {})".format(course_code[:4], course_code[4:], class_id, days[detail_day], activity, start_time, length)
+                                execute_sql(sql)
