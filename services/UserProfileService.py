@@ -60,7 +60,7 @@ def find_by_id(id):
 
 #registers a user
 def register_user(username, password, email, firstname, lastname, gender, dob):
-    sql = "INSERT INTO user_profile(id, username, password, firstname, lastname, email, gender, dob, status, imgpath, degree, flags, last_update) VALUES (null, '" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "', '" + email + "', '" + gender + "', '" + dob + "', '" + utilities.profile.statuses[0] + "', 'default.jpg', None, -1, -1)"
+    sql = "INSERT INTO user_profile(id, username, password, firstname, lastname, email, gender, dob, status, imgpath, degree, flags, last_update) VALUES (null, '" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "', '" + email + "', '" + gender + "', '" + dob + "', '" + utilities.profile.statuses[0] + "', '" + 'default.jpg' + "', null , '" + "-1" + "', '" + "-1" + "')"
     table = execute_sql(sql)
 
 
@@ -184,3 +184,17 @@ def search_users(query):
 def delete_class(id):
     sql = "DELETE FROM user_class WHERE id = " + str(id)
     table = execute_sql(sql)
+
+
+def delete_account_sql(id):
+    sql = "DELETE FROM user_friend WHERE user_id1 = " + str(id)\
+          + ";DELETE FROM friend_request WHERE from_id = " + str(id) \
+          + ";DELETE FROM friend_request WHERE to_id = " + str(id) \
+          + ";DELETE FROM user_friend WHERE user_id2 = " + str(id) \
+          + ";DELETE FROM user_meetup_request WHERE from_id = " + str(id) \
+          + ";DELETE FROM user_meetup_request WHERE to_id = " + str(id) \
+          + ";DELETE FROM user_class WHERE user_id = " + str(id) +\
+          ";DELETE FROM user_todo_list WHERE user_id = " + str(id) + \
+          ";DELETE FROM user_profile WHERE id = " + str(id)
+    table = execute_sql(sql)
+

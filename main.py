@@ -25,7 +25,7 @@ def login():
     username = request.form["inputEmail"]
     password = request.form["inputPassword"]
     profile = find_by_email_pass(username, password)
-    if (profile is not None):
+    if profile is not None:
         session['loggedInUser'] = profile.user_id
         return redirect(url_for('available'))
     else:
@@ -125,10 +125,10 @@ def todo():
 @app.route('/events')
 def events():
     logged_in_user = find_by_id(session.get("loggedInUser"))
-    todo_list = load_public_events()
+    event_list = load_public_events()
 
     tasks = []
-    for task in todo_list:
+    for task in event_list:
         tasks += [
             {
                 'id': task['id'],
@@ -177,12 +177,23 @@ def todo_delete(todo_id):
     return todo()
 
 
+@app.route('/settings/delete_account', methods=['GET'])
+def delete_account():
+    confirmation = request.args.get("confirm")
+    if confirmation == '1':
+        delete_account_sql(session.get("loggedInUser"))
+        return logout()
+    else:
+        return settings()
+
+
 def string_to_date(string):
     try:
         date = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M").strftime("%d %m %Y, %A %I:%M %p")
     except ValueError:
         return string
     return date
+
 
 def get_busy_times(courses):
     busy_times = []
@@ -315,7 +326,8 @@ def user_search():
             { 'first_name': p['firstname'],
               'last_name': p['lastname'],
               'username': p['username'],
-              'imgpath': p['imgpath']
+              'imgpath': p['imgpath'],
+              'user_id': p['id']
             } for p in results
         ]
 
@@ -371,7 +383,8 @@ def send_friend_request():
     print(now)
     send_friend_request_db(from_user_id, to_user_id, message, now)
 
-    return redirect(url_for('available'))
+    profile = find_by_id(to_user_id)
+    return user(profile.username)
 
 @app.route('/acceptFriendRequest', methods=['POST','GET'])
 def accept_friend_request():

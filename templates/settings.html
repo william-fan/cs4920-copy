@@ -65,5 +65,16 @@ Settings
     </br>
     <button type="submit" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i>Edit Settings</button>
   </form>
+  <button type="button" onclick="location.href='javascript:delete_acc()';" class="btn btn-danger float-left"><i class="fa fa-trash-o fa-fw"></i>Delete Account</button>
 </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        //Gives confirmation to deleting account
+        function delete_acc(input) {
+            if (confirm('Are you sure you want to delete your account?\n(This cannot be reversed)')) {
+                document.location = "settings/delete_account?confirm=1";
+            }
+        }
+    </script>
 {% endblock %}
