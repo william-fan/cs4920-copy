@@ -1,4 +1,5 @@
 import time
+import datetime
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
@@ -108,7 +109,7 @@ def todo():
                 'name': task['title'],
                 'text': task['description'],
                 'subject': task['course_name'],
-                'date': task['end_time']
+                'date': string_to_date(task['end_time'])
             }
         ]
 
@@ -124,8 +125,20 @@ def todo():
 @app.route('/events')
 def events():
     logged_in_user = find_by_id(session.get("loggedInUser"))
+    todo_list = load_public_events()
 
-    tasks = load_public_events()
+    tasks = []
+    for task in todo_list:
+        tasks += [
+            {
+                'id': task['id'],
+                'title': task['title'],
+                'description': task['description'],
+                'start_time': string_to_date(task['start_time']),
+                'end_time': string_to_date(task['end_time'])
+            }
+        ]
+
     notifications = load_notifications(session.get("loggedInUser"))
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
@@ -154,7 +167,7 @@ def todo_create_public_event():
 def todo_create():
     if request.method == 'POST':
         add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")),
-                 request.form["course"], str(time.time()), request.form["date"])
+                 request.form["course"], str(time.time()), request.form["date"]+" "+request.form["time"])
     return todo()
 
 
@@ -163,6 +176,13 @@ def todo_delete(todo_id):
     delete_todo(todo_id)
     return todo()
 
+
+def string_to_date(string):
+    try:
+        date = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M").strftime("%d %m %Y, %A %I:%M %p")
+    except ValueError:
+        return string
+    return date
 
 def get_busy_times(courses):
     busy_times = []
@@ -178,10 +198,9 @@ def user(username):
     friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
 
     user = find_by_username(username)
-
-    courses = timetable_by_username(username)
-
-    busy_times = get_busy_times(courses)
+    if user is not None:
+        courses = timetable_by_username(username)
+        busy_times = get_busy_times(courses)
 
     logged_in_user = find_by_id(session.get("loggedInUser"))
 
@@ -190,6 +209,8 @@ def user(username):
 
     sender_dict = map_sender_to_user(notifications)
     receiver_dict = map_receiver_to_user(notifications)
+    if user is None:
+        return page_not_found(404)
     return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 @app.route('/removeFriend/<username>', methods=['GET'])
