@@ -112,7 +112,7 @@
                               <a style="padding-left:15px;" href="">{{receiver_dict[notif.to_id].first_name}}</a> has ACCEPTED your request!<a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
                               <p style="padding-left:15px;"><b>Your description</b>: {{notif.description}}</p>
                               <p style="padding-left:15px;"><b>Your proposed date/time</b>: {{notif.date}}</p>
-
+                              <a style="align:right; padding-left:15px;" href="/deleteMeetUpRequest?userId={{notif.from_id}}">Delete</a>
                             </div>
                         </li>
                       {%else%}
@@ -121,6 +121,7 @@
                               <a style="padding-left:15px;" href="">{{receiver_dict[notif.to_id].first_name}}</a> has REJECTED your request! <a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
                               <p style="padding-left:15px;"><b>Your description</b>: {{notif.description}}</p>
                               <p style="padding-left:15px;"><b>Your proposed date/time</b>: {{notif.date}}</p>
+                              <a style="align:right; padding-left:15px;" href="/deleteMeetUpRequest?userId={{notif.from_id}}">Delete</a>
                             </div>
                         </li>
                       {%endif%}

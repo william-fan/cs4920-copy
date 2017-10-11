@@ -431,6 +431,13 @@ def reject_meetup_request():
     reject_request(from_user_id, to_user_id)
     return redirect(url_for('available'))
 
+@app.route('/deleteMeetUpRequest', methods=['POST', 'GET'])
+def delete_meetup_request():
+    to_user_id = session.get("loggedInUser")
+    from_user_id = request.args.get("userId")
+    delete_request(from_user_id, to_user_id)
+    return redirect(url_for('available'))
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
