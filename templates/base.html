@@ -154,6 +154,7 @@
                 <img src="/static/img/users/{{ logged_in_user.imgpath }}" width="30" height="30" alt="">
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{{ url_for('friends') }}"><i class="fa fa-users fa-fw"></i> Friends</a>
                 <a class="dropdown-item" href="{{ url_for('user', username=current_user) }}"><i class="fa fa-user fa-fw"></i> Profile</a>
                 <a class="dropdown-item" href="{{ url_for('settings')}}"><i class="fa fa-cog fa-fw"></i> Settings</a>
                 <div class="dropdown-divider"></div>

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% set active_page = "friends" %}
+
+{% block title %}
+Friends
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+<link href="../static/friends.css" rel="stylesheet">
+<table id='friendstable' class="table">
+  <thead class="">
+    <tr>
+      <th width="35%">Name</th>
+      <th width="50%">Courses</th>
+      <th width="15%">Availability</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for friend in friends %}
+    <tr>
+      <td>
+          <div class="container">
+              <a class="nounderline" href="{{ url_for('user', username=friend.username) }}">
+                  <img class="" src="/static/img/users/{{ friend.imgpath }}" width="64" height="64" alt="{{ friend.name }}">
+              </a>
+              <a href="{{ url_for('user', username=friend.username) }}" style="color:black">
+                <span class="my-2 col-xl-3 col-lg-4 col-md-6">{{ friend.name }}</span>
+              </a>
+          </div>
+      </td>
+      <td class="align-middle">
+          {{ friend.courses }}
+      </td>
+      <td class="align-middle">
+          {{ friend.status }}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#friendstable').DataTable({
+                "order": [[2, "asc"]],
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search...",
+                    emptyTable: "No friends"
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

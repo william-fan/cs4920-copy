@@ -203,6 +203,37 @@ def get_busy_times(courses):
     return busy_times
 
 
+@app.route('/friends')
+def friends():
+    friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
+
+    friends_list = []
+    for friend in friends_of_user:
+        user = find_by_id(friend)
+        course_list = set([])
+        for courses in timetable_by_id(friend):
+            course_list.add(courses['subject'])
+        friends_list += [
+            {
+                'imgpath': user.imgpath,
+                'courses': ', '.join(course_list),
+                'status': user.status,
+                'name': user.first_name+" "+user.last_name,
+                'username': user.username
+            }
+        ]
+
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+
+    notifications = load_notifications(session.get("loggedInUser"))
+    print(session.get("loggedInUser"))
+
+    sender_dict = map_sender_to_user(notifications)
+    receiver_dict = map_receiver_to_user(notifications)
+
+    return render_template('friends.html', friends=friends_list, logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+
+
 @app.route('/user/<username>', methods=['GET'])
 def user(username):
 
