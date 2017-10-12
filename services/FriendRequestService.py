@@ -45,6 +45,10 @@ def send_friend_request_db(from_id, to_id, message,now):
     sql = "INSERT INTO friend_request(from_id, to_id, status, message, date) VALUES(" + str(from_id) + ", " + str(to_id) + ", 'PENDING', '" + message + "', '" + str(now) + "')"
     table = execute_sql(sql)
 
+def delete_friend_request_db(from_id, to_id):
+    sql = "DELETE FROM friend_request WHERE from_id = " + str(from_id) + " AND to_id = " + str(to_id)
+    table = execute_sql(sql)
+
 def remove_friend_from_db(user_id1, user_id2):
     print("user 1")
     print(user_id1)
