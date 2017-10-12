@@ -43,5 +43,5 @@ def send_request(from_id, to_id, description, date_time):
     table = execute_sql(sql)
 
 def delete_request(from_id, to_id):
-    sql = "DELETE FROM user_meetup_request WHERE from_id = " + from_id + " AND tod_id = " + to_id
+    sql = "DELETE FROM user_meetup_request WHERE from_id = " + str(from_id) + " AND to_id = " + str(to_id)
     table = execute_sql(sql)

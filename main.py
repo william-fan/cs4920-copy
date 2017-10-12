@@ -400,6 +400,13 @@ def reject_friend_request():
     reject_friend_request_db(from_user_id, to_user_id)
     return redirect(url_for('available'))
 
+@app.route('/deleteFriendRequest', methods=['POST', 'GET'])
+def delete_friend_request():
+    from_user_id = session.get("loggedInUser")
+    to_user_id = request.args.get("userId")
+    delete_friend_request_db(from_user_id, to_user_id)
+    return redirect(url_for('available'))
+
 def load_friend_notifications(user_id):
     friend_notifications = find_friend_requests(user_id)
     friend_notifications.extend(find_user_accepted_friend_requests(user_id))
@@ -433,8 +440,8 @@ def reject_meetup_request():
 
 @app.route('/deleteMeetUpRequest', methods=['POST', 'GET'])
 def delete_meetup_request():
-    to_user_id = session.get("loggedInUser")
-    from_user_id = request.args.get("userId")
+    from_user_id = session.get("loggedInUser")
+    to_user_id = request.args.get("userId")
     delete_request(from_user_id, to_user_id)
     return redirect(url_for('available'))
 
