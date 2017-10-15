@@ -6,9 +6,9 @@ Events
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
 <table id='events' class="table table-striped table-hover">
-  <thead class="thead-inverse">
+  <thead class="thead">
     <tr>
       <th width="20%">Title</th>
       <th width="40%">Description</th>
@@ -84,6 +84,7 @@ Events
 
 {% block javascript %}
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             $('#events').DataTable({
@@ -93,10 +94,10 @@ Events
                 ],
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "Search..."
+                    searchPlaceholder: "Search...",
+                    emptyTable: "There are no public events"
                 }
             });
-            $('#events_filter input').addClass('form-control form-control-sm');
         });
     </script>
 {% endblock %}

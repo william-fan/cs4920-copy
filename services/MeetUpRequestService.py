@@ -39,5 +39,9 @@ def reject_request(from_id, to_id):
 
 
 def send_request(from_id, to_id, description, date_time):
-    sql = "INSERT INTO user_meetup_request(from_id, to_id, status, description, date) VALUES (" + str(from_id) + ", " + str(to_id) + ", 'PENDING', '" + description + "', '" + date_time + "')"
+    sql = "INSERT INTO user_meetup_request(from_id, to_id, status, description, date) VALUES ('" + str(from_id) + "', '" + str(to_id) + "', '" + 'PENDING' + "', '" + description + "', '" + date_time + "')"
+    table = execute_sql(sql)
+
+def delete_request(from_id, to_id):
+    sql = "DELETE FROM user_meetup_request WHERE from_id = " + str(from_id) + " AND to_id = " + str(to_id)
     table = execute_sql(sql)

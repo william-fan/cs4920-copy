@@ -1,14 +1,35 @@
 import time
+import datetime
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
 from services.FriendRequestService import *
+import services.SQLService
 
 import utilities.profile
 
 from flask import Flask, render_template, url_for
 app = Flask(__name__)
 app.secret_key = "secret-key"
+
+
+def page_init():
+    services.SQLService.connect()
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+    notifications = load_notifications(session.get("loggedInUser"))
+    friends_notifications = load_friend_notifications(session.get("loggedInUser"))
+    sender_dict = map_sender_to_user(notifications)
+    sender_dict.update(map_sender_to_user(friends_notifications))
+    receiver_dict = map_receiver_to_user(notifications)
+    receiver_dict.update(map_receiver_to_user(friends_notifications))
+    
+    return logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict
+
+def page_init_lite():
+    services.SQLService.connect()
+
+def page_finish():
+    services.SQLService.disconnect()
 
 
 @app.route("/")
@@ -24,7 +45,7 @@ def login():
     username = request.form["inputEmail"]
     password = request.form["inputPassword"]
     profile = find_by_email_pass(username, password)
-    if (profile is not None):
+    if profile is not None:
         session['loggedInUser'] = profile.user_id
         return redirect(url_for('available'))
     else:
@@ -40,6 +61,7 @@ def logout():
 
 @app.route("/register", methods=['POST'])
 def register():
+    page_init_lite()
     username = request.form["username"]
     password = request.form["password"]
     email = request.form["email"]
@@ -55,11 +77,12 @@ def register():
     existing_user = find_by_username(username)
     if (existing_user is not None):
         errors.append("That username has been taken already")
-
+    
     if (len(errors) > 0):
+        page_finish()
         return render_template("register.html", register_error=", ".join(errors))
-
     register_user(username, password, email, firstname, lastname, gender, dob)
+    page_finish()
     return render_template("created.html")
 
 
@@ -70,6 +93,8 @@ def displaySignIn():
 
 @app.route('/available')
 def available():
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+    
     friends_of_user = friends_by_id(session.get("loggedInUser"))
     friends_of_user = utilities.profile.update_statuses(friends_of_user)
     available = [
@@ -82,23 +107,16 @@ def available():
          } for p in friends_of_user
         if p.status == utilities.profile.statuses[0]
     ]
-
-    logged_in_user = find_by_id(session.get("loggedInUser"))
-
-    notifications = load_notifications(session.get("loggedInUser"))
-    friends_notifications = load_friend_notifications(session.get("loggedInUser"))
-    print(session.get("loggedInUser"))
-    sender_dict = map_sender_to_user(notifications)
-    sender_dict.update(map_sender_to_user(friends_notifications))
-    receiver_dict = map_receiver_to_user(notifications)
-    receiver_dict.update(map_receiver_to_user(friends_notifications))
-    print(receiver_dict)
+    
+    page_finish()
     return render_template('available.html', logged_in_user=logged_in_user, available=available,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route('/todo')
 def todo():
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+
     todo_list = load_todos(session.get("loggedInUser"))
     tasks = []
     for task in todo_list:
@@ -108,29 +126,35 @@ def todo():
                 'name': task['title'],
                 'text': task['description'],
                 'subject': task['course_name'],
-                'date': task['end_time']
+                'date': string_to_date(task['end_time'])
             }
         ]
-
-    logged_in_user = find_by_id(session.get("loggedInUser"))
-
-    notifications = load_notifications(session.get("loggedInUser"))
-    print(session.get("loggedInUser"))
-    sender_dict = map_sender_to_user(notifications)
-    receiver_dict = map_receiver_to_user(notifications)
-    return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+            
+    page_finish()
+    return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route('/events')
 def events():
-    logged_in_user = find_by_id(session.get("loggedInUser"))
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
 
-    tasks = load_public_events()
-    notifications = load_notifications(session.get("loggedInUser"))
-    sender_dict = map_sender_to_user(notifications)
-    receiver_dict = map_receiver_to_user(notifications)
-    return render_template('publicevents.html', logged_in_user=logged_in_user, tasks=tasks, notifications=notifications,
-                           sender_dict=sender_dict, receiver_dict=receiver_dict)
+    event_list = load_public_events()
+    tasks = []
+    for task in event_list:
+        tasks += [
+            {
+                'id': task['id'],
+                'title': task['title'],
+                'description': task['description'],
+                'start_time': string_to_date(task['start_time']),
+                'end_time': string_to_date(task['end_time'])
+            }
+        ]
+
+    page_finish()
+    return render_template('publicevents.html', logged_in_user=logged_in_user, tasks=tasks,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 @app.route("/events/create", methods=['POST', 'GET'])
@@ -139,7 +163,6 @@ def event_create():
         add_public_events("a", request.form["title"], request.form["description"],
                           request.form["startDate"]+" "+request.form["startTime"],
                           request.form["endDate"]+" "+request.form["endTime"])
-
     return events()
 
 
@@ -154,7 +177,7 @@ def todo_create_public_event():
 def todo_create():
     if request.method == 'POST':
         add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")),
-                 request.form["course"], str(time.time()), request.form["date"])
+                 request.form["course"], str(time.time()), request.form["date"]+" "+request.form["time"])
     return todo()
 
 
@@ -162,6 +185,24 @@ def todo_create():
 def todo_delete(todo_id):
     delete_todo(todo_id)
     return todo()
+
+
+@app.route('/settings/delete_account', methods=['GET'])
+def delete_account():
+    confirmation = request.args.get("confirm")
+    if confirmation == '1':
+        delete_account_sql(session.get("loggedInUser"))
+        return logout()
+    else:
+        return settings()
+
+
+def string_to_date(string):
+    try:
+        date = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M").strftime("%d %m %Y, %A %I:%M %p")
+    except ValueError:
+        return string
+    return date
 
 
 def get_busy_times(courses):
@@ -172,29 +213,66 @@ def get_busy_times(courses):
     return busy_times
 
 
+@app.route('/friends')
+def friends():
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+
+    friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
+    friends_list = []
+    for friend in friends_of_user:
+        user = find_by_id(friend)
+        course_list = set([])
+        for courses in timetable_by_id(friend):
+            course_list.add(courses['subject'])
+        friends_list += [
+            {
+                'imgpath': user.imgpath,
+                'courses': ', '.join(course_list),
+                'status': user.status,
+                'name': user.first_name+" "+user.last_name,
+                'username': user.username
+            }
+        ]
+
+    page_finish()
+    return render_template('friends.html', friends=friends_list, logged_in_user=logged_in_user, friends_of_user=friends_of_user,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+
+
 @app.route('/user/<username>', methods=['GET'])
 def user(username):
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
 
     friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
 
     user = find_by_username(username)
+    if user is not None:
+        courses = timetable_by_username(username)
+        busy_times = get_busy_times(courses)
 
-    courses = timetable_by_username(username)
+    page_finish()
+    if user is None:
+        return page_not_found(404)
+    return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, courses=courses, busy_times=busy_times,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
-    busy_times = get_busy_times(courses)
+@app.route('/removeFriend/<username>', methods=['GET'])
+def remove_friend(username):
+    page_init_lite()
 
     logged_in_user = find_by_id(session.get("loggedInUser"))
 
-    notifications = load_notifications(session.get("loggedInUser"))
-    print(session.get("loggedInUser"))
+    friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
+    user = find_by_username(username)
+    remove_friend_from_db(logged_in_user.user_id, user.user_id)
 
-    sender_dict = map_sender_to_user(notifications)
-    receiver_dict = map_receiver_to_user(notifications)
-    return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    page_finish()
+    return redirect(url_for('user', username=user.username))
 
 
 @app.route("/class/create", methods=['POST'])
 def class_create():
+    page_init_lite()
 
     user_id = str(session.get("loggedInUser"))
     course_name = request.form["course"]
@@ -210,6 +288,7 @@ def class_create():
     add_class(user_id, course_name, start_time, day, length, activity)
 
     logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    page_finish()
     return redirect(url_for('user', username=logged_in_user))
 
 @app.route('/class/delete/<class_id>')
@@ -220,7 +299,8 @@ def class_delete(class_id):
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    logged_in_user = find_by_id(session.get("loggedInUser"))
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+
     error_message = ''
     if request.method == 'POST':
         old_pw = request.form.get('input-old-password')
@@ -229,10 +309,11 @@ def settings():
             if not utilities.profile.change_username(logged_in_user, new_username):
                 error_message += 'Username already taken.'
             new_password = request.form.get('input-new-password')
-            utilities.profile.change_password(logged_in_user, new_password)            
+            if new_password not in ['', ' ']:
+                utilities.profile.change_password(logged_in_user, new_password)
             new_email = request.form.get('input-email')
             if not utilities.profile.change_email(logged_in_user, new_email):
-                error_message += ('\nEmail already taken.' if error_message else 'Email already taken.')            
+                error_message += ('\nEmail already taken.' if error_message else 'Email already taken.')
             new_status = request.form.get('input-status')
             utilities.profile.change_status(logged_in_user, new_status)
             new_firstname = request.form.get('input-firstname')
@@ -248,15 +329,15 @@ def settings():
         else:
             error_message = 'Incorrect password.'
 
-    notifications = load_notifications(session.get("loggedInUser"))
-    print(session.get("loggedInUser"))
-    sender_dict = map_sender_to_user(notifications)
-    receiver_dict = map_receiver_to_user(notifications)
-    return render_template('settings.html', logged_in_user=logged_in_user, statuses=utilities.profile.statuses, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, error_message=error_message)
+    page_finish()
+    return render_template('settings.html', logged_in_user=logged_in_user, statuses=utilities.profile.statuses,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, error_message=error_message)
 
 
 @app.route("/search", methods=['GET'])
 def user_search():
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+    
     # get arguments
     search_query = request.args.get('q')
     page = request.args.get('page', default=1, type=int)
@@ -271,7 +352,8 @@ def user_search():
             { 'first_name': p['firstname'],
               'last_name': p['lastname'],
               'username': p['username'],
-              'imgpath': p['imgpath']
+              'imgpath': p['imgpath'],
+              'user_id': p['id']
             } for p in results
         ]
 
@@ -290,12 +372,9 @@ def user_search():
     else:
         users = output[page - 1]
 
-    logged_in_user = find_by_id(session.get("loggedInUser"))
-    notifications = load_notifications(session.get("loggedInUser"))
-    print(session.get("loggedInUser"))
-    sender_dict = map_sender_to_user(notifications)
-    receiver_dict = map_receiver_to_user(notifications)
-    return render_template('search.html', logged_in_user=logged_in_user, search=search_query, results=users, page=page, count=len(profiles), page_count=page_count, notifications=notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    page_finish()
+    return render_template('search.html', logged_in_user=logged_in_user, search=search_query, results=users, page=page, count=len(profiles), page_count=page_count,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
 def load_notifications(user_id):
@@ -327,7 +406,8 @@ def send_friend_request():
     print(now)
     send_friend_request_db(from_user_id, to_user_id, message, now)
 
-    return redirect(url_for('available'))
+    profile = find_by_id(to_user_id)
+    return user(profile.username)
 
 @app.route('/acceptFriendRequest', methods=['POST','GET'])
 def accept_friend_request():
@@ -341,6 +421,13 @@ def reject_friend_request():
     to_user_id = session.get("loggedInUser")
     from_user_id = request.args.get("userId")
     reject_friend_request_db(from_user_id, to_user_id)
+    return redirect(url_for('available'))
+
+@app.route('/deleteFriendRequest', methods=['POST', 'GET'])
+def delete_friend_request():
+    from_user_id = session.get("loggedInUser")
+    to_user_id = request.args.get("userId")
+    delete_friend_request_db(from_user_id, to_user_id)
     return redirect(url_for('available'))
 
 def load_friend_notifications(user_id):
@@ -374,9 +461,16 @@ def reject_meetup_request():
     reject_request(from_user_id, to_user_id)
     return redirect(url_for('available'))
 
+@app.route('/deleteMeetUpRequest', methods=['POST', 'GET'])
+def delete_meetup_request():
+    from_user_id = session.get("loggedInUser")
+    to_user_id = request.args.get("userId")
+    delete_request(from_user_id, to_user_id)
+    return redirect(url_for('available'))
+
 @app.errorhandler(404)
 def page_not_found(e):
-    return '404 <button onclick="window.history.back()">Go Back</button>', 404
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':

@@ -283,6 +283,7 @@ def test_auto_update_status():
 
 print("==Testing user profile settings...==")
 try:
+    connect()
     test_change_username()
     test_change_password()
     test_change_email()
@@ -297,9 +298,11 @@ try:
     test_is_auto_update()
     test_set_flags()
     test_auto_update_status()
+    disconnect()
 except:
     update_user(1, username='status', password='dummy', firstname='dummy', lastname='dummy', email='dummy@dummy.dummy', gender='dummy', dob='dummy', status='Available', imgpath='dummy.jpg', degree='Computer Science', flags=-1, last_update=-1)
     update_user(2, status='Available', flags=9, last_update=-1)
+    disconnect()
     assert False
 
 print("==User profile settings OK!==")

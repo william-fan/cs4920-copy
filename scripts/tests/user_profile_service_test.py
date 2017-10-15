@@ -2,7 +2,22 @@
 import sys
 sys.path.append('./')
 from services.UserProfileService import *
+import services.SQLService
 import classes.UserProfile
+
+def test_register_user():
+    print("Testing register_user()...")
+    register_user("registest", 'test', 'test@test.test', 'firstest', 'lastest', 'male', 'tuesday')
+    user = find_by_username('registest')
+    assert user.username == 'registest' and user.password == 'test' and user.email == 'test@test.test' and user.first_name == 'firstest' and user.last_name == 'lastest' and user.gender == 'male' and user.dob=='tuesday' and user.status =='Available' and user.imgpath == 'default.jpg' and user.degree == 'None' and user.flags == -1 and user.last_update == -1
+    print("register_user() OK!")
+    
+def test_delete_user():
+    print("Testing delete_user()...")
+    delete_account_sql(get_user_id_from_username("registest"))
+    user = find_by_username('registest')
+    assert user is None
+    print("delete_user() OK!")
 
 def test_find_by_email_pass():
     print("Testing find_by_email_pass()...")
@@ -97,6 +112,9 @@ def test_get_username_from_user_id():
 
 print("==Testing UserProfileService.py...==")
 try:
+    services.SQLService.connect()
+    test_register_user()
+    test_delete_user()
     test_find_by_email_pass()
     test_find_by_email()
     test_find_by_username()
@@ -104,7 +122,9 @@ try:
     test_update_user()
     test_get_user_id_from_username()
     test_get_username_from_user_id()
+    services.SQLService.disconnect()
 except:
     update_user(2, username='service', password='service', firstname='servicefirst', lastname='servicelast', email='service@service.com', gender='servicegender', dob='servicedob', status='Available', imgpath='default.jpg', degree='Computer Science')
+    services.SQLService.disconnect()
     assert False
 print("==UserProfileService.py OK!==")

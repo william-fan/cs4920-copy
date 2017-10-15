@@ -2,7 +2,6 @@ from services.SQLService import *
 
 from classes.UserProfile import UserProfile
 from classes.PublicEvent import PublicEvent
-from classes.ToDo import ToDo
 
 import utilities.profile
 
@@ -145,13 +144,11 @@ def load_todos(id):
     todo_list = list(table.fetchall())
     return todo_list
 
+
 def load_public_events():
-    public_events = []
     sql = "SELECT * FROM public_event"
     table = execute_sql(sql)
-    for row in table:
-        public_events.append(PublicEvent(row["id"], row["title"], row["description"], row["start_time"], row["end_time"]))
-
+    public_events = list(table.fetchall())
     return public_events
 
 
@@ -187,3 +184,17 @@ def search_users(query):
 def delete_class(id):
     sql = "DELETE FROM user_class WHERE id = " + str(id)
     table = execute_sql(sql)
+
+
+def delete_account_sql(id):
+    sql = "DELETE FROM user_friend WHERE user_id1 = " + str(id)\
+          + ";DELETE FROM friend_request WHERE from_id = " + str(id) \
+          + ";DELETE FROM friend_request WHERE to_id = " + str(id) \
+          + ";DELETE FROM user_friend WHERE user_id2 = " + str(id) \
+          + ";DELETE FROM user_meetup_request WHERE from_id = " + str(id) \
+          + ";DELETE FROM user_meetup_request WHERE to_id = " + str(id) \
+          + ";DELETE FROM user_class WHERE user_id = " + str(id) +\
+          ";DELETE FROM user_todo_list WHERE user_id = " + str(id) + \
+          ";DELETE FROM user_profile WHERE id = " + str(id)
+    table = execute_sql(sql)
+
