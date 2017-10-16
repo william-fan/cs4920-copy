@@ -235,3 +235,14 @@ def courses_on_code_and_id(course_code, class_id):
             'length': row['length']
         })
     return courses
+
+def find_common_courses(user_id):
+    recommended = {}
+    sql = "select distinct user_id, course_name FROM user_class WHERE course_name IN (SELECT course_name FROM user_class WHERE user_id = " + str(user_id) + ") AND user_id != " + str(user_id);
+    table = execute_sql(sql)
+    for row in table:
+        if (row['user_id'] not in recommended):
+            recommended[row['user_id']] = "";
+        recommended[row['user_id']] = recommended[row['user_id']] + row['course_name'] + " ";
+
+    return recommended

@@ -239,6 +239,19 @@ def friends():
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
+@app.route('/recommended')
+def show_recommended():
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+    recommended = find_common_courses(session.get("loggedInUser"))
+    user_dict = map_id_to_object(recommended)
+    return render_template('recommended.html', logged_in_user=logged_in_user, notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, recommended=recommended, user_dict=user_dict)
+
+def map_id_to_object(map):
+    dict = {}
+    for key in map:
+        dict[key] = find_by_id(key)
+    return dict
+
 @app.route('/user/<username>', methods=['GET'])
 def user(username):
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()

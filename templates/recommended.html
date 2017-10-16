@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% set active_page = "recommended" %}
+
+{% block title %}
+Recommended Friends
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+<link href="../static/friends.css" rel="stylesheet">
+<table id='recctable' class="table">
+  <thead class="">
+    <tr>
+      <th width="35%">Name</th>
+      <th width="65%">Mutual courses</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for id in recommended %}
+    <tr>
+      <td>
+          <div class="container">
+              <a class="nounderline" href="{{ url_for('user', username=user_dict[id].username) }}">
+                  <img class="" src="/static/img/users/{{user_dict[id].imgpath}}" width="64" height="64" alt="{{user_dict[id].first_name}}">
+              </a>
+              <a href="{{ url_for('user', username=user_dict[id].username) }}" style="color:black">
+                <span class="my-2 col-xl-3 col-lg-4 col-md-6">{{user_dict[id].first_name}}</span>
+              </a>
+          </div>
+      </td>
+      <td class="align-middle">
+          {{recommended[id]}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#recctable').DataTable({
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search...",
+                    emptyTable: "No friends"
+                }
+            });
+        });
+
+    </script>
+{% endblock %}
