@@ -253,8 +253,11 @@ def user(username):
     page_finish()
     if user is None:
         return page_not_found(404)
-    return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, courses=courses, busy_times=busy_times,
-                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    all_courses_list = all_courses()
+    return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user,
+                           courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict,
+                           receiver_dict=receiver_dict, all_courses=all_courses_list)
+
 
 @app.route('/removeFriend/<username>', methods=['GET'])
 def remove_friend(username):
@@ -275,17 +278,13 @@ def class_create():
     page_init_lite()
 
     user_id = str(session.get("loggedInUser"))
-    course_name = request.form["course"]
-    start_time = request.form["time"][:-3]
+    selection = request.form["course"]
+    course_name, class_id = selection.split()
 
-    day_numbers = {"Monday": 0, "Tuesday": 1, "Wednesday": 2, "Thursday": 3, "Friday": 4}
-    day = day_numbers[request.form["day"]]
-
-    length = request.form["length"]
-    activity = request.form["activity"]
-
-
-    add_class(user_id, course_name, start_time, day, length, activity)
+    selected_courses = courses_on_code_and_id(course_name, class_id)
+    for course in selected_courses:
+        add_class(user_id, course['course_code'], course['start_time'], course['day'], course['length'],
+                           course['activity'])
 
     logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
     page_finish()

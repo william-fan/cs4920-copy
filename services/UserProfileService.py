@@ -198,3 +198,31 @@ def delete_account_sql(id):
           ";DELETE FROM user_profile WHERE id = " + str(id)
     table = execute_sql(sql)
 
+def all_courses():
+    sql = "SELECT DISTINCT faculty, course_code, class_id FROM courses"
+    table = execute_sql(sql)
+    courses = []
+    for row in table:
+        courses.append({
+            'course_code': '{}{}'.format(row['faculty'], row['course_code']),
+            'class_id': row['class_id']
+        })
+    return courses
+
+
+def courses_on_code_and_id(course_code, class_id):
+    faculty = course_code[:4]
+    course_code = course_code[4:]
+    sql = "SELECT * FROM courses WHERE faculty = '{}' AND course_code = {} AND class_id = '{}'".format(faculty, course_code, class_id)
+    table = execute_sql(sql)
+    courses = []
+    for row in table:
+        courses.append({
+            'course_code': '{}{}'.format(row['faculty'], row['course_code']),
+            'class_id': row['class_id'],
+            'day': row['day'],
+            'activity': row['activity'],
+            'start_time': row['start_time'],
+            'length': row['length']
+        })
+    return courses
