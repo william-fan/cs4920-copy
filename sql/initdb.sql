@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS user_todo_list (
   course_name  VARCHAR(45) NOT NULL,
   create_time VARCHAR(45) NOT NULL,
   end_time  VARCHAR(45) NOT NULL,
+  priority INT(11) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES user_profile(id)
 );

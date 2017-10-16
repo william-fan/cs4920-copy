@@ -199,7 +199,7 @@ def delete_account():
 
 def string_to_date(string):
     try:
-        date = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M").strftime("%d %m %Y, %A %I:%M %p")
+        date = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M").strftime("%d/%m/%Y, %A %I:%M %p")
     except ValueError:
         return string
     return date
