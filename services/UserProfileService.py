@@ -16,7 +16,16 @@ def friends_by_id(user_id):
     table = execute_sql(sql)
     profiles = []
     for row in table:
-        profiles.append(find_by_id(row["user_id2"]))
+        profile = find_by_id(row["user_id1"])
+        if profile not in profiles:
+            profiles.append(find_by_id(row["user_id1"]))
+
+    sql = "SELECT * FROM user_friend WHERE user_id2="+str(user_id)
+    table = execute_sql(sql)
+    for row in table:
+        profile = find_by_id(row["user_id1"])
+        if profile not in profiles:
+            profiles.append(find_by_id(row["user_id1"]))
     return profiles
 
 #Retreives a user based on email and pass
@@ -131,7 +140,7 @@ def timetable_by_id(user_id):
             'activity': row['activity']
         })
     return courses
-    
+
 
 def timetable_by_username(username):
     user_id = get_user_id_from_username(username)

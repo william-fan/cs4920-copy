@@ -29,8 +29,6 @@ def accept_friend_request_db(from_id, to_id):
     table = execute_sql(sql)
     sql = "INSERT INTO user_friend(user_id1, user_id2) VALUES(" + str(from_id) + ", " + str(to_id) + ")"
     table = execute_sql(sql)
-    sql = "INSERT INTO user_friend(user_id1, user_id2) VALUES(" + str(to_id) + ", " + str(from_id) + ")"
-    table = execute_sql(sql)
 
 def reject_friend_request_db(from_id, to_id):
     sql = "UPDATE friend_request SET status = 'REJECTED' WHERE from_id = " + str(from_id) + " AND to_id = " + str(to_id)
