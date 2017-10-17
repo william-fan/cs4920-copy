@@ -4,6 +4,7 @@ Settings
 {% endblock %}
 
 {% block content %}
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
  <div class="form-group">
 
   {% if error_message %}
@@ -15,8 +16,9 @@ Settings
     <div class="form-group">
       <label for="status">Status:</label>
       <select class="form-control" name="input-status">
+          <option {% if utils.is_auto_update(logged_in_user) %}selected{% endif %}   >Automatic</option>
         {% for status in statuses %}
-          <option {% if logged_in_user.status == status %}selected{% endif %}   >{{status}}</option>
+          <option {% if not utils.is_auto_update(logged_in_user) and logged_in_user.status == status %}selected{% endif %}   >{{status}}</option>
         {% endfor %}
       </select>
     </div>
@@ -45,6 +47,13 @@ Settings
       <input name="input-degree" type="text" id="input-degree" class="form-control" value="{{logged_in_user.degree}}">
     </div>
     </br>
+    <strong>Privacy Settings</strong></br>
+    Set what people who aren't your friends can see.</br>
+    Email: <input name="privacy-email" id="privacy-email" {% if utils.is_private(logged_in_user, 'email') %}checked{% endif %} data-toggle="toggle" data-size="mini" type="checkbox">
+    Gender: <input name="privacy-gender" id="privacy-gender" {% if utils.is_private(logged_in_user, 'gender') %}checked{% endif %} data-toggle="toggle" data-size="mini" type="checkbox">
+    Date of Birth: <input name="privacy-dob" id="privacy-dob" {% if utils.is_private(logged_in_user, 'dob') %}checked{% endif %} data-toggle="toggle" data-size="mini" type="checkbox">
+    Degree: <input name="privacy-degree" id="privacy-degree" {% if utils.is_private(logged_in_user, 'degree') %}checked{% endif %} data-toggle="toggle" data-size="mini" type="checkbox">
+    </br></br></br>
     <strong>Account Information</strong></br>
     <div class="form-group">
       <label for="username">Username:</label>
@@ -69,6 +78,7 @@ Settings
 </div>
 {% endblock %}
 {% block javascript %}
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script>
         //Gives confirmation to deleting account
         function delete_acc(input) {
