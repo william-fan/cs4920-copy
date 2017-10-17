@@ -22,7 +22,7 @@ def page_init():
     sender_dict.update(map_sender_to_user(friends_notifications))
     receiver_dict = map_receiver_to_user(notifications)
     receiver_dict.update(map_receiver_to_user(friends_notifications))
-    
+
     return logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict
 
 def page_init_lite():
@@ -77,7 +77,7 @@ def register():
     existing_user = find_by_username(username)
     if (existing_user is not None):
         errors.append("That username has been taken already")
-    
+
     if (len(errors) > 0):
         page_finish()
         return render_template("register.html", register_error=", ".join(errors))
@@ -94,7 +94,7 @@ def displaySignIn():
 @app.route('/available')
 def available():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
-    
+
     friends_of_user = friends_by_id(session.get("loggedInUser"))
     friends_of_user = utilities.profile.update_statuses(friends_of_user)
     available = [
@@ -107,7 +107,7 @@ def available():
          } for p in friends_of_user
         if p.status == utilities.profile.statuses[0]
     ]
-    
+
     page_finish()
     return render_template('available.html', logged_in_user=logged_in_user, available=available,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
@@ -129,7 +129,7 @@ def todo():
                 'date': string_to_date(task['end_time'])
             }
         ]
-            
+
     page_finish()
     return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
@@ -257,6 +257,10 @@ def user(username):
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
 
     friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
+    pending_friends_of_user = [profile.user_id for profile in pending_friends_by_id(session.get("loggedInUser"))]
+
+    for profile in pending_friends_of_user:
+        print(profile)
 
     user = find_by_username(username)
     if user is not None:
@@ -269,7 +273,7 @@ def user(username):
     all_courses_list = all_courses()
     return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user,
                            courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict,
-                           receiver_dict=receiver_dict, all_courses=all_courses_list)
+                           receiver_dict=receiver_dict, all_courses=all_courses_list, pending_friends_of_user=pending_friends_of_user)
 
 
 @app.route('/removeFriend/<username>', methods=['GET'])
@@ -285,6 +289,18 @@ def remove_friend(username):
     page_finish()
     return redirect(url_for('user', username=user.username))
 
+
+@app.route('/cancelFriendRequest/<username>', methods=['GET'])
+def cancel_friend_request(username):
+    page_init_lite()
+
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+
+    user = find_by_username(username)
+    remove_friend_request_from_db(logged_in_user.user_id, user.user_id)
+
+    page_finish()
+    return redirect(url_for('user', username=user.username))
 
 @app.route("/class/create", methods=['POST'])
 def class_create():
@@ -349,7 +365,7 @@ def settings():
 @app.route("/search", methods=['GET'])
 def user_search():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
-    
+
     # get arguments
     search_query = request.args.get('q')
     page = request.args.get('page', default=1, type=int)

@@ -56,3 +56,7 @@ def remove_friend_from_db(user_id1, user_id2):
     table = execute_sql(sql)
     sql ="DELETE FROM user_friend WHERE user_id1=\"" + str(user_id2) + "\" AND user_id2=\"" + str(user_id1) + "\""
     table = execute_sql(sql)
+
+def remove_friend_request_from_db(from_id, to_id):
+    sql ="DELETE FROM friend_request WHERE from_id=\"" + str(from_id) + "\" AND to_id=\"" + str(to_id) + "\""
+    table = execute_sql(sql)

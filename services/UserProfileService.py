@@ -28,6 +28,16 @@ def friends_by_id(user_id):
             profiles.append(find_by_id(row["user_id1"]))
     return profiles
 
+def pending_friends_by_id(user_id):
+    sql = "SELECT * FROM friend_request WHERE from_id="+str(user_id)+" AND status='PENDING'"
+    table = execute_sql(sql)
+    profiles = []
+    for row in table:
+        profile = find_by_id(row["to_id"])
+        if profile not in profiles:
+            profiles.append(profile)
+    return profiles
+
 #Retreives a user based on email and pass
 def find_by_email_pass(email, password):
     sql = "SELECT * FROM user_profile WHERE email = '" + email + "' AND password = '" + password + "'"
