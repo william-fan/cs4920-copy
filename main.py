@@ -42,9 +42,13 @@ def index():
 
 @app.route("/login", methods=['POST'])
 def login():
-    username = request.form["inputEmail"]
+    username = request.form["inputUserEmail"]
     password = request.form["inputPassword"]
     profile = find_by_email_pass(username, password)
+    if profile is not None:
+        session['loggedInUser'] = profile.user_id
+        return redirect(url_for('available'))
+    profile = find_by_user_pass(username, password)
     if profile is not None:
         session['loggedInUser'] = profile.user_id
         return redirect(url_for('available'))
@@ -94,9 +98,9 @@ def displaySignIn():
 @app.route('/available')
 def available():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+    utilities.profile.update_statuses(all_users())
 
     friends_of_user = friends_by_id(session.get("loggedInUser"))
-    friends_of_user = utilities.profile.update_statuses(friends_of_user)
     available = [
         {
          'user_id': p.user_id,
@@ -273,7 +277,7 @@ def user(username):
     if user is None:
         return page_not_found(404)
     all_courses_list = all_courses()
-    return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user,
+    return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, privacy_fn=utilities.profile.is_private,
                            courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict,
                            receiver_dict=receiver_dict, all_courses=all_courses_list, pending_friends_of_user=pending_friends_of_user)
 
@@ -345,7 +349,11 @@ def settings():
             if not utilities.profile.change_email(logged_in_user, new_email):
                 error_message += ('\nEmail already taken.' if error_message else 'Email already taken.')
             new_status = request.form.get('input-status')
-            utilities.profile.change_status(logged_in_user, new_status)
+            set_auto = None
+            if new_status == 'Automatic':
+                set_auto = True
+            else:
+                utilities.profile.change_status(logged_in_user, new_status)
             new_firstname = request.form.get('input-firstname')
             utilities.profile.change_firstname(logged_in_user, new_firstname)
             new_lastname = request.form.get('input-lastname')
@@ -356,11 +364,19 @@ def settings():
             utilities.profile.change_dob(logged_in_user, new_dob)
             new_degree = request.form.get('input-degree')
             utilities.profile.change_degree(logged_in_user, new_degree)
+            # privacy settings stuff
+            p_email = True if request.form.get('privacy-email') else False
+            p_dob = True if request.form.get('privacy-dob') else False
+            p_gender = True if request.form.get('privacy-gender') else False
+            p_degree = True if request.form.get('privacy-degree') else False
+            print(p_email, p_dob, p_gender, p_degree, set_auto)
+            utilities.profile.set_flags(logged_in_user, email=p_email, dob=p_dob, gender=p_gender, degree=p_degree, auto=set_auto)
+
         else:
             error_message = 'Incorrect password.'
 
     page_finish()
-    return render_template('settings.html', logged_in_user=logged_in_user, statuses=utilities.profile.statuses,
+    return render_template('settings.html', logged_in_user=logged_in_user, statuses=utilities.profile.statuses, utils=utilities.profile,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, error_message=error_message)
 
 

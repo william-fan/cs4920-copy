@@ -11,6 +11,11 @@ def load_profile(sql_row):
                        sql_row["flags"], sql_row["last_update"])
 
 
+def all_users():
+    sql = "SELECT * FROM user_profile"
+    table = execute_sql(sql)
+    return [load_profile(row) for row in table]
+
 def friends_by_id(user_id):
     sql = "SELECT * FROM user_friend WHERE user_id1="+str(user_id)
     table = execute_sql(sql)
@@ -47,6 +52,14 @@ def find_by_email_pass(email, password):
         profile = load_profile(row)
     return profile
 
+#Retreives a user based on user and pass
+def find_by_user_pass(user, password):
+    sql = "SELECT * FROM user_profile WHERE username = '" + user + "' AND password = '" + password + "'"
+    table = execute_sql(sql)
+    profile = None
+    for row in table:
+        profile = load_profile(row)
+    return profile
 
 #Retreives a user based on email
 def find_by_email(email):
@@ -189,6 +202,7 @@ def delete_todo(id):
 def add_class(user_id, course_name, start_time, day, length, activity):
     sql = "insert into user_class (user_id, course_name, start_time, day, length, activity) values ({}, '{}', {}, {}, {}, '{}')".format(user_id, course_name, start_time, day, length, activity)
     table = execute_sql(sql)
+    update_statuses([find_by_id(user_id)])
 
 
 def search_users(query):
@@ -203,6 +217,7 @@ def search_users(query):
 def delete_class(id):
     sql = "DELETE FROM user_class WHERE id = " + str(id)
     table = execute_sql(sql)
+    update_statuses([find_by_id(id)])
 
 
 def delete_account_sql(id):
