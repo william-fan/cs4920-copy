@@ -42,9 +42,13 @@ def index():
 
 @app.route("/login", methods=['POST'])
 def login():
-    username = request.form["inputEmail"]
+    username = request.form["inputUserEmail"]
     password = request.form["inputPassword"]
     profile = find_by_email_pass(username, password)
+    if profile is not None:
+        session['loggedInUser'] = profile.user_id
+        return redirect(url_for('available'))
+    profile = find_by_user_pass(username, password)
     if profile is not None:
         session['loggedInUser'] = profile.user_id
         return redirect(url_for('available'))

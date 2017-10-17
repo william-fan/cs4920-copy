@@ -47,6 +47,14 @@ def find_by_email_pass(email, password):
         profile = load_profile(row)
     return profile
 
+#Retreives a user based on user and pass
+def find_by_user_pass(user, password):
+    sql = "SELECT * FROM user_profile WHERE username = '" + user + "' AND password = '" + password + "'"
+    table = execute_sql(sql)
+    profile = None
+    for row in table:
+        profile = load_profile(row)
+    return profile
 
 #Retreives a user based on email
 def find_by_email(email):
