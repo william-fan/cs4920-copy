@@ -13,19 +13,32 @@ To Do
       <th width="20%">Task</th>
       <th width="19%">Subject</th>
       <th width="40%">Text</th>
-      <th width="20%">Due</th>
+      <th width="15%">Due</th>
+      <th width="5%">Priority</th>
       <th width="1%"></th>
     </tr>
   </thead>
   <tbody>
     {% for task in tasks %}
-    <tr>
-      <td>{{ task.name }}</td>
-      <td>{{ task.subject }}</td>
-      <td>{{ task.text }}</td>
-      <td>{{ task.date }}</td>
-      <td><a href="/todo/delete/{{ task.id }}"><i class="fa fa-times"></i></a></td>
-    </tr>
+        {% if task.priority == 0 %}
+            <tr>
+        {% endif %}
+        {% if task.priority == 1 %}
+            <tr>
+        {% endif %}
+        {% if task.priority == 2 %}
+            <tr class="table-info">
+        {% endif %}
+        {% if task.priority == 3 %}
+            <tr class="table-warning">
+        {% endif %}
+              <td>{{ task.name }}</td>
+              <td>{{ task.subject }}</td>
+              <td>{{ task.text }}</td>
+              <td>{{ task.date }}</td>
+              <td>{{ task.priority }}</td>
+              <td><a href="/todo/delete/{{ task.id }}"><i class="fa fa-times"></i></a></td>
+            </tr>
     {% endfor %}
   </tbody>
 </table>
@@ -68,6 +81,15 @@ To Do
             <label for="time" class="form-control-label">Due Time</label>
             <input name="time" type="time" id="time" class="form-control" autofocus required>
           </div>
+          <div class="form-group">
+            <label for="priority" class="form-control-label">Priority</label>
+            <select name="priority" id="priority" class="form-control" size="1" autofocus required>
+                <option value="0">No Priority</option>
+                <option value="1">Low Priority</option>
+                <option value="2">Moderate Priority</option>
+                <option value="3">High Priority</option>
+            </select>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -85,7 +107,7 @@ To Do
     <script type="text/javascript">
         $(document).ready(function(){
             $('#todotable').DataTable({
-                "order": [[3, "asc"]],
+                "order": [[3, "asc"], [4, "desc"]],
                 columnDefs: [
                     { orderable: false, targets: -1 }
                 ],

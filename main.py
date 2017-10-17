@@ -126,7 +126,8 @@ def todo():
                 'name': task['title'],
                 'text': task['description'],
                 'subject': task['course_name'],
-                'date': string_to_date(task['end_time'])
+                'date': task['end_time'],
+                'priority': task['priority']
             }
         ]
 
@@ -147,8 +148,8 @@ def events():
                 'id': task['id'],
                 'title': task['title'],
                 'description': task['description'],
-                'start_time': string_to_date(task['start_time']),
-                'end_time': string_to_date(task['end_time'])
+                'start_time': task['start_time'],
+                'end_time': task['end_time']
             }
         ]
 
@@ -161,15 +162,15 @@ def events():
 def event_create():
     if request.method == 'POST':
         add_public_events("a", request.form["title"], request.form["description"],
-                          request.form["startDate"]+" "+request.form["startTime"],
-                          request.form["endDate"]+" "+request.form["endTime"])
+                          string_to_date(request.form["startDate"]+" "+request.form["startTime"]),
+                          string_to_date(request.form["endDate"]+" "+request.form["endTime"]))
     return events()
 
 
 @app.route("/todo/createPublicEvent", methods=['GET'])
 def todo_create_public_event():
     add_todo("a",request.args.get("title"), request.args.get("description"), str(session.get("loggedInUser")), "Event",
-             request.args.get("startTime"), request.args.get("endTime"))
+             string_to_date(request.args.get("startTime")), string_to_date(request.args.get("endTime")), "0")
     return todo()
 
 
@@ -177,7 +178,8 @@ def todo_create_public_event():
 def todo_create():
     if request.method == 'POST':
         add_todo("a", request.form["title"], request.form["description"], str(session.get("loggedInUser")),
-                 request.form["course"], str(time.time()), request.form["date"]+" "+request.form["time"])
+                 request.form["course"], datetime.datetime.now().strftime("%d/%m/%Y, %A %I:%M %p"),
+                 string_to_date(request.form["date"]+" "+request.form["time"]), request.form["priority"])
     return todo()
 
 
