@@ -26,12 +26,12 @@
           <td><a href="/removeFriend/{{user.username}}" class="btn btn-primary float-right">Remove Friend</a></td>
         {% endif %}
       {% endif %}
-      <i class="fa fa-graduation-cap fa-fw"></i> {{ user.degree }}
-      <br />
+      {% if not privacy_fn(user, 'degree') or user.user_id in friends_of_user or current_user == user.username %}<i class="fa fa-graduation-cap fa-fw"></i> {{ user.degree }}
+      <br />{% endif %}
       <i class="fa fa-user fa-fw"></i> {{ user.status }}
       <br />
-      <i class="fa fa-envelope fa-fw"></i> <a href="mailto:{{user.email}}" style="color:#212529">{{ user.email }}</a>
-      <br />
+      {% if not privacy_fn(user, 'email') or user.user_id in friends_of_user or current_user == user.username %}<i class="fa fa-envelope fa-fw"></i> <a href="mailto:{{user.email}}" style="color:#212529">{{ user.email }}</a>
+      <br />{% endif %}
       {% if current_user != user.username %}
       <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#contactModal">Contact</button>
       {% endif %}
