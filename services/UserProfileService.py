@@ -16,16 +16,16 @@ def friends_by_id(user_id):
     table = execute_sql(sql)
     profiles = []
     for row in table:
-        profile = find_by_id(row["user_id1"])
+        profile = find_by_id(row["user_id2"])
         if profile not in profiles:
-            profiles.append(find_by_id(row["user_id1"]))
+            profiles.append(profile)
 
     sql = "SELECT * FROM user_friend WHERE user_id2="+str(user_id)
     table = execute_sql(sql)
     for row in table:
         profile = find_by_id(row["user_id1"])
         if profile not in profiles:
-            profiles.append(find_by_id(row["user_id1"]))
+            profiles.append(profile)
     return profiles
 
 def pending_friends_by_id(user_id):
