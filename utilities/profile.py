@@ -146,6 +146,7 @@ def update_statuses(users, current=datetime.datetime.now()):
                 timeslots[j] = statuses[1]
             timeslot_time = start+user_class['length']
             class_before = True
+        print(timeslots)
         users[i] = change_status(user, timeslots[current.hour])
         users[i].last_update = update_time
     return users

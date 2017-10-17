@@ -52,25 +52,25 @@ Settings
 
     <div class="form-check">
       <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" value="" name="privacy-email" id="privacy-email" {% if utils.is_private(logged_in_user, 'email') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Public" data-off="Friends" data-offstyle="warning">
+        <input class="form-check-input" type="checkbox" value="True" name="privacy-email" id="privacy-email" {% if utils.is_private(logged_in_user, 'email') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
         Email
       </label>
     </div>
     <div class="form-check">
       <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" value="" name="privacy-gender" id="privacy-gender" {% if utils.is_private(logged_in_user, 'gender') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Public" data-off="Friends" data-offstyle="warning">
+        <input class="form-check-input" type="checkbox" value="True" name="privacy-gender" id="privacy-gender" {% if utils.is_private(logged_in_user, 'gender') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
         Gender
       </label>
     </div>
     <div class="form-check">
       <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" value="" name="privacy-dob" id="privacy-dob" {% if utils.is_private(logged_in_user, 'dob') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Public" data-off="Friends" data-offstyle="warning">
+        <input class="form-check-input" type="checkbox" value="True" name="privacy-dob" id="privacy-dob" {% if utils.is_private(logged_in_user, 'dob') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
         DOB
       </label>
     </div>
     <div class="form-check">
       <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" value="" name="privacy-degree" id="privacy-degree" {% if utils.is_private(logged_in_user, 'degree') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Public" data-off="Friends" data-offstyle="warning">
+        <input class="form-check-input" type="checkbox" value="True" name="privacy-degree" id="privacy-degree" {% if utils.is_private(logged_in_user, 'degree') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
         Degree
       </label>
     </div>

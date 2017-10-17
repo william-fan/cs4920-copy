@@ -250,7 +250,10 @@ def show_recommended():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
     recommended = find_common_courses(session.get("loggedInUser"))
     user_dict = map_id_to_object(recommended)
-    return render_template('recommended.html', logged_in_user=logged_in_user, notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, recommended=recommended, user_dict=user_dict)
+    
+    page_finish()
+    return render_template('recommended.html', logged_in_user=logged_in_user, recommended=recommended, user_dict=user_dict,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 def map_id_to_object(map):
     dict = {}
@@ -321,15 +324,21 @@ def class_create():
         add_class(user_id, course['course_code'], course['start_time'], course['day'], course['length'],
                            course['activity'])
 
-    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+    logged_in_user.last_update = -1
+    logged_in_user = utilities.profile.update_statuses([logged_in_user])[0]
     page_finish()
-    return redirect(url_for('user', username=logged_in_user))
+    return redirect(url_for('user', username=logged_in_user.username))
 
 @app.route('/class/delete/<class_id>')
 def class_delete(class_id):
+    page_init_lite()
     delete_class(class_id)
-    logged_in_user = get_username_from_user_id(session.get("loggedInUser"))
-    return redirect(url_for('user', username=logged_in_user))
+    logged_in_user = find_by_id(session.get("loggedInUser"))
+    logged_in_user.last_update = -1
+    logged_in_user = utilities.profile.update_statuses([logged_in_user])[0]
+    page_finish()
+    return redirect(url_for('user', username=logged_in_user.username))
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
@@ -352,7 +361,10 @@ def settings():
             set_auto = None
             if new_status == 'Automatic':
                 set_auto = True
+                logged_in_user = utilities.profile.update_statuses([logged_in_user])[0]
             else:
+                set_auto = False
+                logged_in_user.last_update = -1
                 utilities.profile.change_status(logged_in_user, new_status)
             new_firstname = request.form.get('input-firstname')
             utilities.profile.change_firstname(logged_in_user, new_firstname)

@@ -202,7 +202,6 @@ def delete_todo(id):
 def add_class(user_id, course_name, start_time, day, length, activity):
     sql = "insert into user_class (user_id, course_name, start_time, day, length, activity) values ({}, '{}', {}, {}, {}, '{}')".format(user_id, course_name, start_time, day, length, activity)
     table = execute_sql(sql)
-    update_statuses([find_by_id(user_id)])
 
 
 def search_users(query):
@@ -217,7 +216,6 @@ def search_users(query):
 def delete_class(id):
     sql = "DELETE FROM user_class WHERE id = " + str(id)
     table = execute_sql(sql)
-    update_statuses([find_by_id(id)])
 
 
 def delete_account_sql(id):
