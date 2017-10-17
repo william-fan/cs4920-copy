@@ -272,7 +272,8 @@ def find_common_courses(user_id):
 
     return recommended
 
-def find_mutual_friends(user_id):
+#grabs all the users that have the same friends as u
+def find_users_with_mutual_friends(user_id):
     sql = ""
     sql +=      "select user_id1 as friend from"
     sql +=          "("
