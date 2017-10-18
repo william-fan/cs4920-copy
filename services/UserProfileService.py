@@ -212,7 +212,6 @@ def delete_todo(id):
 def add_class(user_id, course_name, start_time, day, length, activity):
     sql = "insert into user_class (user_id, course_name, start_time, day, length, activity) values ({}, '{}', {}, {}, {}, '{}')".format(user_id, course_name, start_time, day, length, activity)
     table = execute_sql(sql)
-    update_statuses([find_by_id(user_id)])
 
 
 def search_users(query):
@@ -227,7 +226,6 @@ def search_users(query):
 def delete_class(id):
     sql = "DELETE FROM user_class WHERE id = " + str(id)
     table = execute_sql(sql)
-    update_statuses([find_by_id(id)])
 
 
 def delete_account_sql(id):
@@ -281,3 +279,51 @@ def find_common_courses(user_id):
         recommended[row['user_id']] = recommended[row['user_id']] + row['course_name'] + " ";
 
     return recommended
+
+#grabs all the users that have the same friends as u
+def find_users_with_mutual_friends(user_id):
+    sql = ""
+    sql +=      "select user_id1 as friend from"
+    sql +=          "("
+    sql +=	            "select * from user_friend where (user_id1 IN "
+    sql +=		            "("
+    sql +=			            "select user_id2 as friend FROM user_friend where user_id1 = " + str(user_id)
+    sql +=			            " UNION "
+    sql +=			            "select user_id1 as friend FROM user_friend where user_id2 = " + str(user_id)
+    sql +=		            ") or user_id2 in "
+    sql +=		            "("
+    sql +=			            "select user_id2 as friend FROM user_friend where user_id1 = " + str(user_id)
+    sql +=			            " UNION "
+    sql +=			            "select user_id1 as friend FROM user_friend where user_id2 = " + str(user_id)
+    sql +=		            ")"
+    sql +=	            ") and user_id1 != " + str(user_id) + " and user_id2 != " + str(user_id)
+    sql +=          ") as friends where user_id2 in "
+    sql +=              "("
+    sql +=                  "select user_id2 as friend FROM user_friend where user_id1 = " + str(user_id)
+    sql +=                  " UNION "
+    sql +=                  "select user_id1 as friend FROM user_friend where user_id2 = " + str(user_id)
+    sql +=                ")"
+    sql +=      " UNION "
+    sql +=      "select user_id2 as friend from"
+    sql +=           "("
+    sql +=                "select * from user_friend where (user_id1 in "
+    sql +=                  "("
+    sql +=                       "select user_id2 as friend FROM user_friend where user_id1 = " + str(user_id)
+    sql +=                        " UNION "
+    sql +=                       " select user_id1 as friend FROM user_friend where user_id2 = " + str(user_id)
+    sql +=                   ") or user_id2 in "
+    sql +=                   "("
+    sql +=                        "select user_id2 as friend FROM user_friend where user_id1 = " + str(user_id)
+    sql +=                        " UNION "
+    sql +=                        "select user_id1 as friend FROM user_friend where user_id2 = " + str(user_id)
+    sql +=                   ")"
+    sql +=                ") and user_id1 != " + str(user_id) + " and user_id2 != " + str(user_id)
+    sql +=             ") as friends where user_id1 in "
+    sql +=                 "("
+    sql +=                    "select user_id2 as friend FROM user_friend where user_id1 = " + str(user_id)
+    sql +=                    " UNION "
+    sql +=                    "select user_id1 as friend FROM user_friend where user_id2 = " + str(user_id)
+    sql +=                  ")"
+    table = execute_sql(sql)
+    for row in table:
+        print (row["friend"])

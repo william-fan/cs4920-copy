@@ -1,6 +1,7 @@
 from services.SQLService import *
 
 from classes.MeetUpRequest import MeetUpRequest
+from services.UserProfileService import *
 
 
 def find_user_requests(receiver_id):
@@ -29,8 +30,21 @@ def find_user_rejected_requests(sender_id):
 
 
 def accept_request(from_id, to_id):
+    from_user = find_by_id(from_id)
+    to_user = find_by_id(to_id)
+    from_name = from_user.first_name + " " + from_user.last_name
+    to_name = to_user.first_name + " " + to_user.last_name
     sql = "UPDATE user_meetup_request SET status = 'ACCEPTED' WHERE from_id = " + str(from_id) + " AND to_id = " + str(to_id)
     table = execute_sql(sql)
+    sql = "SELECT * FROM user_meetup_request WHERE from_id = " + str(from_id) + " AND to_id = " + str(to_id) + " AND status = 'ACCEPTED'"
+    table = execute_sql(sql)
+    for row in table:
+        sql = "INSERT INTO user_todo_list(id, title, description, user_id, course_name, create_time, end_time, priority) VALUES (null, 'Meet Up With Friend', '" + row["description"] + "', '" + str(from_id) + "', '" + to_name + "', '" + row["date"] + "', '" + row["date"] + "', '1')"
+        table = execute_sql(sql)
+        sql = "INSERT INTO user_todo_list(id, title, description, user_id, course_name, create_time, end_time, priority) VALUES (null, 'Meet Up With Friend', '" + row["description"] + "', '" + str(to_id) + "', '" + from_name + "', '" + row["date"] + "', '" + row["date"] + "', '1')"
+        table = execute_sql(sql)
+
+
 
 def reject_request(from_id, to_id):
     sql = "UPDATE user_meetup_request SET status = 'ACCEPTED' WHERE from_id = " + str(
