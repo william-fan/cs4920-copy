@@ -177,6 +177,16 @@ def load_todos(id):
     return todo_list
 
 
+def update_todos(todos):
+    sql = ""
+    for key, value in todos.items():
+        if int(value) > 3 or int(value) < 0:
+            return False
+        else:
+            sql += "UPDATE user_todo_list SET priority = " + value + " WHERE id = " + str(key) + ";"
+    execute_sql(sql)
+    return True
+
 def load_public_events():
     sql = "SELECT * FROM public_event"
     table = execute_sql(sql)

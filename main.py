@@ -1,5 +1,6 @@
 import time
 import datetime
+import json
 from flask import Flask, render_template, url_for, redirect, request, session
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
@@ -187,6 +188,18 @@ def todo_create():
     return todo()
 
 
+@app.route("/todo/update", methods=['POST'])
+def todo_update():
+    todos = request.get_json()
+    output = True
+    if todos:
+        output = update_todos(todos)
+    if output:
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    else:
+        return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
+
+
 @app.route('/todo/delete/<todo_id>')
 def todo_delete(todo_id):
     delete_todo(todo_id)
@@ -201,6 +214,13 @@ def delete_account():
         return logout()
     else:
         return settings()
+
+
+@app.route('/share', methods=['GET'])
+def share():
+    user_page = user(get_username_from_user_id(session.get("loggedInUser")))
+
+    return user_page
 
 
 def string_to_date(string):
