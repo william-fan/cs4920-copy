@@ -218,7 +218,7 @@ def delete_account():
 
 @app.route('/share', methods=['GET'])
 def share():
-    user_page = timetable_by_id(session.get("loggedInUser"))
+    user_page = user(get_username_from_user_id(session.get("loggedInUser")))
 
     return user_page
 
