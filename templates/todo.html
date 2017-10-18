@@ -55,7 +55,7 @@ To Do
               <td>{{ task.subject }}</td>
               <td>{{ task.text }}</td>
               <td>{{ task.date }}</td>
-              <td>
+              <td data-order="{{ task.priority }}">
                   <select id="{{ task.id }}">
                       <option {% if task.priority == 0 %} selected {% endif %} value="0">0</option>
                       <option {% if task.priority == 1 %} selected {% endif %} value="1">1</option>
