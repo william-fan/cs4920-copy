@@ -269,6 +269,17 @@ def friends():
     return render_template('friends.html', friends=friends_list, logged_in_user=logged_in_user, friends_of_user=friends_of_user,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
+@app.route('/course/<course>')
+def course_page(course):
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+    students = doing_course(course)
+    user_dict = map_id_to_object(students)
+
+    page_finish()
+    return render_template('course.html', course=course, logged_in_user=logged_in_user, students=students, user_dict=user_dict,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+
+
 
 @app.route('/recommended')
 def show_recommended():

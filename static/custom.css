@@ -21,11 +21,15 @@ body {
   position: relative;
 }
 
-.subject a {
+.subject i {
   color: black;
   position: absolute;
   top: 0px;
   right: 5px;
+}
+
+.subject a {
+  color: black;
 }
 
 .navbar-expand-lg .dropdown-menu.notify-drop {

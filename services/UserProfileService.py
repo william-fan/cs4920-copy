@@ -280,6 +280,15 @@ def find_common_courses(user_id):
 
     return recommended
 
+def doing_course(course):
+    students = []
+    sql = "SELECT DISTINCT user_id FROM user_class WHERE course_name = '{}'".format(course)
+    table = execute_sql(sql)
+    for row in table:
+        students.append(row['user_id'])
+
+    return students
+
 #grabs all the users that have the same friends as u
 def find_users_with_mutual_friends(user_id):
     sql = ""

@@ -152,7 +152,7 @@
           {% if course.day == day and course.time == time %}
             <td class="subject text-center align-middle" rowspan="{{ course.length }}">
               {% if current_user == user.username %}<a href="/class/delete/{{ course.id }}"><i class="fa fa-times"></i></a>{% endif %}
-              {{ course.subject }}<br />{{ course.activity }}
+              <a href="{{ url_for('course_page', course=course.subject) }}">{{ course.subject }}</a><br />{{ course.activity }}
             </td>
           {% endif %}
         {% endfor %}
