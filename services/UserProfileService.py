@@ -317,3 +317,9 @@ def find_users_with_mutual_friends(user_id):
     table = execute_sql(sql)
     for row in table:
         print (row["friend"])
+
+
+
+def update_img_path(username):
+    sql = "UPDATE user_profile SET imgpath = '" + username + ".png' WHERE username='" + username + "'"
+    table = execute_sql(sql)

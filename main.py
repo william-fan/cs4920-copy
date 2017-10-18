@@ -1,6 +1,7 @@
+import os
 import time
 import datetime
-from flask import Flask, render_template, url_for, redirect, request, session
+from flask import Flask, render_template, url_for, redirect, request, session, send_from_directory
 from services.UserProfileService import *
 from services.MeetUpRequestService import *
 from services.FriendRequestService import *
@@ -8,8 +9,13 @@ import services.SQLService
 
 import utilities.profile
 
+from werkzeug.utils import secure_filename
+UPLOAD_FOLDER = 'static/img/users'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
 from flask import Flask, render_template, url_for
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = "secret-key"
 
 
@@ -250,7 +256,7 @@ def show_recommended():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
     recommended = find_common_courses(session.get("loggedInUser"))
     user_dict = map_id_to_object(recommended)
-    
+
     page_finish()
     return render_template('recommended.html', logged_in_user=logged_in_user, recommended=recommended, user_dict=user_dict,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
@@ -261,9 +267,27 @@ def map_id_to_object(map):
         dict[key] = find_by_id(key)
     return dict
 
-@app.route('/user/<username>', methods=['GET'])
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/user/<username>', methods=['GET', 'POST'])
 def user(username):
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return redirect(url_for('user', username=logged_in_user.username))
+
+        file = request.files['file']
+        if file:
+            filename = logged_in_user.username + ".png"
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            update_img_path(logged_in_user.username)
+        return redirect(url_for('user', username=logged_in_user.username))
 
     friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
     pending_friends_of_user = [profile.user_id for profile in pending_friends_by_id(session.get("loggedInUser"))]
