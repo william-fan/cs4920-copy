@@ -7,6 +7,25 @@ To Do
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+
+
+<!-- AJAX success panel -->
+<div id="success" class="alert alert-success alert-dismissible fade in show" role="alert" style="display: none;">
+  <button type="button" class="close" data-hide="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Successfully updated!</strong>
+</div>
+
+<!-- AJAX error panel -->
+<div id="failure" class="alert alert-danger alert-dismissible fade in show" role="alert" style="display: none;">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Failed to update!</strong>
+</div>
+
+
 <table id='todotable' class="table table-striped table-hover">
   <thead class="thead">
     <tr>
@@ -36,7 +55,14 @@ To Do
               <td>{{ task.subject }}</td>
               <td>{{ task.text }}</td>
               <td>{{ task.date }}</td>
-              <td>{{ task.priority }}</td>
+              <td>
+                  <select id="{{ task.id }}">
+                      <option {% if task.priority == 0 %} selected {% endif %} value="0">0</option>
+                      <option {% if task.priority == 1 %} selected {% endif %} value="1">1</option>
+                      <option {% if task.priority == 2 %} selected {% endif %} value="2">2</option>
+                      <option {% if task.priority == 3 %} selected {% endif %} value="3">3</option>
+                  </select>
+              </td>
               <td><a href="/todo/delete/{{ task.id }}"><i class="fa fa-times"></i></a></td>
             </tr>
     {% endfor %}
@@ -45,9 +71,15 @@ To Do
 
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTodo">
-  Add new item
-</button>
+<div class="p-3">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTodo"><i class="fa fa-plus fa-fw"></i>
+      Add new todo
+    </button>
+    <button id="update" type="button" class="btn btn-primary float-right"><i class="fa fa-pencil-square-o fa-fw"></i>
+      Update todos
+    </button>
+</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="addTodo" tabindex="-1" role="dialog" aria-labelledby="addTodoLabel" aria-hidden="true">
@@ -104,20 +136,5 @@ To Do
 {% block javascript %}
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('#todotable').DataTable({
-                "order": [[3, "asc"], [4, "desc"]],
-                columnDefs: [
-                    { orderable: false, targets: -1 }
-                ],
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search...",
-                    emptyTable: "You have no to-dos"
-                }
-            });
-        });
-
-    </script>
+    <script type="text/javascript" src="static/todo.js"></script>
 {% endblock %}
