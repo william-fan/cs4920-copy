@@ -43,11 +43,22 @@ $('#update').click(function() {
             $('#failure').fadeTo(500,1);
         }
     });
-
 });
 
 $(function(){
     $("[data-hide]").on("click", function(){
         $(this).closest("." + $(this).attr("data-hide")).fadeOut('fast');
     });
+});
+
+
+$('.remove').on("click", function() {
+    var tableRow = $(this).closest('tr');
+    tableRow.find('td').fadeOut('fast',
+        function(){
+            tableRow.remove();
+        }
+    );
+    console.log(json);
+    json[this.value] = -1;
 });

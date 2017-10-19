@@ -203,12 +203,6 @@ def todo_update():
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
 
-@app.route('/todo/delete/<todo_id>')
-def todo_delete(todo_id):
-    delete_todo(todo_id)
-    return todo()
-
-
 @app.route('/settings/delete_account', methods=['GET'])
 def delete_account():
     confirmation = request.args.get("confirm")

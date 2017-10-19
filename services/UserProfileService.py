@@ -182,12 +182,15 @@ def load_todos(id):
 def update_todos(todos):
     sql = ""
     for key, value in todos.items():
-        if int(value) > 3 or int(value) < 0:
+        if int(value) > 3 or int(value) < -1:
             return False
+        elif int(value) == -1:
+            sql += "DELETE FROM user_todo_list WHERE id = " + str(key) + ";"
         else:
             sql += "UPDATE user_todo_list SET priority = " + value + " WHERE id = " + str(key) + ";"
     execute_sql(sql)
     return True
+
 
 def load_public_events():
     sql = "SELECT * FROM public_event"
@@ -203,11 +206,6 @@ def add_public_events(id, title, description, start_time, end_time):
 
 def add_todo(id, title, description, user_id, course_name, create_time, end_time, priority):
     sql = "INSERT INTO user_todo_list(id, title, description, user_id, course_name, create_time, end_time, priority) VALUES (null, '" + title + "', '" + description + "', '" + user_id + "', '" + course_name + "', '" + create_time + "', '" + end_time + "', '" + priority + "')"
-    table = execute_sql(sql)
-
-
-def delete_todo(id):
-    sql = "DELETE FROM user_todo_list WHERE id = " + str(id)
     table = execute_sql(sql)
 
 

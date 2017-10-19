@@ -63,7 +63,7 @@ To Do
                       <option {% if task.priority == 3 %} selected {% endif %} value="3">3</option>
                   </select>
               </td>
-              <td><a href="/todo/delete/{{ task.id }}"><i class="fa fa-times"></i></a></td>
+              <td><button value="{{ task.id }}" type="button" class="remove btn btn-link"><i class="fa fa-times"></i></button></td>
             </tr>
     {% endfor %}
   </tbody>
