@@ -12,6 +12,13 @@ $(document).ready(function(){
             emptyTable: "You have no to-dos"
         }
     });
+
+    window.onbeforeunload = confirmExit;
+    function confirmExit() {
+        if (!jQuery.isEmptyObject(json)) {
+            return "Todo changes not saved. Do you wish to leave the page?";
+        }
+    }
 });
 
 $('select').on('change', function() {
@@ -43,6 +50,7 @@ $('#update').click(function() {
             $('#failure').fadeTo(500,1);
         }
     });
+    json = {};
 });
 
 $(function(){
