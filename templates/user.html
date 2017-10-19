@@ -101,7 +101,7 @@
 </div>
 
 
-<table class="table table-striped table-bordered">
+<table id="timetable" class="table table-striped table-bordered">
   <thead class="thead-inverse">
     <tr>
       <th width="5%">Time</th>
@@ -143,9 +143,9 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addClass"><i class="fa fa-plus fa-fw"></i>
     Add class
 </button>
-<a href="/share" class="btn btn-primary float-right"><i class="fa fa-share-square-o fa-fw"></i>
+<button onclick="takeScreenShot()" type="button" class="btn btn-primary float-right"><i class="fa fa-share-square-o fa-fw"></i>
     Share Timetable
-</a>
+</button>
 
 <div class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="addClassLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -176,4 +176,9 @@
   </div>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="/static/user.js"></script>
 {% endblock %}
