@@ -102,7 +102,7 @@ def displaySignIn():
 @app.route('/available')
 def available():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
-    utilities.profile.update_statuses(all_users())
+    # utilities.profile.update_statuses(all_users())
 
     friends_of_user = friends_by_id(session.get("loggedInUser"))
     available = [
