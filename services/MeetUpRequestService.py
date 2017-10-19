@@ -1,5 +1,3 @@
-import time
-import datetime
 from services.SQLService import *
 
 from classes.MeetUpRequest import MeetUpRequest
@@ -61,11 +59,3 @@ def send_request(from_id, to_id, description, date_time):
 def delete_request(from_id, to_id):
     sql = "DELETE FROM user_meetup_request WHERE from_id = " + str(from_id) + " AND to_id = " + str(to_id)
     table = execute_sql(sql)
-
-
-def string_to_date(string):
-    try:
-        date = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M").strftime("%d/%m/%Y, %A %I:%M %p")
-    except ValueError:
-        return string
-    return date

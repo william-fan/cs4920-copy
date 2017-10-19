@@ -1,3 +1,5 @@
+import time
+import datetime
 from services.SQLService import *
 
 from classes.UserProfile import UserProfile
@@ -342,3 +344,11 @@ def find_users_with_mutual_friends(user_id):
 def update_img_path(username):
     sql = "UPDATE user_profile SET imgpath = '" + username + ".png' WHERE username='" + username + "'"
     table = execute_sql(sql)
+
+
+def string_to_date(string):
+    try:
+        date = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M").strftime("%d/%m/%Y, %A %I:%M %p")
+    except ValueError:
+        return string
+    return date

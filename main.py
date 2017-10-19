@@ -1,6 +1,4 @@
 import os
-import time
-import datetime
 import json
 from flask import Flask, render_template, url_for, redirect, request, session, send_from_directory
 from services.UserProfileService import *
@@ -226,14 +224,6 @@ def share():
     user_page = user(get_username_from_user_id(session.get("loggedInUser")))
 
     return user_page
-
-
-def string_to_date(string):
-    try:
-        date = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M").strftime("%d/%m/%Y, %A %I:%M %p")
-    except ValueError:
-        return string
-    return date
 
 
 def get_busy_times(courses):
