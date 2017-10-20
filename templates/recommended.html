@@ -11,8 +11,9 @@ Recommended Friends
 <table id='recctable' class="table">
   <thead class="">
     <tr>
-      <th width="35%">Name</th>
+      <th width="25%">Name</th>
       <th width="65%">Mutual courses</th>
+      <th width="10%">Contact</th>
     </tr>
   </thead>
   <tbody>
@@ -31,6 +32,10 @@ Recommended Friends
       <td class="align-middle">
           {{recommended[id]}}
       </td>
+      <td class="align-middle">
+          {% set user=user_dict[id] %}
+          {% set contact_redirect="show_recommended" %}
+          {% include 'contact_button.html' %}
     </tr>
     {% endfor %}
   </tbody>
