@@ -30,7 +30,9 @@ Friends
           </div>
       </td>
       <td class="align-middle">
-          {{ friend.courses }}
+        {% for course in friend.courses %}
+          <a href="{{ url_for('course_page', course=course) }}" style="color:black;">{{ course }}</a>{{ "," if not loop.last }}
+        {% endfor %}
       </td>
       <td class="align-middle">
           {{ friend.status }}

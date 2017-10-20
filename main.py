@@ -242,7 +242,7 @@ def friends():
         friends_list += [
             {
                 'imgpath': user.imgpath,
-                'courses': ', '.join(course_list),
+                'courses': sorted(course_list),
                 'status': user.status,
                 'name': user.first_name+" "+user.last_name,
                 'username': user.username
