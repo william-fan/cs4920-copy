@@ -1,4 +1,4 @@
-var takeScreenShot = function() {
+function takeScreenShot(username) {
     html2canvas(document.getElementById("timetable"), {
         onrendered: function (canvas) {
             var width = $('#timetable').width();
@@ -10,7 +10,7 @@ var takeScreenShot = function() {
             context.drawImage(canvas,0,0,width,height,0,0,width,height);
             var link=document.createElement("a");
             link.href=tempcanvas.toDataURL('image/jpg');
-            link.download = 'timetable.jpg';
+            link.download = username.concat('-timetable.jpg');
             link.click();
         }
     });
