@@ -11,31 +11,36 @@ Friends
 <table id='friendstable' class="table">
   <thead class="">
     <tr>
-      <th width="35%">Name</th>
+      <th width="25%">Name</th>
       <th width="50%">Courses</th>
       <th width="15%">Availability</th>
+      <th width="10%">Contact</th>
     </tr>
   </thead>
   <tbody>
-    {% for friend in friends %}
+    {% for user in friends %}
     <tr>
       <td>
           <div class="container">
-              <a class="nounderline" href="{{ url_for('user', username=friend.username) }}">
-                  <img class="" src="/static/img/users/{{ friend.imgpath }}" width="64" height="64" alt="{{ friend.name }}">
+              <a class="nounderline" href="{{ url_for('user', username=user.username) }}">
+                  <img class="" src="/static/img/users/{{ user.imgpath }}" width="64" height="64" alt="{{ user.name }}">
               </a>
-              <a href="{{ url_for('user', username=friend.username) }}" style="color:black">
-                <span class="my-2 col-xl-3 col-lg-4 col-md-6">{{ friend.name }}</span>
+              <a href="{{ url_for('user', username=user.username) }}" style="color:black">
+                <span class="my-2 col-xl-3 col-lg-4 col-md-6">{{ user.name }}</span>
               </a>
           </div>
       </td>
       <td class="align-middle">
-        {% for course in friend.courses %}
+        {% for course in user.courses %}
           <a href="{{ url_for('course_page', course=course) }}" style="color:black;">{{ course }}</a>{{ "," if not loop.last }}
         {% endfor %}
       </td>
       <td class="align-middle">
-          {{ friend.status }}
+          {{ user.status }}
+      </td>
+      <td class="align-middle">
+        {% set contact_redirect="friends" %}
+        {% include 'contact_button.html' %}
       </td>
     </tr>
     {% endfor %}

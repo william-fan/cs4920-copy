@@ -115,9 +115,20 @@ def available():
          } for p in friends_of_user
         if p.status == utilities.profile.statuses[0]
     ]
+    off_campus = [
+        {
+         'user_id': p.user_id,
+         'first_name': p.first_name,
+         'last_name': p.last_name,
+         'username': p.username,
+         'imgpath': p.imgpath
+         } for p in friends_of_user
+        if p.status == utilities.profile.statuses[2]
+    ]
+        
 
     page_finish()
-    return render_template('available.html', logged_in_user=logged_in_user, available=available,
+    return render_template('available.html', logged_in_user=logged_in_user, available=available, off_campus=off_campus,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 
@@ -241,6 +252,7 @@ def friends():
             course_list.add(courses['subject'])
         friends_list += [
             {
+                'user_id': user.user_id,
                 'imgpath': user.imgpath,
                 'courses': sorted(course_list),
                 'status': user.status,
@@ -540,8 +552,11 @@ def send_meetup_request():
     date_time = date + " " + time
     description = request.form["description"]
     send_request(from_user_id, to_user_id, description, date_time)
-
-    return redirect(url_for('available'))
+    redirTo = request.form["redirTo"]
+    if 'user' in redirTo:
+        url, username = redirTo.split('/')
+        return redirect(url_for(url, username=username))
+    return redirect(url_for(redirTo))
 
 @app.route('/acceptMeetUpRequest', methods=['POST','GET'])
 def accept_meetup_request():

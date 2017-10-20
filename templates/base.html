@@ -55,7 +55,6 @@
                 <div class="notify-drop-title">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-6">Friend Requests <span class="badge badge-secondary">{{friends_notifications|length}}</span></div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 text-right"><a href="" class="rIcon allRead" data-tooltip="tooltip" data-placement="bottom" title="tümü okundu."><i class="fa fa-dot-circle-o"></i></a></div>
                     </div>
                 </div>
                 <!-- end notify title -->
@@ -68,16 +67,15 @@
                       {%if fn.status == "ACCEPTED"%}
                         <li>
                             <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
-                              <a style="padding-left:15px;" href="{{ url_for('user', username=receiver_dict[fn.to_id].username) }}">{{receiver_dict[fn.to_id].first_name}}</a> has ACCEPTED your request!<a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
+                              <a style="padding-left:15px;" href="{{ url_for('user', username=receiver_dict[fn.to_id].username) }}">{{receiver_dict[fn.to_id].first_name}}</a> has ACCEPTED your request!<a href="/deleteFriendRequest?userId={{receiver_dict[fn.to_id].user_id}}" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
                               <p style="padding-left:15px;"><b>Date</b>: {{fn.date}}</p>
-                              <a style="align:right; padding-left:15px;" href="/deleteFriendRequest?userId={{receiver_dict[fn.to_id].user_id}}">Delete</a>
                             </div>
                         </li>
                       {%endif%}
                     {%else%}
                       <li>
                           <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
-                            <a style="padding-left:15px;" href="">{{sender_dict[fn.from_id].first_name}}</a> has sent a friend request <a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
+                            <a style="padding-left:15px;" href="">{{sender_dict[fn.from_id].first_name}}</a> has sent a friend request
                             <p style="padding-left:15px;"><b>Message</b>: {{fn.message}}</p>
                             <p style="padding-left:15px;"><b>Date</b>: {{fn.date}}</p>
                             <a style="align:right; padding-left:15px;" href="/acceptFriendRequest?userId={{fn.from_id}}">Accept</a>
@@ -100,7 +98,6 @@
                 <div class="notify-drop-title">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-6">Notifications <span class="badge badge-secondary">{{notifications|length}}</span></div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 text-right"><a href="" class="rIcon allRead" data-tooltip="tooltip" data-placement="bottom" title="tümü okundu."><i class="fa fa-dot-circle-o"></i></a></div>
                     </div>
                 </div>
                 <!-- end notify title -->
@@ -113,26 +110,24 @@
                       {%if notif.status == "ACCEPTED"%}
                         <li>
                             <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
-                              <a style="padding-left:15px;" href="{{ url_for('user', username=receiver_dict[notif.to_id].username) }}">{{receiver_dict[notif.to_id].first_name}}</a> has ACCEPTED your request!<a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
+                              <a style="padding-left:15px;" href="{{ url_for('user', username=receiver_dict[notif.to_id].username) }}">{{receiver_dict[notif.to_id].first_name}}</a> has ACCEPTED your request!<a href="/deleteMeetUpRequest?userId={{receiver_dict[notif.to_id].user_id}}" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
                               <p style="padding-left:15px;"><b>Your description</b>: {{notif.description}}</p>
                               <p style="padding-left:15px;"><b>Your proposed date/time</b>: {{notif.date}}</p>
-                              <a style="align:right; padding-left:15px;" href="/deleteMeetUpRequest?userId={{receiver_dict[notif.to_id].user_id}}">Delete</a>
                             </div>
                         </li>
                       {%else%}
                         <li>
                             <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
-                              <a style="padding-left:15px;" href="{{ url_for('user', username=receiver_dict[notif.to_id].username) }}">{{receiver_dict[notif.to_id].first_name}}</a> has REJECTED your request! <a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
+                              <a style="padding-left:15px;" href="{{ url_for('user', username=receiver_dict[notif.to_id].username) }}">{{receiver_dict[notif.to_id].first_name}}</a> has REJECTED your request! <a href="/deleteMeetUpRequest?userId={{receiver_dict[notif.to_id].user_id}}" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
                               <p style="padding-left:15px;"><b>Your description</b>: {{notif.description}}</p>
                               <p style="padding-left:15px;"><b>Your proposed date/time</b>: {{notif.date}}</p>
-                              <a style="align:right; padding-left:15px;" href="/deleteMeetUpRequest?userId={{receiver_dict[notif.to_id].user_id}}">Delete</a>
                             </div>
                         </li>
                       {%endif%}
                     {%else%}
                       <li>
                           <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
-                            <a style="padding-left:15px;" href="{{ url_for('user', username=sender_dict[notif.from_id].username) }}">{{sender_dict[notif.from_id].first_name}}</a> has requested a meet up <a href="" class="rIcon"><i class="fa fa-dot-circle-o"></i></a>
+                            <a style="padding-left:15px;" href="{{ url_for('user', username=sender_dict[notif.from_id].username) }}">{{sender_dict[notif.from_id].first_name}}</a> has requested a meet up
                             <p style="padding-left:15px;"><b>Description</b>: {{notif.description}}</p>
                             <p style="padding-left:15px;"><b>Date/Time</b>: {{notif.date}}</p>
                             <a style="align:right; padding-left:15px;" href="/acceptMeetUpRequest?userId={{notif.from_id}}">Accept</a>
