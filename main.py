@@ -9,7 +9,8 @@ import services.SQLService
 import utilities.profile
 
 from werkzeug.utils import secure_filename
-UPLOAD_FOLDER = 'static/img/users'
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/img/users')
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
@@ -332,7 +333,7 @@ def user(username):
     all_courses_list = all_courses()
     return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, privacy_fn=utilities.profile.is_private,
                            courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, friends_notifications=friends_notifications,
-                           receiver_dict=receiver_dict, all_courses=all_courses_list, pending_friends_of_user=pending_friends_of_user)
+                           receiver_dict=receiver_dict, all_courses=all_courses_list, pending_friends_of_user=pending_friends_of_user, time=time.time())
 
 
 @app.route('/removeFriend/<username>', methods=['GET'])
@@ -450,7 +451,7 @@ def user_search():
     search_query = request.args.get('q')
     page = request.args.get('page', default=1, type=int)
     # set how many results per page
-    per_page = 1
+    per_page = 10
 
     profiles = []
     # if query exists

@@ -10,7 +10,7 @@
 <div class="profile">
   <div class="row">
     <div class="col-sm-3 text-center">
-      <img class="img-fluid" src="/static/img/users/{{ user.imgpath }}" width="200" height="200" alt="{{ user.first_name }} {{ user.last_name }}">
+      <img class="img-fluid" src="/static/img/users/{{ user.imgpath }}?{{ time }}" width="200" height="200" alt="{{ user.first_name }} {{ user.last_name }}">
       <br />
       {% if current_user == user.username %}
         <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target=".upload-picture"><i class="fa fa-upload"></i> Upload Picture</button>
@@ -28,7 +28,7 @@
                 <div class="modal-body">
 
                     <div class="form-group">
-                      <input type=file name=file class="form-control-file" id="profile-pic">
+                      <input type=file name=file accept="image/*" class="form-control-file" id="profile-pic">
                     </div>
 
                 </div>
