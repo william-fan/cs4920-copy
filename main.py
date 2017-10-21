@@ -557,25 +557,24 @@ def send_meetup_request():
 
 @app.route('/acceptMeetUpRequest', methods=['POST','GET'])
 def accept_meetup_request():
+    id = request.args.get("id")
     to_user_id = session.get("loggedInUser")
     from_user_id = request.args.get("userId")
-    accept_request(from_user_id, to_user_id)
+    accept_request(id, from_user_id, to_user_id)
     return redirect(redirect_url())
 
 
 @app.route('/rejectMeetUpRequest', methods=['POST', 'GET'])
 def reject_meetup_request():
-    to_user_id = session.get("loggedInUser")
-    from_user_id = request.args.get("userId")
-    reject_request(from_user_id, to_user_id)
+    id = request.args.get("id")
+    reject_request(id)
     return redirect(redirect_url())
 
 
 @app.route('/deleteMeetUpRequest', methods=['POST', 'GET'])
 def delete_meetup_request():
-    from_user_id = session.get("loggedInUser")
-    to_user_id = request.args.get("userId")
-    delete_request(from_user_id, to_user_id)
+    id = request.args.get("id")
+    delete_request(id)
     return redirect(redirect_url())
 
 

@@ -217,11 +217,11 @@ def add_class(user_id, course_name, start_time, day, length, activity):
 def search_users(query):
     # search users based on query
     # concat both first name and last name, search last name only, search first name only
-    # unsanitised so far
     sql = "SELECT * FROM user_profile WHERE CONCAT(firstname, ' ', lastname) LIKE '%s%%' OR lastname LIKE '%s%%' OR firstname LIKE '%s%%'" % (query, query, query)
     table = execute_sql(sql)
     user_list = list(table.fetchall())
     return user_list
+
 
 def delete_class(id):
     sql = "DELETE FROM user_class WHERE id = " + str(id)
@@ -239,6 +239,7 @@ def delete_account_sql(id):
           ";DELETE FROM user_todo_list WHERE user_id = " + str(id) + \
           ";DELETE FROM user_profile WHERE id = " + str(id)
     table = execute_sql(sql)
+
 
 def all_courses():
     sql = "SELECT DISTINCT faculty, course_code, class_id FROM courses"

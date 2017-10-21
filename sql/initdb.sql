@@ -33,10 +33,13 @@ CREATE TABLE IF NOT EXISTS user_class (
 );
 
 CREATE TABLE IF NOT EXISTS user_meetup_request (
+  id 			INT(11) NOT NULL AUTO_INCREMENT,
   from_id  INT(11) NOT NULL,
   to_id     INT (11) NOT NULL,
   status    VARCHAR(45) NOT NULL,
   description VARCHAR(45) NOT NULL,
+  date VARCHAR(45) NOT NULL,
+  PRIMARY KEY (id),
   FOREIGN KEY (from_id) REFERENCES user_profile(id),
   FOREIGN KEY (to_id) REFERENCES user_profile(id)
 );

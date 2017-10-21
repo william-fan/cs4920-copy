@@ -62,7 +62,7 @@
 
                 <div class="drop-content">
                   {%for fn in friends_notifications%}
-                    <!-- if we were the sender then that means someone has accepted our request, we put that shit in as well-->
+                    <!-- if we were the sender then that means someone has accepted our request, we put that in as well-->
                     {%if fn.from_id == logged_in_user.user_id%}
                       {%if fn.status == "ACCEPTED"%}
                         <li>
@@ -105,7 +105,7 @@
 
                 <div class="drop-content">
                   {%for notif in notifications%}
-                    <!-- if we were the sender then that means someone has accepted our request, we put that shit in as well-->
+                    <!-- if we were the sender then that means someone has accepted our request, we put that in as well-->
                     {%if notif.from_id == logged_in_user.user_id%}
                       {%if notif.status == "ACCEPTED"%}
                         <li>
@@ -130,8 +130,8 @@
                             <a style="padding-left:15px;" href="{{ url_for('user', username=sender_dict[notif.from_id].username) }}">{{sender_dict[notif.from_id].first_name}}</a> has requested a meet up
                             <p style="padding-left:15px;"><b>Description</b>: {{notif.description}}</p>
                             <p style="padding-left:15px;"><b>Date/Time</b>: {{notif.date}}</p>
-                            <a style="align:right; padding-left:15px;" href="/acceptMeetUpRequest?userId={{notif.from_id}}">Accept</a>
-                            <a style="align:right; padding-left:15px;" href="/rejectMeetUpRequest?userId={{notif.from_id}}">Reject</a>
+                            <a style="align:right; padding-left:15px;" href="/acceptMeetUpRequest?userId={{notif.from_id}}&id={{notif.id}}">Accept</a>
+                            <a style="align:right; padding-left:15px;" href="/rejectMeetUpRequest?userId={{notif.from_id}}&id={{notif.id}}">Reject</a>
                           </div>
                       </li>
                     {%endif%}
