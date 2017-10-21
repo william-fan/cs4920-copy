@@ -331,7 +331,7 @@ def user(username):
         return page_not_found(404)
     all_courses_list = all_courses()
     return render_template('user.html', logged_in_user=logged_in_user, user=user, friends_of_user=friends_of_user, privacy_fn=utilities.profile.is_private,
-                           courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict,
+                           courses=courses, busy_times=busy_times, notifications=notifications, sender_dict=sender_dict, friends_notifications=friends_notifications,
                            receiver_dict=receiver_dict, all_courses=all_courses_list, pending_friends_of_user=pending_friends_of_user)
 
 
