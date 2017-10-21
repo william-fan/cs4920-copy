@@ -20,11 +20,11 @@ Events
   <tbody>
     {% for task in tasks %}
     <tr>
-      <td>{{ task.title }}</td>
-      <td>{{ task.description }}</td>
-      <td>{{ task.start_time }}</td>
-      <td>{{ task.end_time }}</td>
-      <td><a href="/todo/createPublicEvent?title={{ task.title }}&description={{ task.description }}&startTime={{ task.start_time }}&endTime={{ task.end_time }}">Add to Todo</a></td>
+      <td class="align-middle">{{ task.title }}</td>
+      <td class="align-middle">{{ task.description }}</td>
+      <td class="align-middle">{{ task.start_time }}</td>
+      <td class="align-middle">{{ task.end_time }}</td>
+      <td class="align-middle"><a href="/todo/createPublicEvent?title={{ task.title }}&description={{ task.description }}&startTime={{ task.start_time }}&endTime={{ task.end_time }}">Add to Todo</a></td>
     </tr>
     {% endfor %}
   </tbody>

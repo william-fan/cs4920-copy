@@ -12,10 +12,10 @@ Settings
   {% endif %}
 
   <form action="/settings" method="POST">
-    <strong>Profile Information</strong></br>
+    <strong>Profile Information</strong>
     <div class="form-group">
-      <label for="status">Status:</label>
-      <select class="form-control" name="input-status">
+      <label for="input-status">Status:</label>
+      <select name="input-status" class="form-control">
           <option {% if utils.is_auto_update(logged_in_user) %}selected{% endif %}   >Automatic</option>
         {% for status in statuses %}
           <option {% if not utils.is_auto_update(logged_in_user) and logged_in_user.status == status %}selected{% endif %}   >{{status}}</option>
@@ -24,77 +24,78 @@ Settings
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
-        <label for="firstname">First Name:</label>
+        <label for="input-firstname">First Name:</label>
         <input name="input-firstname" type="text" id="input-firstname" class="form-control" value="{{logged_in_user.first_name}}">
       </div>
       <div class="form-group col-md-6">
-        <label for="lastname">Last Name:</label>
+        <label for="input-lastname">Last Name:</label>
         <input name="input-lastname" type="text" id="input-lastname" class="form-control" value="{{logged_in_user.last_name}}">
       </div>
     </div>
 
     <div class="form-group">
-      <label for="gender">Gender:</label>
-      <input name="input-gender" type="text" id="input-gender" class="form-control" value="{{logged_in_user.gender}}">
+      <label for="input-gender">Gender:</label>
+      <select name="input-gender" id="input-gender" class="form-control">
+          <option {% if logged_in_user.gender == 'Male' %} selected {% endif %} value="Male">Male</option>
+          <option {% if logged_in_user.gender == 'Female' %} selected {% endif %} value="Female">Female</option>
+      </select>
     </div>
 
     <div class="form-group">
-      <label for="dob">Date of Birth:</label>
-      <input name="input-dob" type="text" id="input-dob" class="form-control" value="{{logged_in_user.dob}}">
+      <label for="input-dob">Date of Birth:</label>
+      <input name="input-dob" type="date" id="input-dob" class="form-control" value="{{logged_in_user.dob}}">
     </div>
     <div class="form-group">
-      <label for="degree">Degree:</label>
+      <label for="input-degree">Degree:</label>
       <input name="input-degree" type="text" id="input-degree" class="form-control" value="{{logged_in_user.degree}}">
     </div>
-    </br>
-    <strong>Privacy Settings</strong></br>
-    Set what people who aren't your friends can see.</br>
+    <br>
+    <strong>Privacy Settings</strong>
+    Set what people who aren't your friends can see.
+    <div class="pt-4 pb-4">
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" value="True" name="privacy-email" id="privacy-email" {% if utils.is_private(logged_in_user, 'email') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
+            Email
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" value="True" name="privacy-gender" id="privacy-gender" {% if utils.is_private(logged_in_user, 'gender') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
+            Gender
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" value="True" name="privacy-dob" id="privacy-dob" {% if utils.is_private(logged_in_user, 'dob') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
+            DOB
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" value="True" name="privacy-degree" id="privacy-degree" {% if utils.is_private(logged_in_user, 'degree') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
+            Degree
+          </label>
+        </div>
+    </div>
 
-    <div class="form-check">
-      <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" value="True" name="privacy-email" id="privacy-email" {% if utils.is_private(logged_in_user, 'email') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
-        Email
-      </label>
-    </div>
-    <div class="form-check">
-      <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" value="True" name="privacy-gender" id="privacy-gender" {% if utils.is_private(logged_in_user, 'gender') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
-        Gender
-      </label>
-    </div>
-    <div class="form-check">
-      <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" value="True" name="privacy-dob" id="privacy-dob" {% if utils.is_private(logged_in_user, 'dob') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
-        DOB
-      </label>
-    </div>
-    <div class="form-check">
-      <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" value="True" name="privacy-degree" id="privacy-degree" {% if utils.is_private(logged_in_user, 'degree') %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Friends-Only" data-off="Public" data-onstyle="warning" data-offstyle="primary">
-        Degree
-      </label>
-    </div>
-
-
-    </br>
-    <strong>Account Information</strong></br>
+    <strong>Account Information</strong>
     <div class="form-group">
-      <label for="username">Username:</label>
+      <label for="input-username">Username:</label>
       <input name="input-username" type="text" id="input-username" class="form-control" value="{{logged_in_user.username}}">
     </div>
     <div class="form-group">
-      <label for="password">Old Password</label>
+      <label for="input-old-password">Old Password</label>
       <input name="input-old-password" type="password" id="input-old-password" class="form-control" required>
     </div>
     <div class="form-group">
-      <label for="password">New Password</label>
+      <label for="input-new-password">New Password</label>
       <input name="input-new-password" type="password" id="input-new-password" class="form-control">
     </div>
     <div class="form-group">
-      <label for="email">Email</label>
+      <label for="input-email">Email</label>
       <input name="input-email" type="email" id="input-email" class="form-control" value="{{logged_in_user.email}}">
     </div>
-    </br>
     <button type="submit" class="btn btn-primary float-right"><i class="fa fa-edit fa-fw"></i>Edit Settings</button>
   </form>
   <button type="button" onclick="location.href='javascript:delete_acc()';" class="btn btn-danger float-left"><i class="fa fa-trash-o fa-fw"></i>Delete Account</button>
