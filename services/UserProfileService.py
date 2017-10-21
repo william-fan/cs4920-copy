@@ -275,8 +275,8 @@ def find_common_courses(user_id):
     table = execute_sql(sql)
     for row in table:
         if (row['user_id'] not in recommended):
-            recommended[row['user_id']] = "";
-        recommended[row['user_id']] = recommended[row['user_id']] + row['course_name'] + " ";
+            recommended[row['user_id']] = [];
+        recommended[row['user_id']].append(row['course_name'])
 
     return recommended
 

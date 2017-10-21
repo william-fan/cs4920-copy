@@ -30,7 +30,9 @@ Recommended Friends
           </div>
       </td>
       <td class="align-middle">
-          {{recommended[id]}}
+          {%for course in recommended[id]%}
+            <a href="/course/{{course}}">{{course}}</a>
+          {%endfor%}
       </td>
       <td class="align-middle">
           {% set user=user_dict[id] %}
