@@ -514,29 +514,28 @@ def send_friend_request():
     print(now)
     send_friend_request_db(from_user_id, to_user_id, message, now)
 
-    profile = find_by_id(to_user_id)
-    return user(profile.username)
+    return redirect(redirect_url())
 
 @app.route('/acceptFriendRequest', methods=['POST','GET'])
 def accept_friend_request():
     to_user_id = session.get("loggedInUser")
     from_user_id = request.args.get("userId")
     accept_friend_request_db(from_user_id, to_user_id)
-    return redirect(url_for('available'))
+    return redirect(redirect_url())
 
 @app.route('/rejectFriendRequest', methods=['POST', 'GET'])
 def reject_friend_request():
     to_user_id = session.get("loggedInUser")
     from_user_id = request.args.get("userId")
     reject_friend_request_db(from_user_id, to_user_id)
-    return redirect(url_for('available'))
+    return redirect(redirect_url())
 
 @app.route('/deleteFriendRequest', methods=['POST', 'GET'])
 def delete_friend_request():
     from_user_id = session.get("loggedInUser")
     to_user_id = request.args.get("userId")
     delete_friend_request_db(from_user_id, to_user_id)
-    return redirect(url_for('available'))
+    return redirect(redirect_url())
 
 def load_friend_notifications(user_id):
     friend_notifications = find_friend_requests(user_id)
@@ -552,36 +551,43 @@ def send_meetup_request():
     date_time = date + " " + time
     description = request.form["description"]
     send_request(from_user_id, to_user_id, description, date_time)
-    redirTo = request.form["redirTo"]
-    if 'user' in redirTo:
-        url, username = redirTo.split('/')
-        return redirect(url_for(url, username=username))
-    return redirect(url_for(redirTo))
+
+    return redirect(redirect_url())
+
 
 @app.route('/acceptMeetUpRequest', methods=['POST','GET'])
 def accept_meetup_request():
     to_user_id = session.get("loggedInUser")
     from_user_id = request.args.get("userId")
     accept_request(from_user_id, to_user_id)
-    return redirect(url_for('available'))
+    return redirect(redirect_url())
+
 
 @app.route('/rejectMeetUpRequest', methods=['POST', 'GET'])
 def reject_meetup_request():
     to_user_id = session.get("loggedInUser")
     from_user_id = request.args.get("userId")
     reject_request(from_user_id, to_user_id)
-    return redirect(url_for('available'))
+    return redirect(redirect_url())
+
 
 @app.route('/deleteMeetUpRequest', methods=['POST', 'GET'])
 def delete_meetup_request():
     from_user_id = session.get("loggedInUser")
     to_user_id = request.args.get("userId")
     delete_request(from_user_id, to_user_id)
-    return redirect(url_for('available'))
+    return redirect(redirect_url())
+
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+def redirect_url(default='index'):
+    return request.args.get('next') or \
+           request.referrer or \
+           url_for(default)
 
 
 if __name__ == '__main__':
