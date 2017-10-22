@@ -33,16 +33,16 @@ Recommended Friends
           Courses:
           {% if recommended_by_course[id]|length > 0 %}
             {%for course in recommended_by_course[id]%}
-              <a href="/course/{{course}}">{{course}}</a>
+              <a style="color:black;" href="/course/{{course}}">{{course}}</a>{{ "," if not loop.last }}
             {%endfor%}
           {% else %}
             None
           {% endif %}
           <br>
-          Mutual Friends:
+          Friends:
           {% if recommended_by_friend[id]|length > 0 %}
             {%for friend in recommended_by_friend[id]%}
-              <a href="/user/{{friend}}">{{friend}}</a>
+              <a style="color:black;" href="/user/{{friend}}">{{friend}}</a>{{ "," if not loop.last }}
             {%endfor%}
           {% else %}
             None
