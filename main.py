@@ -76,11 +76,12 @@ def home():
                 'text': task['description'],
                 'subject': task['course_name'],
                 'date': task['end_time'],
+                'sort_date': datetime.datetime.strptime(task['end_time'], "%d/%m/%Y, %A %I:%M %p").timestamp(),
                 'priority': task['priority']
             }
         ]
 
-    tasks = sorted(tasks, key=lambda k: k['date'])
+    tasks = sorted(tasks, key=lambda k: k['sort_date'])
 
     page_finish()
     return render_template('home.html', logged_in_user=logged_in_user, available=available, courses=courses, busy_times=busy_times, tasks=tasks,
@@ -158,9 +159,11 @@ def todo():
                 'text': task['description'],
                 'subject': task['course_name'],
                 'date': task['end_time'],
+                'sort_date': datetime.datetime.strptime(task['end_time'], "%d/%m/%Y, %A %I:%M %p").timestamp(),
                 'priority': task['priority']
             }
         ]
+    tasks = sorted(tasks, key=lambda k: k['sort_date'])
 
     page_finish()
     return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks,

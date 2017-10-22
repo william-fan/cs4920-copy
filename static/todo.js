@@ -2,7 +2,7 @@ var json = {};
 
 $(document).ready(function(){
     $('#todotable').DataTable({
-        "order": [[3, "asc"], [4, "desc"]],
+        "order": [],
         columnDefs: [
             { orderable: false, targets: -1 },
         ],
