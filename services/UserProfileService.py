@@ -354,7 +354,6 @@ def find_users_with_mutual_friends(user_id):
         for row in table:
             user = find_by_id(row['friend']).username
             mutual_friends[key].append(user)
-    print(mutual_friends)
     return mutual_friends
 
 def update_img_path(username):

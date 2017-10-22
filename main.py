@@ -292,9 +292,6 @@ def show_recommended():
     recommended = list(recommended_by_course.keys())
     recommended = recommended + (list(recommended_by_friend.keys()))
     friends = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
-    print("-------------------")
-    print(friends)
-    print(recommended)
     recommended = list(set(recommended) - set(friends))
 
     user_dict = map_id_to_object(recommended)
