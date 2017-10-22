@@ -292,6 +292,7 @@ def doing_course(course):
 
 #grabs all the users that have the same friends as u
 def find_users_with_mutual_friends(user_id):
+    mutual_friends = {}
     sql = ""
     sql +=      "select user_id1 as friend from"
     sql +=          "("
@@ -336,9 +337,25 @@ def find_users_with_mutual_friends(user_id):
     sql +=                  ")"
     table = execute_sql(sql)
     for row in table:
-        print (row["friend"])
-
-
+        mutual_friends[row["friend"]] = [];
+    for key, value in mutual_friends.items():
+        sql = "select user_id1 as friend from user_friend where user_id1 in "
+        sql +=    "(select user_id1 from user_friend where user_id2 = " + str(user_id)
+        sql +=    " union "
+        sql +=    "select user_id2 from user_friend where user_id1 = " +str(user_id) +") "
+        sql +=    "and user_id2="+str(key)
+        sql += " union "
+        sql += "select user_id2 as friend from user_friend where user_id2 in "
+        sql +=    "(select user_id1 from user_friend where user_id2 = " + str(user_id)
+        sql +=    " union "
+        sql +=    "select user_id2 from user_friend where user_id1 =" +str(user_id) +") "
+        sql +=    "and user_id1=" + str(key)
+        table = execute_sql(sql)
+        for row in table:
+            user = find_by_id(row['friend']).username
+            mutual_friends[key].append(user)
+    print(mutual_friends)
+    return mutual_friends
 
 def update_img_path(username):
     sql = "UPDATE user_profile SET imgpath = '" + username + ".png' WHERE username='" + username + "'"

@@ -12,7 +12,7 @@ Recommended Friends
   <thead class="">
     <tr>
       <th width="25%">Name</th>
-      <th width="65%">Mutual courses</th>
+      <th width="65%">Mutual</th>
       <th width="10%">Contact</th>
     </tr>
   </thead>
@@ -30,9 +30,23 @@ Recommended Friends
           </div>
       </td>
       <td class="align-middle">
-          {%for course in recommended[id]%}
-            <a href="/course/{{course}}">{{course}}</a>
-          {%endfor%}
+          Courses:
+          {% if recommended_by_course[id]|length > 0 %}
+            {%for course in recommended_by_course[id]%}
+              <a href="/course/{{course}}">{{course}}</a>
+            {%endfor%}
+          {% else %}
+            None
+          {% endif %}
+          <br>
+          Mutual Friends:
+          {% if recommended_by_friend[id]|length > 0 %}
+            {%for friend in recommended_by_friend[id]%}
+              <a href="/user/{{friend}}">{{friend}}</a>
+            {%endfor%}
+          {% else %}
+            None
+          {% endif %}
       </td>
       <td class="align-middle">
           {% set user=user_dict[id] %}

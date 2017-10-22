@@ -126,7 +126,7 @@ def available():
          } for p in friends_of_user
         if p.status == utilities.profile.statuses[2]
     ]
-        
+
 
     page_finish()
     return render_template('available.html', logged_in_user=logged_in_user, available=available, off_campus=off_campus,
@@ -281,12 +281,19 @@ def course_page(course):
 @app.route('/recommended')
 def show_recommended():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
-    recommended = find_common_courses(session.get("loggedInUser"))
+    recommended_by_course = find_common_courses(session.get("loggedInUser"))
+    recommended_by_friend = find_users_with_mutual_friends(session.get("loggedInUser"))
+
+    recommended = list(recommended_by_course.keys())
+    recommended = recommended + (list(recommended_by_friend.keys()))
+    recommended = list(set(recommended))
+
     user_dict = map_id_to_object(recommended)
+    find_users_with_mutual_friends(session.get("loggedInUser"))
 
     page_finish()
-    return render_template('recommended.html', logged_in_user=logged_in_user, recommended=recommended, user_dict=user_dict,
-                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
+    return render_template('recommended.html', logged_in_user=logged_in_user, recommended=recommended, user_dict=user_dict, recommended_by_course=recommended_by_course,
+                           recommended_by_friend=recommended_by_friend, notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 def map_id_to_object(map):
     dict = {}
