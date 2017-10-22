@@ -42,7 +42,7 @@ Recommended Friends
           Friends:
           {% if recommended_by_friend[id]|length > 0 %}
             {%for friend in recommended_by_friend[id]%}
-              <a style="color:black;" href="/user/{{friend}}">{{friend}}</a>{{ "," if not loop.last }}
+              <a style="color:black;" href="/user/{{friend.username}}">{{friend.first_name}} {{friend.last_name}}</a>{{ "," if not loop.last }}
             {%endfor%}
           {% else %}
             None

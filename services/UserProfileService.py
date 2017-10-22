@@ -352,7 +352,7 @@ def find_users_with_mutual_friends(user_id):
         sql +=    "and user_id1=" + str(key)
         table = execute_sql(sql)
         for row in table:
-            user = find_by_id(row['friend']).username
+            user = find_by_id(row['friend'])
             mutual_friends[key].append(user)
     return mutual_friends
 
