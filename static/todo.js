@@ -11,12 +11,6 @@ $(document).ready(function(){
         }
     });
 
-    window.onbeforeunload = confirmExit;
-    function confirmExit() {
-        if (!jQuery.isEmptyObject(json)) {
-            return "Todo changes not saved. Do you wish to leave the page?";
-        }
-    }
 });
 
 $('.change-priority').on('change', function() {
