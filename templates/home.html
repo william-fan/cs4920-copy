@@ -47,9 +47,9 @@ Home
 
 
   <div class="col-lg-6">
-    <h3>Available</h3>
+    <h3>{% if logged_in_user.status != 'In-Class' %}{{logged_in_user.status}}{% else %}Available{% endif %}</h3>
     <div class="row">
-    {% for user in available[:10] %}
+    {% for user in available %}
       <div class="media my-2 col-lg-6">
           <a href="{{ url_for('user', username=user.username) }}">
               <img class="d-flex mr-3" src="/static/img/users/{{ user.imgpath }}" width="64" height="64" alt="{{ user.first_name }} {{ user.last_name }}">
@@ -80,7 +80,7 @@ Home
         </tr>
       </thead>
       <tbody>
-        {% for task in tasks[:2] %}
+        {% for task in tasks %}
             {% if task.priority == 0 %}
                 <tr>
             {% endif %}

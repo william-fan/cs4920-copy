@@ -48,7 +48,6 @@ def index():
 @app.route("/home")
 def home():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
-    # utilities.profile.update_statuses(all_users())
 
     current_day = datetime.date.today().weekday()
     current_time = datetime.datetime.now().hour
@@ -64,12 +63,12 @@ def home():
          'username': p.username,
          'imgpath': p.imgpath
          } for p in friends_of_user
-        if p.status == utilities.profile.statuses[0]
-    ]
+        if p.status == (utilities.profile.statuses[0] if logged_in_user.status == utilities.profile.statuses[1] else logged_in_user.status)
+    ][:16]
 
     todo_list = load_todos(session.get("loggedInUser"))
     tasks = []
-    for task in todo_list:
+    for task in todo_list[:10]:
         tasks += [
             {
                 'id': task['id'],
@@ -83,8 +82,8 @@ def home():
 
 
     page_finish()
-    return render_template('home.html', logged_in_user=logged_in_user, available=available,
-                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, current_day=current_day, current_time=current_time, courses=courses, busy_times=busy_times, tasks=tasks)
+    return render_template('home.html', logged_in_user=logged_in_user, available=available, courses=courses, busy_times=busy_times, tasks=tasks,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, current_day=current_day, current_time=current_time)
 
 
 
@@ -255,26 +254,17 @@ def get_busy_times(courses):
 def friends():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
 
-    friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
-    friends_list = []
-    for friend in friends_of_user:
-        user = find_by_id(friend)
-        course_list = set([])
-        for courses in timetable_by_id(friend):
-            course_list.add(courses['subject'])
-        friends_list += [
-            {
-                'user_id': user.user_id,
-                'imgpath': user.imgpath,
-                'courses': sorted(course_list),
-                'status': user.status,
-                'name': user.first_name+" "+user.last_name,
-                'username': user.username
-            }
-        ]
+    friends_list = [{
+                'user_id': friend.user_id,
+                'imgpath': friend.imgpath,
+                'courses': sorted(set([courses['subject'] for courses in timetable_by_id(friend.user_id)])),
+                'status': friend.status,
+                'name': friend.first_name+" "+friend.last_name,
+                'username': friend.username
+            } for friend in friends_by_id(logged_in_user.user_id)]
 
     page_finish()
-    return render_template('friends.html', friends=friends_list, logged_in_user=logged_in_user, friends_of_user=friends_of_user,
+    return render_template('friends.html', friends=friends_list, logged_in_user=logged_in_user,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 @app.route('/course/<course>')
@@ -293,6 +283,8 @@ def course_page(course):
 def show_recommended():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
     recommended = find_common_courses(session.get("loggedInUser"))
+    friends = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
+    recommended = list(set(recommended) - set(friends))
     user_dict = map_id_to_object(recommended)
 
     page_finish()
@@ -443,7 +435,6 @@ def settings():
             p_dob = True if request.form.get('privacy-dob') else False
             p_gender = True if request.form.get('privacy-gender') else False
             p_degree = True if request.form.get('privacy-degree') else False
-            print(p_email, p_dob, p_gender, p_degree, set_auto)
             utilities.profile.set_flags(logged_in_user, email=p_email, dob=p_dob, gender=p_gender, degree=p_degree, auto=set_auto)
 
         else:
