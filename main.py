@@ -8,6 +8,7 @@ import services.SQLService
 
 import utilities.profile
 
+import datetime
 from werkzeug.utils import secure_filename
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/img/users')
@@ -40,9 +41,52 @@ def page_finish():
 @app.route("/")
 def index():
     if (session.get("loggedInUser") is not None):
-        return redirect(url_for('available'))
+        return redirect(url_for('home'))
     else:
         return render_template("signin.html")
+
+@app.route("/home")
+def home():
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+    # utilities.profile.update_statuses(all_users())
+
+    current_day = datetime.date.today().weekday()
+    current_time = datetime.datetime.now().hour
+    courses = timetable_by_username(logged_in_user.username)
+    busy_times = get_busy_times(courses)
+
+    friends_of_user = friends_by_id(session.get("loggedInUser"))
+    available = [
+        {
+         'user_id': p.user_id,
+         'first_name': p.first_name,
+         'last_name': p.last_name,
+         'username': p.username,
+         'imgpath': p.imgpath
+         } for p in friends_of_user
+        if p.status == utilities.profile.statuses[0]
+    ]
+
+    todo_list = load_todos(session.get("loggedInUser"))
+    tasks = []
+    for task in todo_list:
+        tasks += [
+            {
+                'id': task['id'],
+                'name': task['title'],
+                'text': task['description'],
+                'subject': task['course_name'],
+                'date': task['end_time'],
+                'priority': task['priority']
+            }
+        ]
+
+
+    page_finish()
+    return render_template('home.html', logged_in_user=logged_in_user, available=available,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, current_day=current_day, current_time=current_time, courses=courses, busy_times=busy_times, tasks=tasks)
+
+
 
 
 @app.route("/login", methods=['POST'])
@@ -52,11 +96,11 @@ def login():
     profile = find_by_email_pass(username, password)
     if profile is not None:
         session['loggedInUser'] = profile.user_id
-        return redirect(url_for('available'))
+        return redirect(url_for('home'))
     profile = find_by_user_pass(username, password)
     if profile is not None:
         session['loggedInUser'] = profile.user_id
-        return redirect(url_for('available'))
+        return redirect(url_for('home'))
     else:
         return render_template("signin.html", error_message="Incorrect username or password")
 
@@ -116,20 +160,10 @@ def available():
          } for p in friends_of_user
         if p.status == utilities.profile.statuses[0]
     ]
-    off_campus = [
-        {
-         'user_id': p.user_id,
-         'first_name': p.first_name,
-         'last_name': p.last_name,
-         'username': p.username,
-         'imgpath': p.imgpath
-         } for p in friends_of_user
-        if p.status == utilities.profile.statuses[2]
-    ]
-        
+
 
     page_finish()
-    return render_template('available.html', logged_in_user=logged_in_user, available=available, off_campus=off_campus,
+    return render_template('available.html', logged_in_user=logged_in_user, available=available,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 

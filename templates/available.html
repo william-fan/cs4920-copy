@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% set active_page = "available" %}
 
-<!--{% block title %}
+{% block title %}
 Available
-{% endblock %}-->
+{% endblock %}
 
 {% block content %}
-
+<div class="row">
 {% for user in available %}
     <div class="media my-2 col-xl-3 col-lg-4 col-md-6">
         <a href="{{ url_for('user', username=user.username) }}">
@@ -22,5 +22,5 @@ Available
         </div>
     </div>
 {% endfor %}
-
+</div>
 {% endblock %}
