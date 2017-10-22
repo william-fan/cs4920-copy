@@ -80,6 +80,7 @@ def home():
             }
         ]
 
+    tasks = sorted(tasks, key=lambda k: k['date'])
 
     page_finish()
     return render_template('home.html', logged_in_user=logged_in_user, available=available, courses=courses, busy_times=busy_times, tasks=tasks,
