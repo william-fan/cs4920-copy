@@ -144,29 +144,6 @@ def displaySignIn():
     return render_template("register.html")
 
 
-@app.route('/available')
-def available():
-    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
-    # utilities.profile.update_statuses(all_users())
-
-    friends_of_user = friends_by_id(session.get("loggedInUser"))
-    available = [
-        {
-         'user_id': p.user_id,
-         'first_name': p.first_name,
-         'last_name': p.last_name,
-         'username': p.username,
-         'imgpath': p.imgpath
-         } for p in friends_of_user
-        if p.status == utilities.profile.statuses[0]
-    ]
-
-
-    page_finish()
-    return render_template('available.html', logged_in_user=logged_in_user, available=available,
-                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
-
-
 @app.route('/todo')
 def todo():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()

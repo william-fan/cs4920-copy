@@ -59,7 +59,7 @@ Home
               <a href="{{ url_for('user', username=user.username) }}" style="color:black">
                   <h5 class="mt-0">{{ user.first_name }} {{ user.last_name }}</h5>
               </a>
-              {% set contact_redirect="available" %}
+              {% set contact_redirect="home" %}
               {% include "contact_button.html" %}
           </div>
       </div>
