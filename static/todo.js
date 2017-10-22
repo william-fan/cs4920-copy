@@ -21,7 +21,7 @@ $(document).ready(function(){
     }
 });
 
-$('select').on('change', function() {
+$('.change-priority').on('change', function() {
     $(this).parent().attr('data-order', this.value)
     if (this.value == 0 || this.value == 1) {
         $(this).parent().parent().removeClass("table-info table-warning");

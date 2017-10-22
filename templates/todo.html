@@ -55,7 +55,7 @@ To Do
               <td class="align-middle">{{ task.text }}</td>
               <td class="align-middle">{{ task.date }}</td>
               <td class="align-middle" data-order="{{ task.priority }}">
-                  <select class="form-control-sm" style="width:auto;" size="1" id="{{ task.id }}">
+                  <select class="change-priority form-control-sm" style="width:auto;" size="1" id="{{ task.id }}">
                       <option {% if task.priority == 0 %} selected {% endif %} value="0">0</option>
                       <option {% if task.priority == 1 %} selected {% endif %} value="1">1</option>
                       <option {% if task.priority == 2 %} selected {% endif %} value="2">2</option>
