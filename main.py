@@ -288,7 +288,7 @@ def show_recommended():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
     recommended = find_common_courses(session.get("loggedInUser"))
     friends = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
-    recommended = list(set(recommended) - set(friends))
+    recommended = {rec:recommended[rec] for rec in recommended if rec not in friends}
     user_dict = map_id_to_object(recommended)
 
     page_finish()
