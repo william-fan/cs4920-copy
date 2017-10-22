@@ -35,10 +35,7 @@ Settings
 
     <div class="form-group">
       <label for="input-gender">Gender:</label>
-      <select name="input-gender" id="input-gender" class="form-control">
-          <option {% if logged_in_user.gender == 'Male' %} selected {% endif %} value="Male">Male</option>
-          <option {% if logged_in_user.gender == 'Female' %} selected {% endif %} value="Female">Female</option>
-      </select>
+      <input name="input-gender" type="text" id="input-gender" class="form-control" value="{{logged_in_user.gender}}">
     </div>
 
     <div class="form-group">
