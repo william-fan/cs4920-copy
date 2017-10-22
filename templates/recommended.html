@@ -31,7 +31,7 @@ Recommended Friends
       </td>
       <td class="align-middle">
           {%for course in recommended[id]%}
-            <a href="/course/{{course}}">{{course}}</a>
+            <a style="color:black;" href="/course/{{course}}">{{course}}</a>{{ "," if not loop.last }}
           {%endfor%}
       </td>
       <td class="align-middle">
