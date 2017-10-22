@@ -11,7 +11,6 @@ def execute_sql(query):
     if sql_connection is None:
         connect()
         one_time = True
-        
     with sql_connection.cursor() as cursor:
         # Execute query.
         cursor.execute(query)

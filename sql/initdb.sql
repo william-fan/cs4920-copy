@@ -1,5 +1,26 @@
 USE sql12195058;
 
+CREATE TABLE IF NOT EXISTS `courses` (
+  `faculty` varchar(5) NOT NULL,
+  `course_code` int(5) NOT NULL,
+  `class_id` varchar(10) NOT NULL,
+  `day` int(2) NOT NULL,
+  `activity` varchar(15) NOT NULL,
+  `start_time` int(3) NOT NULL,
+  `length` int(3) NOT NULL,
+  UNIQUE KEY `faculty` (`faculty`,`course_code`,`class_id`,`day`,`activity`,`start_time`,`length`)
+);
+
+CREATE TABLE IF NOT EXISTS `friend_request` (
+  `from_id` int(11) NOT NULL,
+  `to_id` int(11) NOT NULL,
+  `status` varchar(45) NOT NULL,
+  `message` varchar(45) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  FOREIGN KEY (`from_id`) REFERENCES `user_profile` (`id`),
+  FOREIGN KEY (`to_id`) REFERENCES `user_profile` (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS user_profile (
 	id 			INT(11) NOT NULL AUTO_INCREMENT,
 	username 	VARCHAR(45) NOT NULL,
@@ -12,6 +33,8 @@ CREATE TABLE IF NOT EXISTS user_profile (
 	status		VARCHAR(45) DEFAULT NULL,
 	imgpath		VARCHAR(45) DEFAULT NULL,
 	degree          VARCHAR(45) DEFAULT NULL,
+  `flags` int(11) DEFAULT NULL,
+  `last_update` int(11) DEFAULT NULL,
 	PRIMARY KEY (id)
 );
 
@@ -28,6 +51,9 @@ CREATE TABLE IF NOT EXISTS user_class (
   course_name  VARCHAR(45) NOT NULL,
   start_time VARCHAR(45) NOT NULL,
   end_time  VARCHAR(45) NOT NULL,
+  `day` int(3) NOT NULL,
+  `length` int(3) NOT NULL,
+  `activity` varchar(45) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES user_profile(id)
 );
@@ -65,15 +91,3 @@ CREATE TABLE IF NOT EXISTS public_event (
   end_time VARCHAR(45) NOT NULL,
   PRIMARY KEY (id)
 );
-
-INSERT INTO user_profile (id, username, password, firstname, lastname, email, gender, dob, status, imgpath)
-VALUES (2, 'testuser1', 'testuser1', 'test1', 'user1', 'testuser1@test.com', 'MALE', '1997-01-01', 'CREATED', 'default.jpg');
-INSERT INTO user_profile (id, username, password, firstname, lastname, email, gender, dob, status, imgpath)
-VALUES (3, 'testuser2', 'testuser2', 'test2', 'user2', 'testuser2@test.com', 'MALE', '1997-01-01', 'CREATED', 'default.jpg');
-INSERT INTO user_profile (id, username, password, firstname, lastname, email, gender, dob, status, imgpath)
-VALUES (4, 'testuser3', 'testuser3', 'test3', 'user3', 'testuser3@test.com', 'MALE', '1997-01-01', 'CREATED', 'default.jpg');
-
-INSERT INTO public_event(id, title, description, start_time, end_time) VALUES (null, 'CSE BBQ', 'Free sausage BBQ at the CSE lawn on friday!!', '2017-11-01 13:00:00', '2017-11-01 15:00:00');
-INSERT INTO public_event(id, title, description, start_time, end_time) VALUES (null, 'COMP4920 Workshop', 'Ethics workshop for students that require assistance in understanding ethical theories', '2017-11-01 13:00:00', '2017-11-01 15:00:00');
-INSERT INTO public_event(id, title, description, start_time, end_time) VALUES (null, 'COMP1917 Workshop', 'C programming workshop for dumb students', '2017-11-01 13:00:00', '2017-11-01 15:00:00');
-INSERT INTO public_event(id, title, description, start_time, end_time) VALUES (null, 'COMP2121 Workshop', 'Assembly programming workshop for microprocessing teens', '2017-11-01 13:00:00', '2017-11-01 15:00:00');

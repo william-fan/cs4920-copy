@@ -25,7 +25,7 @@ Recommended Friends
                   <img class="" src="/static/img/users/{{user_dict[id].imgpath}}" width="64" height="64" alt="{{user_dict[id].first_name}}">
               </a>
               <a href="{{ url_for('user', username=user_dict[id].username) }}" style="color:black">
-                <span class="my-2 col-xl-3 col-lg-4 col-md-6">{{user_dict[id].first_name}}</span>
+                <span class="my-2 col-xl-3 col-lg-4 col-md-6">{{user_dict[id].first_name}} {{user_dict[id].last_name}}</span>
               </a>
           </div>
       </td>

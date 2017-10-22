@@ -8,6 +8,7 @@ import services.SQLService
 
 import utilities.profile
 
+import datetime
 from werkzeug.utils import secure_filename
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/img/users')
@@ -40,9 +41,53 @@ def page_finish():
 @app.route("/")
 def index():
     if (session.get("loggedInUser") is not None):
-        return redirect(url_for('available'))
+        return redirect(url_for('home'))
     else:
         return render_template("signin.html")
+
+@app.route("/home")
+def home():
+    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
+
+    current_day = datetime.date.today().weekday()
+    current_time = datetime.datetime.now().hour
+    courses = timetable_by_username(logged_in_user.username)
+    busy_times = get_busy_times(courses)
+
+    friends_of_user = friends_by_id(session.get("loggedInUser"))
+    available = [
+        {
+         'user_id': p.user_id,
+         'first_name': p.first_name,
+         'last_name': p.last_name,
+         'username': p.username,
+         'imgpath': p.imgpath
+         } for p in friends_of_user
+        if p.status == (utilities.profile.statuses[0] if logged_in_user.status == utilities.profile.statuses[1] else logged_in_user.status)
+    ][:16]
+
+    todo_list = load_todos(session.get("loggedInUser"))
+    tasks = []
+    for task in todo_list[:10]:
+        tasks += [
+            {
+                'id': task['id'],
+                'name': task['title'],
+                'text': task['description'],
+                'subject': task['course_name'],
+                'date': task['end_time'],
+                'sort_date': datetime.datetime.strptime(task['end_time'], "%d/%m/%Y, %A %I:%M %p").timestamp(),
+                'priority': task['priority']
+            }
+        ]
+
+    tasks = sorted(tasks, key=lambda k: k['sort_date'])
+
+    page_finish()
+    return render_template('home.html', logged_in_user=logged_in_user, available=available, courses=courses, busy_times=busy_times, tasks=tasks,
+                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict, current_day=current_day, current_time=current_time)
+
+
 
 
 @app.route("/login", methods=['POST'])
@@ -52,11 +97,11 @@ def login():
     profile = find_by_email_pass(username, password)
     if profile is not None:
         session['loggedInUser'] = profile.user_id
-        return redirect(url_for('available'))
+        return redirect(url_for('home'))
     profile = find_by_user_pass(username, password)
     if profile is not None:
         session['loggedInUser'] = profile.user_id
-        return redirect(url_for('available'))
+        return redirect(url_for('home'))
     else:
         return render_template("signin.html", error_message="Incorrect username or password")
 
@@ -100,39 +145,6 @@ def displaySignIn():
     return render_template("register.html")
 
 
-@app.route('/available')
-def available():
-    logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
-    # utilities.profile.update_statuses(all_users())
-
-    friends_of_user = friends_by_id(session.get("loggedInUser"))
-    available = [
-        {
-         'user_id': p.user_id,
-         'first_name': p.first_name,
-         'last_name': p.last_name,
-         'username': p.username,
-         'imgpath': p.imgpath
-         } for p in friends_of_user
-        if p.status == utilities.profile.statuses[0]
-    ]
-    off_campus = [
-        {
-         'user_id': p.user_id,
-         'first_name': p.first_name,
-         'last_name': p.last_name,
-         'username': p.username,
-         'imgpath': p.imgpath
-         } for p in friends_of_user
-        if p.status == utilities.profile.statuses[2]
-    ]
-
-
-    page_finish()
-    return render_template('available.html', logged_in_user=logged_in_user, available=available, off_campus=off_campus,
-                           notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
-
-
 @app.route('/todo')
 def todo():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
@@ -147,9 +159,11 @@ def todo():
                 'text': task['description'],
                 'subject': task['course_name'],
                 'date': task['end_time'],
+                'sort_date': datetime.datetime.strptime(task['end_time'], "%d/%m/%Y, %A %I:%M %p").timestamp(),
                 'priority': task['priority']
             }
         ]
+    tasks = sorted(tasks, key=lambda k: k['sort_date'])
 
     page_finish()
     return render_template('todo.html', logged_in_user=logged_in_user, tasks=tasks,
@@ -244,26 +258,17 @@ def get_busy_times(courses):
 def friends():
     logged_in_user, notifications, friends_notifications, sender_dict, receiver_dict = page_init()
 
-    friends_of_user = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
-    friends_list = []
-    for friend in friends_of_user:
-        user = find_by_id(friend)
-        course_list = set([])
-        for courses in timetable_by_id(friend):
-            course_list.add(courses['subject'])
-        friends_list += [
-            {
-                'user_id': user.user_id,
-                'imgpath': user.imgpath,
-                'courses': sorted(course_list),
-                'status': user.status,
-                'name': user.first_name+" "+user.last_name,
-                'username': user.username
-            }
-        ]
+    friends_list = [{
+                'user_id': friend.user_id,
+                'imgpath': friend.imgpath,
+                'courses': sorted(set([courses['subject'] for courses in timetable_by_id(friend.user_id)])),
+                'status': friend.status,
+                'name': friend.first_name+" "+friend.last_name,
+                'username': friend.username
+            } for friend in friends_by_id(logged_in_user.user_id)]
 
     page_finish()
-    return render_template('friends.html', friends=friends_list, logged_in_user=logged_in_user, friends_of_user=friends_of_user,
+    return render_template('friends.html', friends=friends_list, logged_in_user=logged_in_user,
                            notifications=notifications, friends_notifications=friends_notifications, sender_dict=sender_dict, receiver_dict=receiver_dict)
 
 @app.route('/course/<course>')
@@ -286,7 +291,11 @@ def show_recommended():
 
     recommended = list(recommended_by_course.keys())
     recommended = recommended + (list(recommended_by_friend.keys()))
-    recommended = list(set(recommended))
+    friends = [profile.user_id for profile in friends_by_id(session.get("loggedInUser"))]
+    print("-------------------")
+    print(friends)
+    print(recommended)
+    recommended = list(set(recommended) - set(friends))
 
     user_dict = map_id_to_object(recommended)
     find_users_with_mutual_friends(session.get("loggedInUser"))
@@ -439,7 +448,6 @@ def settings():
             p_dob = True if request.form.get('privacy-dob') else False
             p_gender = True if request.form.get('privacy-gender') else False
             p_degree = True if request.form.get('privacy-degree') else False
-            print(p_email, p_dob, p_gender, p_degree, set_auto)
             utilities.profile.set_flags(logged_in_user, email=p_email, dob=p_dob, gender=p_gender, degree=p_degree, auto=set_auto)
 
         else:
