@@ -75,7 +75,7 @@
                     {%else%}
                       <li>
                           <div class="col-md-12 col-sm-12 col-xs-12 pd-15">
-                            <a style="padding-left:15px;" href="">{{sender_dict[fn.from_id].first_name}}</a> has sent a friend request
+                            <a style="padding-left:15px;" href="/user/{{sender_dict[fn.from_id].username}}">{{sender_dict[fn.from_id].first_name}}</a> has sent a friend request
                             <p style="padding-left:15px;"><b>Message</b>: {{fn.message}}</p>
                             <p style="padding-left:15px;"><b>Date</b>: {{fn.date}}</p>
                             <a style="align:right; padding-left:15px;" href="/acceptFriendRequest?userId={{fn.from_id}}">Accept</a>
