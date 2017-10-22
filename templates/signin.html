@@ -16,23 +16,54 @@
   </head>
 
   <body>
+    <section class="login-block">
+        <div class="container">
+        <div class="row">
+            <div class="col-md-4 login-sec">
+                <h2 class="text-center">Login Now</h2>
+               {%if error_message%}
+                  <div class="alert alert-danger">
+                    <strong>Login error</strong> {{error_message}}
+                  </div>
+                {%endif%}
+                <form class="login-form" action="/login" method="POST">
+                <div class="form-group">
+                  <label for="inputUserEmail" class="text-uppercase">Username</label>
+                  <input id="inputUserEmail" type="text" name="inputUserEmail" class="form-control" placeholder="" required>
 
-    <div class="container">
-      {% if error_message %}
-      <div class="alert alert-danger">
-        <strong>Login Failed</strong> {{ errorMessage }}
+                </div>
+                <div class="form-group">
+                  <label for="inputPassword" class="text-uppercase">Password</label>
+                  <input id="inputPassword" type="password" name="inputPassword" class="form-control" placeholder="" required>
+                </div>
+
+
+                  <div class="form-check">
+                    <button type="submit" class="btn btn-primary float-right">Login</button>
+                  </div>
+
+              </form>
+              <a href="/registerPage">Register</a>
+            </div>
+            <div class="col-md-8 banner-sec">
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                     <ol class="carousel-indicators">
+                        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                      </ol>
+                <div class="carousel-inner" role="listbox">
+                    <div class="carousel-item active">
+                      <img class="d-block img-fluid" src="https://static.pexels.com/photos/33972/pexels-photo.jpg" alt="First slide">
+                      <div class="carousel-caption d-none d-md-block">
+                        <div class="banner-text">
+                            <h2>UniManage</h2>
+                            <p>A place where managing your time with friends and work is made simple!</p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
-      {% endif %}
-      <form action="/login" id="form-login" class="form-signin" method="POST">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputUserEmail" class="sr-only">Email address/Username</label>
-        <input name="inputUserEmail" type="text" id="inputUserEmail" class="form-control" placeholder="Email address/Username" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input name="inputPassword" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <button id="login" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <a class="btn btn-lg btn-secondary btn-block" href="/registerPage">Register</a>
-      </form>
-
-    </div>
+    </section>
   </body>
 </html>
