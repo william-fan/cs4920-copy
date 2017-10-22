@@ -7,59 +7,88 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <title>Register - uniManage</title>
+    <title>uniManage Sign In</title>
 
 
     <!-- Custom styles for this template -->
-    <link href="../static/register.css" rel="stylesheet">
+    <link href="../static/signin.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
 
   <body>
+    <section class="login-block">
+        <div class="container">
+        <div class="row">
+            <div class="col-md-4 login-sec">
+                <h2 class="text-center">Register Now</h2>
+                {%if register_error%}
+                  <div class="alert alert-danger">
+                    <strong>Register error</strong> {{register_error}}
+                  </div>
+                {%endif%}
+                <form class="login-form" action="/register" method="POST">
+                    <div class="form-group">
+                      <label for="username" class="text-uppercase">Username</label>
+                      <input id="username" type="text" name="username" class="form-control" placeholder="" required>
 
-    <div class="container">
-      {% if register_error %}
-      <div class="alert alert-danger">
-        <strong>Registration Failed</strong> {{ register_error }}
+                    </div>
+                    <div class="form-group">
+                      <label for="password" class="text-uppercase">Password</label>
+                      <input id="password" type="password" name="password" class="form-control" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="email" class="text-uppercase">Email</label>
+                      <input id="email" type="email" name="email" class="form-control" placeholder="" required>
+
+                    </div>
+                    <div class="form-group">
+                      <label for="firstname" class="text-uppercase">Firstname</label>
+                      <input id="firstname" type="text" name="firstname" class="form-control" placeholder="" required>
+                    </div>
+                      <div class="form-group">
+                      <label for="lastname" class="text-uppercase">Lastname</label>
+                      <input id="lastname" type="text" name="lastname" class="form-control" placeholder="" required>
+
+                    </div>
+                    <div class="form-group">
+                      <label for="gender">GENDER</label>
+                      <select name="gender" class="form-control" id="gender">
+                        <option>MALE</option>
+                        <option>FEMALE</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="date" class="text-uppercase">DOB</label>
+                      <input id="date" type="date" name="dob" class="form-control" placeholder="" required>
+                    </div>
+
+                  <div class="form-check">
+                    <button type="submit" class="btn btn-login float-right">Register</button>
+                  </div>
+
+              </form>
+              <a href="/">Sign In</a>
+              <div class="copy-text">UniManage <i class="fa fa-heart"></i></div>
+            </div>
+            <div class="col-md-8 banner-sec">
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                     <ol class="carousel-indicators">
+                        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                     </ol>
+                <div class="carousel-inner" role="listbox">
+                    <div class="carousel-item active">
+                      <img class="d-block img-fluid" src="https://static.pexels.com/photos/33972/pexels-photo.jpg" alt="First slide">
+                      <div class="carousel-caption d-none d-md-block">
+                        <div class="banner-text">
+                            <h2>UniManage</h2>
+                            <p>A place where managing your time with friends and work is made simple!</p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
-      {% endif %}
-      <form action="/register" id="form-register" class="form-register" method="POST">
-        <h2 class="form-register-heading">Register</h2>
-        <div class="form-group">
-          <label for="username" class="col-form-label">Username</label>
-          <input name="username" type="text" id="username" class="form-control" placeholder="Enter Username" required autofocus>
-        </div>
-        <div class="form-group">
-          <label for="password" class="col-form-label">Password</label>
-          <input name="password" type="password" id="password" class="form-control" placeholder="Enter Password" required>
-        </div>
-        <div class="form-group">
-          <label for="email" class="col-form-label">Email</label>
-          <input name="email" type="email" id="email" class="form-control" placeholder="Enter Email" required>
-        </div>
-        <div class="form-group">
-          <label for="firstname" class="col-form-label">First Name</label>
-          <input name="firstname" type="text" id="firstname" class="form-control" placeholder="Enter First Name" required>
-        </div>
-        <div class="form-group">
-          <label for="lastname" class="col-form-label">Last Name</label>
-          <input name="lastname" type="text" id="lastname" class="form-control" placeholder="Enter Last Name" required>
-        </div>
-        <div class="form-group">
-          <label for="gender" class="col-form-label">Select Gender</label>
-          <select name="gender" class="form-control input-lg" size="1" id="gender">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="date" class="col-form-label">DOB</label>
-          <input name="dob" type="date" id="dob" class="form-control" placeholder="Enter DOB" required>
-        </div>
-        <button id="register" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-        <a class="btn btn-lg btn-secondary btn-block" href="/">Cancel</a>
-      </form>
-
-    </div>
+    </section>
   </body>
 </html>
